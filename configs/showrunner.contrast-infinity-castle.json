@@ -1,0 +1,160 @@
+{
+  "title": "Contrast in the Infinity Castle",
+  "logline": "In a surreal Infinity Castle ruled by a plucked string that knocks everyone off balance, a calm stranger named Gadolinium follows the flow toward a mesmerizing geisha who hoards all attention-only to mark her with \"contrast\" and reveal the true predator in the room.",
+  "theme": "What looks like salvation can be a lure; predation can hide inside rescue, and the act that steadies the crowd can expose the threat.",
+  "characters": [
+    "Gadolinium",
+    "Castle String",
+    "Hydrogen Crowd",
+    "Geisha"
+  ],
+  "locations": [
+    "Infinity Castle Tatami Hall",
+    "Tatami Corridor of Sliding Doors",
+    "Glass Water Chamber",
+    "Festival Pillar Platform",
+    "Geisha Dais"
+  ],
+  "lines": [
+    {
+      "line_id": "l1",
+      "kind": "action",
+      "text": "Close-up: a black field is split by one sharp pluck of string that snaps the silence like a command.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l2",
+      "kind": "action",
+      "text": "In the Infinity Castle Tatami Hall, a young woman jolts upright inside a dreamlike hush and scans endless doors.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l3",
+      "kind": "dialogue",
+      "text": "Where am I... and why does it feel like the room is listening?",
+      "speaker": "Gadolinium",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l4",
+      "kind": "action",
+      "text": "She enters the Tatami Corridor of Sliding Doors as a new pluck tilts the floor and she keeps her balance.",
+      "speaker": null,
+      "est_duration_s": 8.0
+    },
+    {
+      "line_id": "l5",
+      "kind": "action",
+      "text": "A door opens into a chamber where the Hydrogen Crowd collapses in sync with each pluck and rises only to drop again.",
+      "speaker": null,
+      "est_duration_s": 8.0
+    },
+    {
+      "line_id": "l6",
+      "kind": "dialogue",
+      "text": "Everyone moves when it moves. Like they have no anchor.",
+      "speaker": "Gadolinium",
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l7",
+      "kind": "action",
+      "text": "Beyond a glass wall in the Glass Water Chamber, divers drift in suspension while each pluck ripples their bodies like a soft wave.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l8",
+      "kind": "action",
+      "text": "Another room reveals heavy figures braced like sumo wrestlers, yet the pluck still shifts them half a step.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l9",
+      "kind": "action",
+      "text": "At the Festival Pillar Platform, people grip a tall post between beats while she passes in silence and tracks the hunger driving the crowd.",
+      "speaker": null,
+      "est_duration_s": 9.0
+    },
+    {
+      "line_id": "l10",
+      "kind": "action",
+      "text": "Ahead, the Hydrogen Crowd drifts in a single current with eager smiles as if called by an unseen lure.",
+      "speaker": null,
+      "est_duration_s": 8.0
+    },
+    {
+      "line_id": "l11",
+      "kind": "action",
+      "text": "On the Geisha Dais, a flawless Geisha lifts her fan on each pluck and the crowd obeys with one small step.",
+      "speaker": null,
+      "est_duration_s": 8.0
+    },
+    {
+      "line_id": "l12",
+      "kind": "action",
+      "text": "Close-up on a shoji silhouette: the shadow briefly breaks pose and leaves a cold afterimage.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l13",
+      "kind": "dialogue",
+      "text": "So that's the trick. You don't fight the rhythm... you feed on it.",
+      "speaker": "Gadolinium",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l14",
+      "kind": "action",
+      "text": "The calm stranger enters the tightening circle and the next pluck turns the crowd's collapse into a controlled sway.",
+      "speaker": null,
+      "est_duration_s": 9.0
+    },
+    {
+      "line_id": "l15",
+      "kind": "dialogue",
+      "text": "I'm not stopping the rhythm. I'm making it visible.",
+      "speaker": "Gadolinium",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l16",
+      "kind": "action",
+      "text": "On the next pluck, the circle steps once into a clean emblem around the Geisha as a wrist shows a clear contrast mark.",
+      "speaker": null,
+      "est_duration_s": 8.0
+    },
+    {
+      "line_id": "l17",
+      "kind": "dialogue",
+      "text": "Contrast.",
+      "speaker": "Gadolinium",
+      "est_duration_s": 2.0
+    },
+    {
+      "line_id": "l18",
+      "kind": "action",
+      "text": "The Geisha's smile fractures as fear replaces poise and the now-steady crowd fixes its gaze on her.",
+      "speaker": null,
+      "est_duration_s": 8.0
+    },
+    {
+      "line_id": "l19",
+      "kind": "dialogue",
+      "text": "You wanted their energy. Now you get their eyes.",
+      "speaker": "Gadolinium",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l20",
+      "kind": "action",
+      "text": "One final softer pluck freezes the Infinity Castle while Gadolinium stands still and the Geisha is trapped inside the circle she once ruled.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    }
+  ]
+}

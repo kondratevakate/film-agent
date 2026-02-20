@@ -1,0 +1,61 @@
+:root {
+  /* Color - Core */
+  --color-bg: #F7F8FA;            /* off-white */
+  --color-surface: #FFFFFF;       /* cards/surfaces */
+  --color-ink: #111317;           /* near-black text */
+  --color-muted: #5E6672;         /* secondary text */
+  --color-line: #E3E7EE;          /* dividers */
+  --color-shadow: rgba(17, 19, 23, 0.10);
+
+  /* Color - Accents */
+  --color-accent: #2B5C6B;        /* desaturated teal */
+  --color-accent-2: #1F2A33;      /* deep slate */
+  --color-alert: #D11F2A;         /* red (verdict/stop) */
+
+  /* Typography */
+  --font-sans: ui-sans-serif, system-ui, -apple-system, Segoe UI, Inter, Roboto, Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --text-xs: 12px;
+  --text-sm: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+
+  --line-tight: 1.15;
+  --line-normal: 1.35;
+  --line-relaxed: 1.55;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+
+  /* Spacing */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+
+  /* Radius */
+  --radius-sm: 10px;
+  --radius-md: 14px;
+  --radius-lg: 18px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 10px var(--color-shadow);
+  --shadow-md: 0 8px 24px var(--color-shadow);
+
+  /* Motion */
+  --ease-standard: cubic-bezier(0.2, 0.0, 0.2, 1);
+  --dur-fast: 120ms;
+  --dur-med: 220ms;
+  --dur-slow: 420ms;
+
+  /* Motion intent */
+  --anim-subtle-y: 6px;           /* small float/slide */
+  --anim-subtle-scale: 1.02;      /* micro emphasis */
+}
+

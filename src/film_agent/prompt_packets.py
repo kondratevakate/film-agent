@@ -30,7 +30,9 @@ class PromptPacketManifest:
 def build_prompt_packet(base_dir: Path, run_id: str, role: RoleId, iteration: int | None = None) -> tuple[Path, Path]:
     run_path = run_dir(base_dir, run_id)
     state = load_state(run_path)
-    config = load_config(Path(state.config_path))
+    config_path = Path(state.config_path)
+    config = load_config(config_path)
+    config_dir = config_path.parent
 
     target_iteration = iteration or state.current_iteration
     iter_key = iteration_key(target_iteration)
@@ -55,6 +57,9 @@ def build_prompt_packet(base_dir: Path, run_id: str, role: RoleId, iteration: in
             "core_concepts": config.core_concepts,
             "reference_images": state.reference_images,
             "reference_image_hashes": state.reference_image_hashes,
+            "creative_direction": _load_optional_config_text(config_dir, config.creative_direction_file),
+            "principles": _load_optional_config_text(config_dir, config.principles_file),
+            "tokens_css": _load_optional_config_text(config_dir, config.tokens_css_file),
             "thresholds": config.thresholds.model_dump(mode="json"),
         },
         source_payloads=source_payloads,
@@ -202,6 +207,23 @@ def _load_schema_text(base_dir: Path, relative_schema_path: str) -> str:
     if not fallback.exists():
         return "{}"
     return fallback.read_text(encoding="utf-8")
+
+
+def _load_optional_config_text(config_dir: Path, configured_path: str | None) -> dict[str, str] | None:
+    if not configured_path:
+        return None
+
+    candidate = Path(configured_path).expanduser()
+    if not candidate.is_absolute():
+        candidate = (config_dir / candidate).resolve()
+
+    if not candidate.exists():
+        raise ValueError(f"Configured look-and-feel file not found: {candidate}")
+
+    return {
+        "path": str(candidate),
+        "content": candidate.read_text(encoding="utf-8"),
+    }
 
 
 def _compose_prompt(

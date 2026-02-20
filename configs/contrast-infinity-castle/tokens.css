@@ -1,0 +1,66 @@
+:root {
+  /* Colors - Base */
+  --c-ink: #0b0d10;          /* near-black ink */
+  --c-charcoal: #14181f;     /* deep neutral */
+  --c-sumi: #1d232c;         /* ink wash */
+  --c-paper: #f2e9d8;        /* warm paper */
+  --c-paper-2: #e8dcc6;      /* aged paper */
+  --c-wood: #4a2f1f;         /* lacquered wood */
+  --c-wood-2: #6a4630;       /* warm wood */
+
+  /* Colors - Accents */
+  --c-red: #b0121b;          /* danger / tumor */
+  --c-red-2: #7e0d14;        /* deep blood */
+  --c-indigo: #1a2a4a;       /* night depth */
+  --c-cyan: #2dd7c4;         /* gadolinium contrast */
+  --c-cyan-2: #1fae9e;
+
+  /* Colors - Utility */
+  --c-text: var(--c-paper);
+  --c-text-muted: rgba(242, 233, 216, 0.72);
+  --c-border: rgba(242, 233, 216, 0.14);
+  --c-shadow: rgba(0, 0, 0, 0.55);
+
+  /* Typography */
+  --font-display: "Cinzel", "Noto Serif JP", "Georgia", serif;
+  --font-body: "Inter", "Noto Sans JP", system-ui, -apple-system, sans-serif;
+
+  --fs-hero: 44px;
+  --fs-h1: 32px;
+  --fs-h2: 24px;
+  --fs-body: 16px;
+  --fs-small: 13px;
+
+  --lh-tight: 1.15;
+  --lh-normal: 1.45;
+
+  /* Spacing (8pt grid) */
+  --s-1: 4px;
+  --s-2: 8px;
+  --s-3: 12px;
+  --s-4: 16px;
+  --s-5: 24px;
+  --s-6: 32px;
+  --s-7: 40px;
+  --s-8: 48px;
+
+  /* Radius - sharp/paper-like */
+  --r-1: 6px;
+  --r-2: 10px;
+  --r-3: 14px;
+
+  /* Shadows - soft but deep */
+  --sh-1: 0 8px 20px var(--c-shadow);
+  --sh-2: 0 16px 40px rgba(0, 0, 0, 0.65);
+
+  /* Motion */
+  --ease-snap: cubic-bezier(0.2, 0.9, 0.1, 1);
+  --ease-silk: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-fast: 140ms;
+  --dur-med: 240ms;
+  --dur-slow: 420ms;
+
+  /* Motif - "pluck" interaction */
+  --pluck-tilt-deg: 4deg;
+  --pluck-shift: 10px;
+}

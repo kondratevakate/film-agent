@@ -1,0 +1,56 @@
+{
+  "image_prompt_package_id": "d0349e6504f59f0caaf05c85e31ed5eb1d9c8200cf351d6b98c287c1e19c558e",
+  "selected_images_id": "9ac37f0f81fb79215ba70d389bfbd46f5e63b7c63c79a23e601140bf4b49c252",
+  "music_prompt": "Minimal shamisen pulse with ritual pauses, low taiko pressure, and cold cyan harmonic bloom only on reveal beats.",
+  "shot_prompts": [
+    {
+      "shot_id": "s01",
+      "video_prompt": "Slow reveal of infinite tatami architecture with one taut string crossing frame, hold silhouettes and negative space.",
+      "audio_prompt": "Single dry pluck with long room decay and distant wood resonance.",
+      "tts_text": null,
+      "duration_s": 9.0
+    },
+    {
+      "shot_id": "s02",
+      "video_prompt": "Hydrogen crowd collapses and recovers in synchronized rhythm as the axis tilts on each beat.",
+      "audio_prompt": "Repeated pluck pattern: pluck, micro-pause, low impact thump, then controlled breath bed.",
+      "tts_text": null,
+      "duration_s": 10.0
+    },
+    {
+      "shot_id": "s03",
+      "video_prompt": "Frontal geisha composition with fan cue controlling one-step crowd advance.",
+      "audio_prompt": "Muted shamisen ostinato with thin bell overtones and suppressed crowd rustle.",
+      "tts_text": null,
+      "duration_s": 10.0
+    },
+    {
+      "shot_id": "s04",
+      "video_prompt": "Close-up shoji shadow mismatch appears for one beat and resolves without overt effects.",
+      "audio_prompt": "Short high scrape layered under a soft pluck, then immediate near-silence.",
+      "tts_text": null,
+      "duration_s": 8.0
+    },
+    {
+      "shot_id": "s05",
+      "video_prompt": "Circle locks into emblem shape around geisha as cyan contrast mark appears on wrist.",
+      "audio_prompt": "Pluck attack with tight taiko accent and restrained cyan-like synth shimmer tail.",
+      "tts_text": "Contrast.",
+      "duration_s": 8.0
+    },
+    {
+      "shot_id": "s06",
+      "video_prompt": "Final soft pluck freezes the room while Gadolinium stands still and reversal is complete.",
+      "audio_prompt": "One softened terminal pluck, long low-frequency decay, then controlled silence.",
+      "tts_text": "You wanted their energy. Now you get their eyes.",
+      "duration_s": 10.0
+    }
+  ],
+  "global_negative_constraints": [
+    "comedic timing",
+    "overproduced trailer braams",
+    "melodic pop chorus",
+    "audio clipping",
+    "mismatched lip sync"
+  ]
+}

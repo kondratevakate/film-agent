@@ -1,16 +1,13 @@
-project_name: the-trace
+project_name: contrast-infinity-castle
 reference_images: []
-creative_direction_file: the-trace/creative-direction.md
-principles_file: the-trace/principles.md
-tokens_css_file: the-trace/tokens.css
-duration_min_s: 60
-duration_max_s: 180
-duration_target_s: 95
+duration_min_s: 90
+duration_max_s: 150
+duration_target_s: 100
 core_concepts:
-  - pulse
-  - recovery
-  - signal
-  - diagnosis
+  - contrast
+  - rhythm
+  - attention
+  - predation
 seed: 42
 resolution: 1920x1080
 fps: 24
