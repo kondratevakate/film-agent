@@ -2,6 +2,8 @@ project_name: view-only-test
 reference_images:
   - ../references/input/view_only/1598711967191014560.jpg
   - ../references/input/view_only/images.jpg
+duration_min_s: 60
+duration_max_s: 120
 duration_target_s: 95
 core_concepts:
   - memory

@@ -5,8 +5,8 @@ from __future__ import annotations
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import re
 from typing import Any
-from uuid import uuid4
 
 from pydantic import BaseModel, Field
 
@@ -65,9 +65,10 @@ def default_retry_counts() -> dict[str, int]:
     return {"gate1": 0, "gate2": 0, "gate3": 0}
 
 
-def build_run_id() -> str:
-    stamp = datetime.now(timezone.utc).strftime("%Y%m%d-%H%M%S")
-    return f"run-{stamp}-{str(uuid4())[:8]}"
+def build_run_id(base_dir: Path, project_name: str) -> str:
+    slug = _project_slug(project_name)
+    number = _next_project_run_number(base_dir, project_name, slug)
+    return f"{slug}-{number:03d}"
 
 
 def run_dir(base_dir: Path, run_id: str) -> Path:
@@ -82,9 +83,9 @@ def ensure_run_layout(path: Path) -> None:
     (path / "events.jsonl").touch(exist_ok=True)
 
 
-def new_state(config_path: Path, config: RunConfig) -> RunStateData:
+def new_state(base_dir: Path, config_path: Path, config: RunConfig) -> RunStateData:
     return RunStateData(
-        run_id=build_run_id(),
+        run_id=build_run_id(base_dir, config.project_name),
         project_name=config.project_name,
         created_at=utc_now_iso(),
         updated_at=utc_now_iso(),
@@ -170,3 +171,44 @@ def start_next_iteration(path: Path, state: RunStateData, reason: str, carry_for
             "carry_forward": carry_forward,
         },
     )
+
+
+def _project_slug(project_name: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", project_name.casefold()).strip("-")
+    return slug or "project"
+
+
+def _next_project_run_number(base_dir: Path, project_name: str, slug: str) -> int:
+    runs_root = base_dir / "runs"
+    if not runs_root.exists():
+        return 1
+
+    matched_runs = 0
+    max_number = 0
+    run_id_pattern = re.compile(rf"^{re.escape(slug)}-(\d+)$")
+
+    for run_path in runs_root.iterdir():
+        if not run_path.is_dir():
+            continue
+
+        payload_path = run_path / "state.json"
+        if not payload_path.exists():
+            continue
+
+        try:
+            payload = load_json(payload_path)
+        except Exception:
+            continue
+
+        if str(payload.get("project_name", "")).strip() != project_name:
+            continue
+
+        matched_runs += 1
+        run_id = str(payload.get("run_id", run_path.name))
+        match = run_id_pattern.match(run_id)
+        if match:
+            max_number = max(max_number, int(match.group(1)))
+
+    if max_number > 0:
+        return max_number + 1
+    return matched_runs + 1

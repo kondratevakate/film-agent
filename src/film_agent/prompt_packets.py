@@ -49,6 +49,8 @@ def build_prompt_packet(base_dir: Path, run_id: str, role: RoleId, iteration: in
         role=role,
         role_prompt=get_prompt_stack(role.value if role != RoleId.QA_JUDGE else "qa_judge"),
         project_constraints={
+            "duration_min_s": config.duration_min_s,
+            "duration_max_s": config.duration_max_s,
             "duration_target_s": config.duration_target_s,
             "core_concepts": config.core_concepts,
             "reference_images": state.reference_images,

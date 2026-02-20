@@ -54,8 +54,10 @@ def evaluate_gate2(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
     script = cast(ScriptArtifact, script)
     review = cast(ScriptReviewArtifact, review)
 
-    script_chars = {item.strip() for item in script.characters if item.strip()}
-    reviewed_chars = {item.strip() for item in review.approved_character_registry if item.strip()}
+    script_chars = {_normalize_character_entry(item) for item in script.characters if _normalize_character_entry(item)}
+    reviewed_chars = {
+        _normalize_character_entry(item) for item in review.approved_character_registry if _normalize_character_entry(item)
+    }
     coverage_pct = (len(script_chars & reviewed_chars) / max(len(script_chars), 1)) * 100.0
     if coverage_pct < 100.0:
         reasons.append("Script review does not cover all declared script characters.")
@@ -113,3 +115,13 @@ def _unique(items: list[str]) -> list[str]:
             out.append(item)
             seen.add(item)
     return out
+
+
+def _normalize_character_entry(raw: str) -> str:
+    text = raw.strip()
+    if not text:
+        return ""
+    # Allow entries like "Name: short description" from direction outputs.
+    if ":" in text:
+        text = text.split(":", 1)[0].strip()
+    return " ".join(text.split())

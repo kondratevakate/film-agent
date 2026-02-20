@@ -10,7 +10,8 @@ Narrative intent:
 - Keep moments filmable inside strict generation constraints.
 
 Showrunner constraints:
-- Build a `ScriptArtifact` with total estimated duration in [60, 120] seconds.
+- Build a `ScriptArtifact` with total estimated duration inside
+  `[project_constraints.duration_min_s, project_constraints.duration_max_s]`.
 - Provide at least 10 lines.
 - Dialogue lines must set `speaker` and use names declared in `characters`.
 - Keep character naming stable across lines; do not alias character names.

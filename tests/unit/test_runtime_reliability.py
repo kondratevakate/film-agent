@@ -77,6 +77,58 @@ def test_run_config_rejects_single_reference_image(tmp_path: Path) -> None:
         create_run(tmp_path, config_path)
 
 
+def test_run_config_rejects_invalid_duration_window(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config_root"
+    config_dir.mkdir(parents=True)
+
+    config = {
+        "project_name": "bad-duration-window",
+        "duration_min_s": 180,
+        "duration_max_s": 120,
+        "duration_target_s": 95,
+        "model_candidates": [
+            {
+                "name": "test-model",
+                "weighted_score": 1.0,
+                "physics": 1.0,
+                "human_fidelity": 1.0,
+                "identity": 1.0,
+            }
+        ],
+    }
+    config_path = config_dir / "project.yaml"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="duration_min_s must be strictly less than duration_max_s"):
+        create_run(tmp_path, config_path)
+
+
+def test_run_config_rejects_target_outside_duration_window(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config_root"
+    config_dir.mkdir(parents=True)
+
+    config = {
+        "project_name": "bad-duration-target",
+        "duration_min_s": 60,
+        "duration_max_s": 90,
+        "duration_target_s": 95,
+        "model_candidates": [
+            {
+                "name": "test-model",
+                "weighted_score": 1.0,
+                "physics": 1.0,
+                "human_fidelity": 1.0,
+                "identity": 1.0,
+            }
+        ],
+    }
+    config_path = config_dir / "project.yaml"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    with pytest.raises(ValueError, match="duration_target_s must be within"):
+        create_run(tmp_path, config_path)
+
+
 def test_audio_sync_penalizes_unordered_or_out_of_range_markers() -> None:
     metrics = FinalMetrics.model_validate(
         {
@@ -106,3 +158,59 @@ def test_audio_sync_penalizes_unordered_or_out_of_range_markers() -> None:
     )
 
     assert compute_audio_sync(good, metrics) > compute_audio_sync(bad, metrics)
+
+
+def test_create_run_uses_project_prefixed_incremental_run_id(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config_root"
+    config_dir.mkdir(parents=True)
+    config = {
+        "project_name": "View Only Test",
+        "duration_target_s": 95,
+        "model_candidates": [
+            {
+                "name": "test-model",
+                "weighted_score": 1.0,
+                "physics": 1.0,
+                "human_fidelity": 1.0,
+                "identity": 1.0,
+            }
+        ],
+    }
+    config_path = config_dir / "project.yaml"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    run1 = create_run(tmp_path, config_path).run_id
+    run2 = create_run(tmp_path, config_path).run_id
+
+    assert run1 == "view-only-test-001"
+    assert run2 == "view-only-test-002"
+
+
+def test_create_run_continues_numbering_after_legacy_run_ids(tmp_path: Path) -> None:
+    legacy_run_path = tmp_path / "runs" / "run-20260220-legacy"
+    legacy_run_path.mkdir(parents=True)
+    (legacy_run_path / "state.json").write_text(
+        json.dumps({"run_id": "run-20260220-legacy", "project_name": "View Only Test"}),
+        encoding="utf-8",
+    )
+
+    config_dir = tmp_path / "config_root"
+    config_dir.mkdir(parents=True)
+    config = {
+        "project_name": "View Only Test",
+        "duration_target_s": 95,
+        "model_candidates": [
+            {
+                "name": "test-model",
+                "weighted_score": 1.0,
+                "physics": 1.0,
+                "human_fidelity": 1.0,
+                "identity": 1.0,
+            }
+        ],
+    }
+    config_path = config_dir / "project.yaml"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    run_id = create_run(tmp_path, config_path).run_id
+    assert run_id == "view-only-test-002"

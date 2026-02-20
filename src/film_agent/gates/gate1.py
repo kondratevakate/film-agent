@@ -58,10 +58,14 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
     script = cast(ScriptArtifact, script)
 
     estimated_duration_s = sum(line.est_duration_s for line in script.lines)
-    duration_ok = 60.0 <= estimated_duration_s <= 120.0
+    duration_ok = config.duration_min_s <= estimated_duration_s <= config.duration_max_s
     if not duration_ok:
-        reasons.append(f"Estimated script duration {estimated_duration_s:.2f}s is outside [60, 120].")
-        fixes.append("Trim or extend script timing so estimated duration fits 60-120 seconds.")
+        reasons.append(
+            f"Estimated script duration {estimated_duration_s:.2f}s is outside [{config.duration_min_s}, {config.duration_max_s}]."
+        )
+        fixes.append(
+            f"Trim or extend script timing so estimated duration fits {config.duration_min_s}-{config.duration_max_s} seconds."
+        )
 
     declared_characters = {name.strip() for name in script.characters if name.strip()}
     undeclared_speakers = {
@@ -221,6 +225,8 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             "character_consistency": round(character_consistency, 2),
             "script_faithfulness": round(script_faithfulness, 2),
             "narrative_coherence": round(narrative_coherence, 2),
+            "duration_min_s": config.duration_min_s,
+            "duration_max_s": config.duration_max_s,
             "duration_target_s": config.duration_target_s,
         },
         reasons=reasons,

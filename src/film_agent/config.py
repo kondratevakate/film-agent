@@ -57,6 +57,8 @@ class RetryLimits(BaseModel):
 class RunConfig(BaseModel):
     project_name: str = "film-agent"
     reference_images: list[str] = Field(default_factory=list)
+    duration_min_s: int = Field(default=60, ge=1, le=600)
+    duration_max_s: int = Field(default=120, ge=1, le=600)
     duration_target_s: int = Field(default=95, ge=90, le=105)
     core_concepts: list[str] = Field(default_factory=list)
     model_candidates: list[ModelCandidate] = Field(default_factory=list)
@@ -71,6 +73,10 @@ class RunConfig(BaseModel):
     def validate_reference_images(self) -> "RunConfig":
         if self.reference_images and not 2 <= len(self.reference_images) <= 3:
             raise ValueError("reference_images must contain 2-3 paths when provided.")
+        if self.duration_min_s >= self.duration_max_s:
+            raise ValueError("duration_min_s must be strictly less than duration_max_s.")
+        if not self.duration_min_s <= self.duration_target_s <= self.duration_max_s:
+            raise ValueError("duration_target_s must be within [duration_min_s, duration_max_s].")
         return self
 
 

@@ -1,16 +1,13 @@
-project_name: film-agent
+project_name: the-trace
 reference_images: []
-# reference_images:
-#   - ../references/input/ref_01.jpg
-#   - ../references/input/ref_02.jpg
 duration_min_s: 60
-duration_max_s: 120
+duration_max_s: 180
 duration_target_s: 95
 core_concepts:
-  - attention
-  - memory
-  - uncertainty
-  - prediction
+  - pulse
+  - recovery
+  - signal
+  - diagnosis
 seed: 42
 resolution: 1920x1080
 fps: 24

@@ -40,7 +40,7 @@ class CommandResult:
 def create_run(base_dir: Path, config_path: Path) -> CommandResult:
     resolved_config_path = config_path.expanduser().resolve()
     config = load_config(resolved_config_path)
-    state = new_state(resolved_config_path, config)
+    state = new_state(base_dir, resolved_config_path, config)
     path = run_dir(base_dir, state.run_id)
     ensure_run_layout(path)
 
