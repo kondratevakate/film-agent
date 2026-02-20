@@ -201,7 +201,7 @@ def _write_readable_index(export_dir: Path) -> None:
     for path in sorted(export_dir.rglob("*")):
         if path.is_dir():
             continue
-        rel = path.relative_to(export_dir)
+        rel = path.relative_to(export_dir).as_posix()
         lines.append(f"- `{rel}`")
     (export_dir / "readable_index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
