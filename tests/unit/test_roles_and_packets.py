@@ -22,7 +22,7 @@ def test_role_pack_files_exist() -> None:
 
 def test_prompt_lint_for_showrunner_passes() -> None:
     prompt = (
-        "## System\nReturn JSON only. 5-second single action continuity.\n\n"
+        "## System\nReturn JSON only. 5-second one primary action continuity close-up adjacent shots.\n\n"
         "## Project Constraints\n{}\n\n"
         "## Iteration Context\nx\n\n"
         "## Output Contract\n{}\n"

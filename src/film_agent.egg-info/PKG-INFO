@@ -1,3 +1,19 @@
+Metadata-Version: 2.4
+Name: film-agent
+Version: 0.1.0
+Summary: Manual multi-agent pipeline for dance film pre-production and gate validation.
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: pydantic<3,>=2.8
+Requires-Dist: typer<1,>=0.12
+Requires-Dist: PyYAML<7,>=6.0
+Requires-Dist: openai<3,>=2.1.0
+Provides-Extra: providers
+Requires-Dist: requests<3,>=2.31; extra == "providers"
+Requires-Dist: python-dotenv<2,>=1.0; extra == "providers"
+Provides-Extra: dev
+Requires-Dist: pytest<9,>=8.0; extra == "dev"
+
 # film-agent
 
 Multi-role film pipeline with strict JSON artifacts, gate validation, and SDK-driven prompt iteration.
@@ -38,8 +54,6 @@ Auto-run role prompts via OpenAI SDK until target stage:
 
 ```bash
 film-agent auto-run --run-id <RUN_ID> --model gpt-4.1 --until gate2
-# optional stricter refinement:
-film-agent auto-run --run-id <RUN_ID> --model gpt-4.1 --until gate2 --self-eval-rounds 2
 ```
 
 Environment variable for SDK:

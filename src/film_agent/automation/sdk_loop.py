@@ -40,6 +40,7 @@ def auto_run_sdk_loop(
     model: str = "gpt-4.1",
     max_cycles: int = 20,
     until: str = "gate2",
+    self_eval_rounds: int = 2,
 ) -> dict[str, Any]:
     """Iteratively run role prompts via OpenAI SDK until target stage is reached."""
     key = os.environ.get("OPENAI_API_KEY") or os.environ.get("OPENAI_SDK")
@@ -76,7 +77,15 @@ def auto_run_sdk_loop(
 
             payload = _call_model_for_json(client, model, prompt_text)
             if role in {RoleId.DANCE_MAPPING, RoleId.CINEMATOGRAPHY, RoleId.AUDIO}:
-                payload = _inject_direction_pack_if_missing(state, payload)
+                payload = _inject_linked_artifact_ids(state, payload)
+            payload = _refine_payload_with_evaluators(
+                client,
+                model,
+                role=role,
+                prompt_text=prompt_text,
+                payload=payload,
+                rounds=self_eval_rounds,
+            )
 
             tmp_dir = run_path / "tmp" / f"iter-{state.current_iteration:02d}"
             tmp_dir.mkdir(parents=True, exist_ok=True)
@@ -114,13 +123,18 @@ def auto_run_sdk_loop(
 
 
 def _call_model_for_json(client, model: str, prompt_text: str) -> dict[str, Any]:
-    response = client.responses.create(
-        model=model,
-        input=[
+    return _call_model_for_json_messages(
+        client,
+        model,
+        [
             {"role": "system", "content": "Return valid JSON only. No markdown wrappers."},
             {"role": "user", "content": prompt_text},
         ],
     )
+
+
+def _call_model_for_json_messages(client, model: str, messages: list[dict[str, str]]) -> dict[str, Any]:
+    response = client.responses.create(model=model, input=messages)
     text = getattr(response, "output_text", "") or _extract_response_text(response)
     payload = _extract_json_object(text)
     if not isinstance(payload, dict):
@@ -164,15 +178,143 @@ def _extract_json_object(text: str) -> Any:
     raise ValueError("Could not parse JSON object from SDK response.")
 
 
-def _inject_direction_pack_if_missing(state, payload: dict[str, Any]) -> dict[str, Any]:
+def _inject_linked_artifact_ids(state, payload: dict[str, Any]) -> dict[str, Any]:
     updated = dict(payload)
-    if not updated.get("script_review_id") and state.latest_direction_pack_id:
+    if state.latest_direction_pack_id:
         updated["script_review_id"] = state.latest_direction_pack_id
-    if not updated.get("image_prompt_package_id") and state.latest_image_prompt_package_id:
+    if state.latest_image_prompt_package_id:
         updated["image_prompt_package_id"] = state.latest_image_prompt_package_id
-    if not updated.get("selected_images_id") and state.latest_selected_images_id:
+    if state.latest_selected_images_id:
         updated["selected_images_id"] = state.latest_selected_images_id
     return updated
+
+
+def _refine_payload_with_evaluators(
+    client,
+    model: str,
+    role: RoleId,
+    prompt_text: str,
+    payload: dict[str, Any],
+    rounds: int,
+) -> dict[str, Any]:
+    if rounds <= 0:
+        return payload
+
+    current = dict(payload)
+    for _ in range(rounds):
+        try:
+            review = _evaluate_payload(client, model, role=role, prompt_text=prompt_text, payload=current)
+        except Exception:
+            return current
+
+        if bool(review.get("approved")):
+            return current
+
+        if not _review_has_issues(review):
+            return current
+
+        try:
+            current = _revise_payload(
+                client,
+                model,
+                role=role,
+                prompt_text=prompt_text,
+                payload=current,
+                review=review,
+            )
+        except Exception:
+            return current
+    return current
+
+
+def _evaluate_payload(
+    client,
+    model: str,
+    role: RoleId,
+    prompt_text: str,
+    payload: dict[str, Any],
+) -> dict[str, Any]:
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You are a strict artifact evaluator. Return JSON only with keys: "
+                "approved (bool), structure_issues (array), content_issues (array), "
+                "style_issues (array), fix_instructions (array)."
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Role: {role.value}\n\n"
+                "Evaluate this artifact against the prompt packet constraints.\n"
+                "Mark approved=true only if no issues remain.\n\n"
+                "PROMPT PACKET:\n"
+                f"{prompt_text}\n\n"
+                "CANDIDATE JSON:\n"
+                f"{json.dumps(payload, ensure_ascii=True, indent=2)}"
+            ),
+        },
+    ]
+    review = _call_model_for_json_messages(client, model, messages)
+    return {
+        "approved": bool(review.get("approved", False)),
+        "structure_issues": _normalize_issue_list(review.get("structure_issues")),
+        "content_issues": _normalize_issue_list(review.get("content_issues")),
+        "style_issues": _normalize_issue_list(review.get("style_issues")),
+        "fix_instructions": _normalize_issue_list(review.get("fix_instructions")),
+    }
+
+
+def _revise_payload(
+    client,
+    model: str,
+    role: RoleId,
+    prompt_text: str,
+    payload: dict[str, Any],
+    review: dict[str, Any],
+) -> dict[str, Any]:
+    messages = [
+        {
+            "role": "system",
+            "content": (
+                "You revise JSON artifacts. Return JSON only. "
+                "Apply feedback while preserving schema validity and linked ids."
+            ),
+        },
+        {
+            "role": "user",
+            "content": (
+                f"Role: {role.value}\n\n"
+                "Revise the candidate JSON using the evaluator feedback below.\n"
+                "Do not add wrapper text.\n\n"
+                "PROMPT PACKET:\n"
+                f"{prompt_text}\n\n"
+                "CURRENT JSON:\n"
+                f"{json.dumps(payload, ensure_ascii=True, indent=2)}\n\n"
+                "EVALUATOR FEEDBACK:\n"
+                f"{json.dumps(review, ensure_ascii=True, indent=2)}"
+            ),
+        },
+    ]
+    return _call_model_for_json_messages(client, model, messages)
+
+
+def _normalize_issue_list(value: Any) -> list[str]:
+    if not isinstance(value, list):
+        return []
+    out: list[str] = []
+    for item in value:
+        if isinstance(item, str) and item.strip():
+            out.append(item.strip())
+    return out
+
+
+def _review_has_issues(review: dict[str, Any]) -> bool:
+    return any(
+        review.get(key)
+        for key in ("structure_issues", "content_issues", "style_issues", "fix_instructions")
+    )
 
 
 def _target_reached(current_state: str, until: str) -> bool:

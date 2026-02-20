@@ -103,9 +103,17 @@ def auto_run(
     model: str = typer.Option("gpt-4.1", "--model", help="OpenAI model for role generation"),
     max_cycles: int = typer.Option(20, "--max-cycles", help="Maximum automation cycles"),
     until: str = typer.Option("gate2", "--until", help="Target stage: gate1|gate2|complete"),
+    self_eval_rounds: int = typer.Option(2, "--self-eval-rounds", help="Evaluator refine rounds per role output"),
 ) -> None:
     try:
-        result = auto_run_sdk_loop(_base_dir(), run_id, model=model, max_cycles=max_cycles, until=until)
+        result = auto_run_sdk_loop(
+            _base_dir(),
+            run_id,
+            model=model,
+            max_cycles=max_cycles,
+            until=until,
+            self_eval_rounds=self_eval_rounds,
+        )
     except Exception as exc:
         _emit({"error": str(exc)})
         raise typer.Exit(code=1)

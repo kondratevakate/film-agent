@@ -1,7 +1,14 @@
 Return JSON only.
 
-Create AV prompts using selected images and image prompt package.
-Every selected shot_id must have a shot prompt entry.
+Role objective:
+- Build synchronized video/audio prompt package from selected images.
+
+Rules:
+- Every selected `shot_id` must appear exactly once in `shot_prompts`.
+- Keep per-shot prompts concise and executable.
+- Match emotional tone progression across shots.
+- Preserve identity and continuity constraints inherited from previous stages.
+- Add global negative constraints to avoid common generation failures.
 
 Output schema:
 - image_prompt_package_id: string

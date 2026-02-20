@@ -101,12 +101,12 @@ def lint_prompt_packet(prompt: str, role: RoleId) -> list[str]:
             errors.append(f"missing section {section}")
 
     if role == RoleId.SHOWRUNNER:
-        for token in ("5-second", "single action"):
+        for token in ("5-second", "one primary action", "close-up", "adjacent shots"):
             if token not in lower:
                 errors.append(f"missing shot rule token '{token}'")
 
     if role == RoleId.CINEMATOGRAPHY:
-        for token in ("5-second", "single action", "continuity"):
+        for token in ("5-second", "one primary action", "continuity", "close-up"):
             if token not in lower:
                 errors.append(f"missing shot rule token '{token}'")
 
@@ -169,7 +169,9 @@ def _compose_prompt(
     constraints = json.dumps(project_constraints, ensure_ascii=True, indent=2)
     shot_rules = (
         "- Each shot is a 5-second unit.\n"
-        "- Each shot must contain a single action.\n"
+        "- Each shot must contain one primary action only.\n"
+        "- Avoid adjacent shots centered on the same character unless required by story logic.\n"
+        "- If text/screen/photo/interface details are important, request close-up framing.\n"
         "- Maintain continuity constraints across adjacent shots.\n"
     )
     return (
