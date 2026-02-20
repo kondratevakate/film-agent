@@ -1,0 +1,46 @@
+{
+  "project": "THE TRACE",
+  "style_anchor_global": "grounded clinical surrealism, school realism, controlled contrast highlights",
+  "notes": [
+    "Keep Leyla identity consistent across all shots (face shape, hair, age, wardrobe continuity).",
+    "Avoid fantasy VFX; surrealism should come from atmosphere, rhythm, and behavior realism.",
+    "Preserve highlight detail, avoid clipping in water, fluorescent fixtures, and red practical lights."
+  ],
+  "shots": [
+    {
+      "shot_id": "s1",
+      "duration_s": 6.5,
+      "narrative_phase": "opening / pre-contrast",
+      "prompt": "Cinematic medium-wide shot, eye-level, 35mm lens equivalent. Leyla slowly surfaces in an indoor high school pool under flickering fluorescent ceiling panels. Water beads on skin, realistic ripples, tiled lane lines visible below surface distortion. Institutional lighting with slight green cast (around 4100K), natural skin tone retention, restrained contrast, gentle highlight roll-off, background slightly desaturated. Handheld but stable camera, grounded physical motion, quiet tension, subtle disorientation, no fantasy stylization. Soft background: tiled walls and locker-room doors out of focus.",
+      "negative_prompt": "blurry face, extra limbs, distorted anatomy, warped reflections, overexposed highlights, dreamy glow, fantasy lighting, text overlays, CGI look"
+    },
+    {
+      "shot_id": "s2",
+      "duration_s": 6.5,
+      "narrative_phase": "school flow / social non-recognition",
+      "prompt": "Steadicam medium-wide hallway shot, eye-level, 28mm lens equivalent. Leyla moves through a fluorescent school corridor with lockers, trophy glass, and dense student flow passing around her without eye contact. Institutional overhead lighting, mild green-magenta correction, neutral skin rendering, controlled highlights on glass and metal surfaces. Natural motion blur only, grounded camera inertia, realistic crowd spacing, subtle unease, muted palette with low saturation in background while Leyla remains slightly more chromatic.",
+      "negative_prompt": "warped perspective, crowd duplication artifacts, duplicate heads, fisheye distortion, exaggerated bokeh, logo text, fantasy glow, smeared faces"
+    },
+    {
+      "shot_id": "s3",
+      "duration_s": 7.0,
+      "narrative_phase": "first high-signal event / stain reveal",
+      "prompt": "Old classroom interior, medium shot transitioning to close-medium, 40mm lens equivalent. Students with crutches and braces destabilize from a pulse impact; one falls as Leyla reaches and catches forearm. Metallic contrast smear appears on contact, visible but physically plausible, like wet reflective tint on skin and fabric. Fluorescent practical lighting with localized specular reflections, preserved texture on skin, sleeves, and scuffed floor. Camera grounded and slightly reactive, no chaotic shake, emotional tone urgent but realistic.",
+      "negative_prompt": "gore, body horror, bone detail, broken-limb graphic focus, unreadable signage, supernatural aura, neon sci-fi effects, liquid metal transformation"
+    },
+    {
+      "shot_id": "s4",
+      "duration_s": 7.0,
+      "narrative_phase": "extraction / red flag state",
+      "prompt": "Corridor extraction shot, medium-wide, shoulder height, 32mm lens equivalent. Red emergency practical light floods the space while two gray-suited technicians restrain Leyla by both elbows and pull her forward; injured students agitated behind classroom glass in background. Red light should dominate but preserve skin detail and midtone separation, no clipping on highlights. Motion is forceful but believable, camera tracks backward with smooth operator movement, realism-first, institutional environment intact.",
+      "negative_prompt": "military uniforms, weapons, police insignia, tactical gear, sci-fi armor, laser effects, over-stylized action blur, comic-book contrast"
+    },
+    {
+      "shot_id": "s5",
+      "duration_s": 5.5,
+      "narrative_phase": "post-contrast clinical reveal",
+      "prompt": "Radiology room close-medium composition, eye-level, 50mm lens equivalent. Patient opens eyes in calm clinical environment while radiologist delivers early lesion finding. Neutral-white medical lighting (4300-4600K), clean skin tones, sterile surfaces, subtle monitor glow without readable UI text. Framing is stable and reassuring, low camera movement, emotionally restrained resolution, controlled contrast with soft highlight roll-off and clear detail in whites.",
+      "negative_prompt": "cartoon style, fantasy lighting, exaggerated futuristic medical devices, heavy depth-of-field blur, readable on-screen text, surreal hallucination effects"
+    }
+  ]
+}

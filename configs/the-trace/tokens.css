@@ -1,0 +1,130 @@
+/* tokens.css - THE TRACE (Stranger Things x Fallout)
+   Use: :root for defaults, [data-scene="school"] and [data-scene="radiology"] for scene switches.
+*/
+
+:root{
+  /* Color - base neutrals */
+  --c-black: #0A0B0E;
+  --c-ink: #12141A;
+  --c-slate: #1E2430;
+  --c-fog: #E7E9EE;
+  --c-white: #FFFFFF;
+
+  /* Color - school (nostalgia vs control) */
+  --c-tungsten-amber: #D6A04A;   /* warm pockets */
+  --c-locker-blue: #2D4E7A;      /* denim/locker */
+  --c-fluoro-green: #A9C09A;     /* sickly fluorescent */
+  --c-shadow-teal: #1B6A6C;      /* cool shadows */
+  --c-neon-red: #D11F2E;         /* emergency */
+  --c-warning-red: #FF2A2A;      /* alarm wash accent */
+  --c-chlorine-cyan: #6FB7C6;    /* pool memory */
+
+  /* Color - "trace" (gadolinium stain motif) */
+  --c-trace-metal: #B7C7FF;      /* metallic tint highlight */
+  --c-trace-sheen: rgba(183,199,255,0.45);
+
+  /* Color - radiology (real world calm) */
+  --c-clinic-bg: #F5F6F8;
+  --c-clinic-text: #1A1C21;
+  --c-clinic-muted: #6B7280;
+
+  /* Typography */
+  --font-display: "ITC Benguiat", "Benguiat", "Libre Baskerville", serif;
+  --font-body: "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  --fs-display-1: 44px;
+  --fs-display-2: 32px;
+  --fs-body: 16px;
+  --fs-caption: 13px;
+  --lh-tight: 1.08;
+  --lh-normal: 1.35;
+  --lh-loose: 1.55;
+
+  /* Spacing */
+  --sp-1: 4px;
+  --sp-2: 8px;
+  --sp-3: 12px;
+  --sp-4: 16px;
+  --sp-5: 24px;
+  --sp-6: 32px;
+  --sp-7: 48px;
+  --sp-8: 64px;
+
+  /* Radius (premium, not "app toy") */
+  --r-sm: 8px;
+  --r-md: 14px;
+  --r-lg: 22px;
+
+  /* Shadows (cinematic depth, soft falloff) */
+  --sh-soft: 0 10px 30px rgba(0,0,0,0.28);
+  --sh-card: 0 16px 50px rgba(0,0,0,0.34);
+  --sh-glow-red: 0 0 30px rgba(209,31,46,0.35);
+  --sh-glow-trace: 0 0 26px rgba(183,199,255,0.28);
+
+  /* Motion */
+  --dur-fast: 140ms;
+  --dur-med: 260ms;
+  --dur-slow: 520ms;
+  --ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-cinematic: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* Film texture (subtle overlays if used) */
+  --grain-opacity: 0.06;
+  --halation-opacity: 0.10;
+}
+
+/* Scene switch: SCHOOL */
+[data-scene="school"]{
+  --bg: var(--c-black);
+  --text: var(--c-fog);
+  --muted: rgba(231,233,238,0.68);
+
+  --accent: var(--c-neon-red);
+  --accent-2: var(--c-tungsten-amber);
+  --cool: var(--c-shadow-teal);
+  --sick: var(--c-fluoro-green);
+
+  --shadow: var(--sh-card);
+}
+
+/* Scene switch: RED ALERT (inside school) */
+[data-scene="red-alert"]{
+  --bg: #0A0607;
+  --text: #FFE9EC;
+  --muted: rgba(255,233,236,0.70);
+
+  --accent: var(--c-warning-red);
+  --accent-2: var(--c-trace-metal);
+  --shadow: var(--sh-glow-red);
+}
+
+/* Scene switch: RADIOLOGY */
+[data-scene="radiology"]{
+  --bg: var(--c-clinic-bg);
+  --text: var(--c-clinic-text);
+  --muted: var(--c-clinic-muted);
+
+  --accent: #2563EB; /* calm blue */
+  --accent-2: #10B981; /* reassurance green */
+  --shadow: 0 10px 30px rgba(0,0,0,0.12);
+}
+
+/* Subtitle styling token example */
+.subtitle{
+  font-family: var(--font-body);
+  font-size: var(--fs-caption);
+  line-height: var(--lh-loose);
+  color: var(--text);
+  text-shadow: 0 2px 10px rgba(0,0,0,0.55);
+  letter-spacing: 0.2px;
+}
+
+/* Title card token example */
+.titlecard{
+  font-family: var(--font-display);
+  font-size: var(--fs-display-1);
+  line-height: var(--lh-tight);
+  color: var(--text);
+  text-shadow: 0 18px 60px rgba(0,0,0,0.45);
+}

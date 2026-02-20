@@ -1,0 +1,41 @@
+{
+  "script_review_id": "6a4384fc5b13be190f0437d9fa0c36101679bf52ef4068cf4a0d1931d43e5bed",
+  "style_anchor": "clinical sports realism, controlled motion language, high-contrast institutional lighting, restrained camera discipline",
+  "image_prompts": [
+    {
+      "shot_id": "s1_pool_pressure",
+      "intent": "Establish pressure and controlled fatigue in the pool sequence.",
+      "image_prompt": "Wide cinematic frame in an indoor competition pool: synchronized swimmer holds a perfect smile while shoulders tremble from fatigue, coach silhouette at pool edge, crisp water reflections, realistic skin texture, documentary sports realism.",
+      "negative_prompt": "cartoon style, extra limbs, blurred faces, text overlays, distorted anatomy",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s2_corridor_control",
+      "intent": "Show collective exhaustion under command and silent oversight.",
+      "image_prompt": "Sports complex corridor medium-wide shot: exhausted athletes seated on floor while Coach Gadolinium strides forward with strict posture, two officials observing from stair landing with tablets, fluorescent practical lighting, grounded composition.",
+      "negative_prompt": "anime look, duplicated people, extreme fisheye, low-detail faces, floating objects",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s3_gym_disruption",
+      "intent": "Capture fragility of precision during cheer and dance drills.",
+      "image_prompt": "Cheer gym action still: stunt line locking formation as one athlete leg shakes and group destabilizes, coach watching with uncompromising expression, shallow haze, cinematic contrast, realistic motion cues without blur artifacts.",
+      "negative_prompt": "gore, warped limbs, unreadable scene, heavy motion smear, graphic text",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s4_disqualified_reveal",
+      "intent": "Stage the pass-to-disqualification reversal with a red alarm cue.",
+      "image_prompt": "Small training room medium shot: gymnast in perfect landing pose, officials in suits stepping forward, tablet tap triggers red indicator light, crowd reaction frozen in shock, ceremonial framing, controlled depth of field.",
+      "negative_prompt": "fantasy effects, neon cyberpunk styling, broken perspective, duplicate heads, posterized skin",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s5_mri_resolution",
+      "intent": "Resolve metaphor in a calm clinical MRI setting.",
+      "image_prompt": "MRI room close-medium frame: patient sits up slowly on scanner bed while doctor indicates highlighted lesion on monitor, clean medical environment, soft neutral tones, early-detection relief emotion, realistic hospital cinematography.",
+      "negative_prompt": "horror tone, exaggerated glow, unreadable monitor, deformities, heavy grain",
+      "duration_s": 5.0
+    }
+  ]
+}

@@ -2,6 +2,10 @@ project_name: view-only-test
 reference_images:
   - ../references/input/view_only/1598711967191014560.jpg
   - ../references/input/view_only/images.jpg
+# Optional style guidance assets:
+# creative_direction_file: view-only/creative-direction.md
+# principles_file: view-only/principles.md
+# tokens_css_file: view-only/tokens.css
 duration_min_s: 60
 duration_max_s: 120
 duration_target_s: 95

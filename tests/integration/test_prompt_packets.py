@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from pathlib import Path
 
 import pytest
@@ -58,3 +59,40 @@ def test_showrunner_packet_includes_previous_gate1_report_on_retry(tmp_path: Pat
     assert "previous_showrunner_script" in packet_text
     assert "story_anchor" in packet_text
     assert "anchor_showrunner_script" in packet_text
+
+
+def test_showrunner_packet_includes_configured_look_and_feel_files(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config_root"
+    style_dir = config_dir / "the-trace"
+    style_dir.mkdir(parents=True)
+    (style_dir / "creative-direction.md").write_text("cinematic grammar check", encoding="utf-8")
+    (style_dir / "principles.md").write_text("consistency principles check", encoding="utf-8")
+    (style_dir / "tokens.css").write_text(":root { --accent: #D11F2E; }", encoding="utf-8")
+
+    config = {
+        "project_name": "look-and-feel-check",
+        "creative_direction_file": "the-trace/creative-direction.md",
+        "principles_file": "the-trace/principles.md",
+        "tokens_css_file": "the-trace/tokens.css",
+        "duration_target_s": 95,
+        "model_candidates": [
+            {
+                "name": "test-model",
+                "weighted_score": 1.0,
+                "physics": 1.0,
+                "human_fidelity": 1.0,
+                "identity": 1.0,
+            }
+        ],
+    }
+    config_path = config_dir / "project.yaml"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    run = create_run(tmp_path, config_path)
+    run_gate0(tmp_path, run.run_id)
+
+    packet_path, _ = build_prompt_packet(tmp_path, run.run_id, RoleId.SHOWRUNNER, iteration=1)
+    packet_text = packet_path.read_text(encoding="utf-8")
+    assert "cinematic grammar check" in packet_text
+    assert "consistency principles check" in packet_text
+    assert "--accent: #D11F2E" in packet_text

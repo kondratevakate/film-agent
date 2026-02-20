@@ -1,0 +1,235 @@
+{
+  "title": "THE TRACE",
+  "logline": "A confused young woman drifts through a high school where periodic pulses destabilize student groups until the only students who see her reveal a hidden signal that leads to urgent diagnosis.",
+  "theme": "Some forces do not heal, they reveal what was hiding.",
+  "characters": [
+    "Leyla",
+    "Tech 1",
+    "Tech 2",
+    "Coach",
+    "Cheer Captain",
+    "Ballerina",
+    "Injury Kid",
+    "Radiologist"
+  ],
+  "locations": [
+    "High School Pool",
+    "Main Hallway",
+    "Gym",
+    "Ballet Studio (Glass Wall)",
+    "Old Classroom (Injury Club Room)",
+    "Radiology Room"
+  ],
+  "lines": [
+    {
+      "line_id": "l1",
+      "kind": "action",
+      "text": "A young woman bursts from a chlorinated school pool and steadies her breath under harsh lights.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l2",
+      "kind": "action",
+      "text": "Nearby synchronized swimmers hold exact symmetry and ignore her at the edge of formation.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l3",
+      "kind": "dialogue",
+      "text": "From the top. Together.",
+      "speaker": "Coach",
+      "est_duration_s": 2.5
+    },
+    {
+      "line_id": "l4",
+      "kind": "action",
+      "text": "A pulse rolls across the water and the team snaps back into alignment after a brief wobble.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l5",
+      "kind": "action",
+      "text": "On an overhead catwalk two grey suited technicians mark notes while she loses them in glare.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l6",
+      "kind": "dialogue",
+      "text": "Recovery.",
+      "speaker": "Tech 1",
+      "est_duration_s": 1.5
+    },
+    {
+      "line_id": "l7",
+      "kind": "dialogue",
+      "text": "Baseline holds.",
+      "speaker": "Tech 2",
+      "est_duration_s": 1.8
+    },
+    {
+      "line_id": "l8",
+      "kind": "action",
+      "text": "She enters a busy passage lined with lockers and trophy glass as students flow past.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l9",
+      "kind": "action",
+      "text": "Another pulse jolts several students who recover instantly and resume the same rhythm.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l10",
+      "kind": "action",
+      "text": "Inside a gym frame cheerleaders hold a pyramid and absorb the pulse with tiny adjustments.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l11",
+      "kind": "dialogue",
+      "text": "Hold. Smile.",
+      "speaker": "Cheer Captain",
+      "est_duration_s": 2.0
+    },
+    {
+      "line_id": "l12",
+      "kind": "action",
+      "text": "She leans in to speak but their eyes slide past and the crowd swallows her again.",
+      "speaker": null,
+      "est_duration_s": 5.5
+    },
+    {
+      "line_id": "l13",
+      "kind": "action",
+      "text": "At a glass-walled studio dancers rehearse clean lines while her reflection echoes their movement.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l14",
+      "kind": "dialogue",
+      "text": "Keep moving.",
+      "speaker": "Ballerina",
+      "est_duration_s": 1.8
+    },
+    {
+      "line_id": "l15",
+      "kind": "action",
+      "text": "A pulse shakes the dancers for a beat and perfect posture returns without assistance.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l16",
+      "kind": "action",
+      "text": "At the far side a technician tracks her path and ignores the performers.",
+      "speaker": null,
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l17",
+      "kind": "dialogue",
+      "text": "No binding. Keep her moving.",
+      "speaker": "Tech 2",
+      "est_duration_s": 2.5
+    },
+    {
+      "line_id": "l18",
+      "kind": "action",
+      "text": "She reaches an older practice room where students with braces and crutches finally meet her gaze.",
+      "speaker": null,
+      "est_duration_s": 7.5
+    },
+    {
+      "line_id": "l19",
+      "kind": "action",
+      "text": "A hard pulse drops the group in a chaotic collapse with crutches skidding across the floor.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l20",
+      "kind": "action",
+      "text": "She catches one student by the forearm and a bright metallic tint streaks across both hands.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l21",
+      "kind": "dialogue",
+      "text": "Don't, you marked me.",
+      "speaker": "Injury Kid",
+      "est_duration_s": 2.3
+    },
+    {
+      "line_id": "l22",
+      "kind": "action",
+      "text": "She tries to lift another student and the tint spreads in louder streaks across fabric and skin.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l23",
+      "kind": "dialogue",
+      "text": "Stop touching us! Get it off!",
+      "speaker": "Injury Kid",
+      "est_duration_s": 2.5
+    },
+    {
+      "line_id": "l24",
+      "kind": "action",
+      "text": "Panic turns to anger as students scrub the stains and knock chairs aside.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l25",
+      "kind": "action",
+      "text": "Outside the room a technician triggers a control box and red emergency light floods the scene.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l26",
+      "kind": "dialogue",
+      "text": "Flag. High signal.",
+      "speaker": "Tech 1",
+      "est_duration_s": 2.0
+    },
+    {
+      "line_id": "l27",
+      "kind": "action",
+      "text": "Both technicians seize her elbows and drag her away while the group rages under red light.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l28",
+      "kind": "dialogue",
+      "text": "We got what we needed.",
+      "speaker": "Tech 2",
+      "est_duration_s": 1.8
+    },
+    {
+      "line_id": "l29",
+      "kind": "action",
+      "text": "A radiology suite replaces the chaos as a patient opens their eyes to calm routine.",
+      "speaker": null,
+      "est_duration_s": 5.5
+    },
+    {
+      "line_id": "l30",
+      "kind": "dialogue",
+      "text": "The contrast highlighted a lesion. We found it early. Next step is treatment.",
+      "speaker": "Radiologist",
+      "est_duration_s": 4.8
+    }
+  ]
+}

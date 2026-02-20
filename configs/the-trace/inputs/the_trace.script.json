@@ -1,0 +1,235 @@
+{
+  "title": "THE TRACE",
+  "logline": "A confused young woman drifts through a high school where periodic \"pulses\" knock student groups off-balance-until she finds the injured kids who finally see her, only to realize her help leaves a revealing stain that triggers an extraction and a real-world diagnosis.",
+  "theme": "Some forces don't heal-they reveal what's been hiding.",
+  "characters": [
+    "Leyla",
+    "Tech 1",
+    "Tech 2",
+    "Coach",
+    "Cheer Captain",
+    "Ballerina",
+    "Injury Kid",
+    "Radiologist"
+  ],
+  "locations": [
+    "High School Pool",
+    "Main Hallway",
+    "Gym",
+    "Ballet Studio (Glass Wall)",
+    "Old Classroom (Injury Club Room)",
+    "Radiology Room"
+  ],
+  "lines": [
+    {
+      "line_id": "l1",
+      "kind": "action",
+      "text": "Leyla breaks the surface of a high school pool, gasps once, and blinks chlorine water away; lane ropes, tiled walls, and echoing acoustics make the space feel endless.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l2",
+      "kind": "action",
+      "text": "Nearby, synchronized swimmers move in perfect unison-smiles fixed, limbs precise-never acknowledging Leyla as she treads water alone at the edge of their formation.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l3",
+      "kind": "dialogue",
+      "text": "From the top. Together.",
+      "speaker": "Coach",
+      "est_duration_s": 2.5
+    },
+    {
+      "line_id": "l4",
+      "kind": "action",
+      "text": "A sudden pulse ripples through the pool area like a quiet quake; bodies wobble, a few heads dip under, then the swimmers snap back into synchronized alignment as if trained to recover instantly.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l5",
+      "kind": "action",
+      "text": "Above the pool on a catwalk, Tech 1 and Tech 2 in grey suits watch and write on clipboards without reacting; Leyla spots them for a beat, then loses them in the glare.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l6",
+      "kind": "dialogue",
+      "text": "Recovery.",
+      "speaker": "Tech 1",
+      "est_duration_s": 1.5
+    },
+    {
+      "line_id": "l7",
+      "kind": "dialogue",
+      "text": "Baseline holds.",
+      "speaker": "Tech 2",
+      "est_duration_s": 1.8
+    },
+    {
+      "line_id": "l8",
+      "kind": "action",
+      "text": "Leyla exits into the main hallway: lockers, trophy cases, club posters, fluorescent lights; students stream past in a steady current as a bell rings somewhere out of view.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l9",
+      "kind": "action",
+      "text": "Another pulse hits; a few students stumble into lockers and catch themselves, then keep walking as if nothing happened-movement resets, faces smooth out, the corridor resumes its flow.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l10",
+      "kind": "action",
+      "text": "Through open gym doors, cheerleaders hold a pyramid; the pulse arrives and barely shakes them-no fall, no panic, just a micro-adjustment and a wider smile.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l11",
+      "kind": "dialogue",
+      "text": "Hold. Smile.",
+      "speaker": "Cheer Captain",
+      "est_duration_s": 2.0
+    },
+    {
+      "line_id": "l12",
+      "kind": "action",
+      "text": "Leyla steps closer as if to speak, but the cheerleaders' eyes slide past her; she stops, then backs away, swallowed by the hallway stream again.",
+      "speaker": null,
+      "est_duration_s": 5.5
+    },
+    {
+      "line_id": "l13",
+      "kind": "action",
+      "text": "A ballet studio with a glass wall: inside, dancers rehearse quiet, controlled lines; Leyla approaches the glass and sees her own reflection layered over their disciplined movement.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l14",
+      "kind": "dialogue",
+      "text": "Keep moving.",
+      "speaker": "Ballerina",
+      "est_duration_s": 1.8
+    },
+    {
+      "line_id": "l15",
+      "kind": "action",
+      "text": "The pulse hits; ballet bodies wobble for a fraction, then return to perfect posture without help-self-contained recovery, no room for Leyla to matter.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l16",
+      "kind": "action",
+      "text": "On the far end of the hall, Tech 2 taps a note; Tech 1 watches Leyla drift away from the glass, tracking her path rather than the dancers.",
+      "speaker": null,
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l17",
+      "kind": "dialogue",
+      "text": "No binding. Keep her moving.",
+      "speaker": "Tech 2",
+      "est_duration_s": 2.5
+    },
+    {
+      "line_id": "l18",
+      "kind": "action",
+      "text": "Leyla reaches an older classroom: scuffed floor, taped marks, stacked chairs; inside, students with crutches, braces, and bandaged wrists practice a simple routine and then-unlike everyone else-look straight at her.",
+      "speaker": null,
+      "est_duration_s": 7.5
+    },
+    {
+      "line_id": "l19",
+      "kind": "action",
+      "text": "A pulse slams through the room; the Injury Club collapses messier than any group so far-crutches slip, knees buckle, bodies hit the floor hard.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l20",
+      "kind": "action",
+      "text": "Leyla grabs one falling student by the forearm and lifts; as she steadies them, a bright metallic tint smears across her palm and onto their skin like wet paint.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l21",
+      "kind": "dialogue",
+      "text": "Don't-you marked me.",
+      "speaker": "Injury Kid",
+      "est_duration_s": 2.3
+    },
+    {
+      "line_id": "l22",
+      "kind": "action",
+      "text": "Leyla tries to help another student up; the tint spreads across her fingers, leaving streaks on sleeves and wrists-more visible with every touch.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l23",
+      "kind": "dialogue",
+      "text": "Stop touching us! Get it off!",
+      "speaker": "Injury Kid",
+      "est_duration_s": 2.5
+    },
+    {
+      "line_id": "l24",
+      "kind": "action",
+      "text": "Panic flips to anger: students recoil, scrub at the stains, shove chairs aside; Leyla's hands hover, unsure, as if help itself has become the problem.",
+      "speaker": null,
+      "est_duration_s": 6.5
+    },
+    {
+      "line_id": "l25",
+      "kind": "action",
+      "text": "Outside the classroom window, Tech 1 flips a switch on a small control box; red emergency light floods the room, turning the metallic tint into a loud signal.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l26",
+      "kind": "dialogue",
+      "text": "Flag. High signal.",
+      "speaker": "Tech 1",
+      "est_duration_s": 2.0
+    },
+    {
+      "line_id": "l27",
+      "kind": "action",
+      "text": "Tech 1 and Tech 2 enter, take Leyla by both elbows, and pull her into the hallway; behind them, the Injury Club rages under red light, frantic to erase what's now visible.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l28",
+      "kind": "dialogue",
+      "text": "We got what we needed.",
+      "speaker": "Tech 2",
+      "est_duration_s": 1.8
+    },
+    {
+      "line_id": "l29",
+      "kind": "action",
+      "text": "Cut to a radiology room: a patient opens their eyes; the red urgency is gone, replaced by calm clinical routine.",
+      "speaker": null,
+      "est_duration_s": 5.5
+    },
+    {
+      "line_id": "l30",
+      "kind": "dialogue",
+      "text": "The contrast highlighted a lesion. We found it early. Next step is treatment.",
+      "speaker": "Radiologist",
+      "est_duration_s": 4.8
+    }
+  ]
+}

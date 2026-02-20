@@ -1,0 +1,30 @@
+{
+  "image_prompt_package_id": "77d94d24b6e82c9ef72093bc1baf989c629cef5339cd2ff380db3f697addc707",
+  "selected_images": [
+    {
+      "shot_id": "s1_pool_pressure",
+      "image_path": "images/disqualified/s1_pool_pressure.png",
+      "notes": "Strong opening frame with controlled strain and water texture."
+    },
+    {
+      "shot_id": "s2_corridor_control",
+      "image_path": "images/disqualified/s2_corridor_control.png",
+      "notes": "Good composition for coach authority and observer contrast."
+    },
+    {
+      "shot_id": "s3_gym_disruption",
+      "image_path": "images/disqualified/s3_gym_disruption.png",
+      "notes": "Captures instability beat while preserving realism."
+    },
+    {
+      "shot_id": "s4_disqualified_reveal",
+      "image_path": "images/disqualified/s4_disqualified_reveal.png",
+      "notes": "Clear pass-to-disqualified turning point with red signal."
+    },
+    {
+      "shot_id": "s5_mri_resolution",
+      "image_path": "images/disqualified/s5_mri_resolution.png",
+      "notes": "Clinical resolution and emotional release are readable."
+    }
+  ]
+}

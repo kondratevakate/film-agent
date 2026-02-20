@@ -21,6 +21,8 @@ Optional legacy provider runtime (deprecated scripts only):
 pip install -e .[providers]
 ```
 
+`.[providers]` is also required for `render-api` (HTTP calls to external generation APIs).
+
 ## Main Commands
 
 ```bash
@@ -30,6 +32,21 @@ film-agent submit --run-id <RUN_ID> --agent showrunner --file script.json
 film-agent validate --run-id <RUN_ID> --gate 1
 film-agent package-iteration --run-id <RUN_ID> --iter 1
 film-agent final-report --run-id <RUN_ID>
+```
+
+API render execution from current run artifacts:
+
+```bash
+film-agent render-api --run-id <RUN_ID> --provider veo_yunwu --api-key <YUNWU_API_KEY>
+# or set env:
+YUNWU_API_KEY=...
+film-agent render-api --run-id <RUN_ID> --provider veo_yunwu
+```
+
+Dry-run (no API calls, request/manifest only):
+
+```bash
+film-agent render-api --run-id <RUN_ID> --provider veo_yunwu --dry-run
 ```
 
 Config note:

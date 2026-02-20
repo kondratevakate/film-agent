@@ -1,0 +1,48 @@
+{
+  "image_prompt_package_id": "77d94d24b6e82c9ef72093bc1baf989c629cef5339cd2ff380db3f697addc707",
+  "selected_images_id": "6f8c9da9a97674b33223dcf89829d55b4f4b652fe4360843df82f85595b0f2cf",
+  "music_prompt": "Minimal percussive sports tension evolving into calm medical clarity with subtle hopeful resolution.",
+  "shot_prompts": [
+    {
+      "shot_id": "s1_pool_pressure",
+      "video_prompt": "Hold a wide pool composition with disciplined symmetry and visible shoulder fatigue under bright institutional lights.",
+      "audio_prompt": "Tight reverb pool ambience with restrained low pulse and breath detail.",
+      "tts_text": "Under pressure, they are told to hold.",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s2_corridor_control",
+      "video_prompt": "Track down the sports corridor as exhausted athletes recover on the floor while the coach moves through frame with authority.",
+      "audio_prompt": "Footsteps, distant whistles, and clipped command tone over steady rhythmic bed.",
+      "tts_text": "Discipline keeps everyone moving.",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s3_gym_disruption",
+      "video_prompt": "Capture the cheer formation wobble and correction in a stable medium frame without identity drift.",
+      "audio_prompt": "Brief impact accent, fabric movement, then controlled silence.",
+      "tts_text": "Detection starts with the smallest shake.",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s4_disqualified_reveal",
+      "video_prompt": "Stage the gymnast pass moment, then pivot to officials and red indicator activation as a formal disqualification beat.",
+      "audio_prompt": "Crowd inhale, short alarm tone, and abrupt room hush.",
+      "tts_text": "What feels like punishment can be protection.",
+      "duration_s": 5.0
+    },
+    {
+      "shot_id": "s5_mri_resolution",
+      "video_prompt": "In MRI room, patient sits up as doctor points to highlighted lesion on monitor with calm clinical framing.",
+      "audio_prompt": "Soft room tone, gentle resolve chord, and clear physician voice focus.",
+      "tts_text": "Early diagnosis revealed the tumor in time.",
+      "duration_s": 5.0
+    }
+  ],
+  "global_negative_constraints": [
+    "identity drift",
+    "camera teleport",
+    "anatomy distortion",
+    "unmotivated stylistic shifts"
+  ]
+}

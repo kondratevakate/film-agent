@@ -3,6 +3,10 @@ reference_images: []
 # reference_images:
 #   - ../references/input/ref_01.jpg
 #   - ../references/input/ref_02.jpg
+# Optional style guidance assets:
+# creative_direction_file: project/creative-direction.md
+# principles_file: project/principles.md
+# tokens_css_file: project/tokens.css
 duration_min_s: 60
 duration_max_s: 120
 duration_target_s: 95

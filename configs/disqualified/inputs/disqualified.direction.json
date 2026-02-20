@@ -1,0 +1,27 @@
+{
+  "script_version": 2,
+  "script_hash_hint": "disqualified-iter2-script",
+  "approved_story_facts": [
+    "Coach Gadolinium repeatedly pushes athletes through exhausting drills.",
+    "Two tech officials record outcomes and repeatedly mark failures before one pass.",
+    "The Gymnast initially appears to pass and trigger relief in the room.",
+    "Officials announce a sudden doping disqualification and trigger a red alert.",
+    "The sequence hard-cuts into an MRI room with a waking patient.",
+    "The Doctor confirms early tumor detection thanks to contrast MRI."
+  ],
+  "approved_character_registry": [
+    "Coach Gadolinium",
+    "Synchronized Swimmer",
+    "Tech 1",
+    "Tech 2",
+    "Gymnast",
+    "Doctor"
+  ],
+  "revision_notes": [
+    "Keep performance pressure visual and clinical, not melodramatic.",
+    "Maintain contrast between discipline scenes and MRI reveal.",
+    "Preserve the protective-system theme in final beat."
+  ],
+  "unresolved_items": [],
+  "lock_story_facts": true
+}

@@ -1,0 +1,154 @@
+{
+  "title": "VIEW ONLY",
+  "logline": "A celebrated landscape photographer who filmed his life instead of living it discovers his memories were a BCI simulation he depends on, and the camera was never a choice, only the only permitted mode.",
+  "theme": "When experience is reduced to capture, you lose both the moment and the people; sometimes the only remaining life is a controlled replay.",
+  "characters": [
+    "Ilya (Simulated Photographer)",
+    "Mira",
+    "Lev",
+    "System Voice"
+  ],
+  "locations": [
+    "Mountain sunrise overlook",
+    "City night street",
+    "Family apartment dining room",
+    "Home desk / editing corner",
+    "Archive void (glitch space)",
+    "Clinical pod / BCI suite"
+  ],
+  "lines": [
+    {
+      "line_id": "l1",
+      "kind": "action",
+      "text": "Sunrise over mountains. Ilya frames the view through a camera; his eye never leaves the viewfinder. A faint digital shimmer crawls along the image edge, then vanishes.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l2",
+      "kind": "dialogue",
+      "text": "Hold it. Perfect. Don't blink.",
+      "speaker": "Ilya (Simulated Photographer)",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l3",
+      "kind": "action",
+      "text": "Rapid cuts: waterfall spray, desert dunes, city neon at night. Each shot ends the same way: click, immediate review, delete, repeat.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l4",
+      "kind": "dialogue",
+      "text": "Save it. Save it. If it's not saved, it didn't happen.",
+      "speaker": "Ilya (Simulated Photographer)",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l5",
+      "kind": "action",
+      "text": "Phone screen: followers surge, comments praise his gift. Ilya smiles at numbers, not at the world around him.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l6",
+      "kind": "action",
+      "text": "Dinner table. Mira speaks, Lev holds up a handmade gift. Ilya raises the camera mid-sentence, turning them into a composition.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l7",
+      "kind": "dialogue",
+      "text": "Ilya... listen. Just for one minute.",
+      "speaker": "Mira",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l8",
+      "kind": "dialogue",
+      "text": "One second. Don't move.",
+      "speaker": "Ilya (Simulated Photographer)",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l9",
+      "kind": "dialogue",
+      "text": "It's okay. I don't need to show you anymore.",
+      "speaker": "Lev",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l10",
+      "kind": "action",
+      "text": "Time-lapse montage: new cameras, older hands, deeper wrinkles. Mira and Lev drift out of frame while Ilya keeps capturing empty beauty. Their laughter becomes muffled, like audio from another room.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l11",
+      "kind": "action",
+      "text": "Night. Ilya uploads a massive archive. Folders labeled by years scroll by. A system tag flashes briefly: SESSION_0472 / VIEW-ONLY, then autocorrects itself to a normal-looking progress bar.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l12",
+      "kind": "dialogue",
+      "text": "All preserved... so it must have been real.",
+      "speaker": "Ilya (Simulated Photographer)",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l13",
+      "kind": "action",
+      "text": "He opens a photo: Mira laughing, Lev small and leaning into him. Ilya tries to mimic the smile. His face fails. The frame pixelates, blocks sliding out of alignment as if the world is tearing at the seams.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l14",
+      "kind": "dialogue",
+      "text": "Signal instability detected. Stabilizing. Please remain still.",
+      "speaker": "System Voice",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l15",
+      "kind": "action",
+      "text": "Hard cut to a clinical pod. Ilya is strapped into a BCI suite, unable to move; his eyes are half-open, unfocused. A sterile interface hovers: LifeView - 120s Trial. Mode: RECORD + REPLAY ONLY. Sensory feedback: DISABLED. Remaining sessions: 0.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l16",
+      "kind": "dialogue",
+      "text": "Session complete. Upgrade to continue. Recommended package: Sunsets + Family (Synthetic).",
+      "speaker": "System Voice",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l17",
+      "kind": "dialogue",
+      "text": "Can I... do it again... but this time... without the camera?",
+      "speaker": "Ilya (Simulated Photographer)",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l18",
+      "kind": "dialogue",
+      "text": "Not available. Viewing is permitted. Living is not included.",
+      "speaker": "System Voice",
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l19",
+      "kind": "dialogue",
+      "text": "Then... start it. Please.",
+      "speaker": "Ilya (Simulated Photographer)",
+      "est_duration_s": 6.0
+    }
+  ]
+}

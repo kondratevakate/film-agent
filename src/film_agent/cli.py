@@ -11,6 +11,7 @@ from film_agent.automation import auto_run_sdk_loop
 from film_agent.io.package_export import package_iteration
 from film_agent.prompt_packets import build_all_prompt_packets, build_prompt_packet
 from film_agent.prompts import get_prompt_stack, get_role_pack, list_agents
+from film_agent.render_api import render_run_via_api
 from film_agent.reporting import build_final_report
 from film_agent.roles import RoleId, list_roles
 from film_agent.state_machine.orchestrator import (
@@ -124,6 +125,71 @@ def auto_run(
         _emit({"error": str(exc)})
         raise typer.Exit(code=1)
     _emit(result)
+
+
+@app.command("render-api")
+def render_api(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    api_key: str | None = typer.Option(
+        None,
+        "--api-key",
+        envvar="YUNWU_API_KEY",
+        help="Yunwu API key (or set YUNWU_API_KEY).",
+    ),
+    provider: str | None = typer.Option(
+        None,
+        "--provider",
+        help="Render provider override (default: render_package.video_provider).",
+    ),
+    model: str | None = typer.Option(
+        None,
+        "--model",
+        help="Model override (default: render_package.model_version or veo3.1-fast).",
+    ),
+    out_dir: Path | None = typer.Option(
+        None,
+        "--out-dir",
+        help="Optional output directory for generated shot videos and manifest.",
+    ),
+    poll_interval_s: float = typer.Option(2.0, "--poll-interval", help="Task status polling interval in seconds."),
+    timeout_s: float = typer.Option(900.0, "--timeout", help="Per-shot timeout in seconds."),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Build requests and manifest without API calls."),
+    fail_fast: bool = typer.Option(
+        True,
+        "--fail-fast/--best-effort",
+        help="Stop on first failed shot (default) or continue collecting failures.",
+    ),
+) -> None:
+    if not dry_run and not (api_key or "").strip():
+        _emit({"error": "Missing api key. Set --api-key or YUNWU_API_KEY."})
+        raise typer.Exit(code=1)
+    try:
+        result = render_run_via_api(
+            _base_dir(),
+            run_id,
+            api_key=(api_key or "").strip(),
+            provider=provider,
+            model=model,
+            output_dir=out_dir.resolve() if out_dir else None,
+            poll_interval_s=poll_interval_s,
+            timeout_s=timeout_s,
+            dry_run=dry_run,
+            fail_fast=fail_fast,
+        )
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+
+    _emit(
+        {
+            "run_id": result.run_id,
+            "iteration": result.iteration,
+            "provider": result.provider,
+            "output_dir": str(result.output_dir),
+            "manifest": str(result.manifest_path),
+            "generated_count": result.generated_count,
+        }
+    )
 
 
 @role_app.command("list")
