@@ -43,7 +43,7 @@ def build_prompt_packet(base_dir: Path, run_id: str, role: RoleId, iteration: in
         missing_str = ", ".join(missing)
         raise ValueError(f"Cannot build packet for role '{role.value}'. Missing inputs: {missing_str}")
 
-    source_payloads = _collect_inputs(run_path, state, target_iteration, manifest.required_inputs)
+    source_payloads = _collect_inputs(run_path, state, target_iteration, manifest.required_inputs, role)
     schema_text = _load_schema_text(base_dir, manifest.output_schema)
     prompt = _compose_prompt(
         role=role,
@@ -123,7 +123,13 @@ def _missing_inputs(state, iteration: int, required_inputs: tuple[str, ...]) -> 
     return [name for name in required_inputs if name not in record.artifacts]
 
 
-def _collect_inputs(run_path: Path, state, iteration: int, required_inputs: tuple[str, ...]) -> dict[str, Any]:
+def _collect_inputs(
+    run_path: Path,
+    state,
+    iteration: int,
+    required_inputs: tuple[str, ...],
+    role: RoleId,
+) -> dict[str, Any]:
     key = iteration_key(iteration)
     record = state.iterations.get(key)
     payloads: dict[str, Any] = {}
@@ -136,12 +142,30 @@ def _collect_inputs(run_path: Path, state, iteration: int, required_inputs: tupl
             continue
         payloads[name] = load_json(Path(item.path))
 
-    # Include latest gate reports for QA role context.
+    # On showrunner retries, include the previous accepted draft as revision anchor.
+    if role == RoleId.SHOWRUNNER and iteration > 1:
+        prev_key = iteration_key(iteration - 1)
+        prev_record = state.iterations.get(prev_key)
+        if prev_record:
+            prev_script = prev_record.artifacts.get("showrunner")
+            if prev_script:
+                payloads["previous_showrunner_script"] = load_json(Path(prev_script.path))
+
+    # Include latest available gate reports up to current iteration
+    # so retry loops can consume fix instructions from previous failures.
     for gate in ("gate0", "gate1", "gate2", "gate3", "gate4"):
-        report_path = run_path / "gate_reports" / f"{gate}.{key}.json"
-        if report_path.exists():
+        report_path = _latest_gate_report_path(run_path, gate, iteration)
+        if report_path is not None:
             payloads[f"{gate}_report"] = load_json(report_path)
     return payloads
+
+
+def _latest_gate_report_path(run_path: Path, gate: str, iteration: int) -> Path | None:
+    for value in range(iteration, 0, -1):
+        candidate = run_path / "gate_reports" / f"{gate}.{iteration_key(value)}.json"
+        if candidate.exists():
+            return candidate
+    return None
 
 
 def _load_schema_text(base_dir: Path, relative_schema_path: str) -> str:

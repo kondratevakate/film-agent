@@ -34,6 +34,11 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
                 "adjacent_character_violations": 999,
                 "multi_action_lines": 999,
                 "complex_visual_without_closeup": 999,
+                "adjacent_same_background_pairs": 999,
+                "tight_spatial_transition_pairs": 999,
+                "fine_grained_visual_elements": 999,
+                "concept_alignment_pct": 0.0,
+                "structure_complete": False,
             },
             reasons=reasons,
             fix_instructions=fixes,
@@ -87,6 +92,32 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         reasons.append("Screen/text/photo/interface details are used without close-up framing cues.")
         fixes.append("Mark those lines as close-up to improve generation reliability.")
 
+    adjacent_same_background_pairs = _count_adjacent_same_background_pairs(script)
+    if adjacent_same_background_pairs > 0:
+        reasons.append("Adjacent lines repeat the same background, reducing shot-level diversity and reliability.")
+        fixes.append("Alternate backgrounds or insert separator shots before returning to the same setting.")
+
+    tight_spatial_transition_pairs = _count_tight_spatial_transition_pairs(script)
+    if tight_spatial_transition_pairs > 0:
+        reasons.append("Some adjacent lines imply tightly connected spatial transitions that are fragile in generation.")
+        fixes.append("Avoid door-to-door or room-to-room adjacency jumps; use looser transition shots.")
+
+    fine_grained_visual_elements = sum(1 for line in script.lines if _has_fine_grained_visual_elements(line.text))
+    if fine_grained_visual_elements > 2:
+        reasons.append("Script contains too many fine-grained visual elements for reliable generation.")
+        fixes.append("Simplify tiny/textual/interface-heavy details and keep composition cleaner.")
+
+    concept_alignment_pct = _concept_alignment_pct(config.core_concepts, script)
+    concept_alignment_ok = concept_alignment_pct >= 75.0 if config.core_concepts else True
+    if not concept_alignment_ok:
+        reasons.append("Script does not sufficiently align with configured core concepts.")
+        fixes.append("Reinforce core concepts explicitly in logline/theme and key lines.")
+
+    structure_complete = _is_structurally_complete(script)
+    if not structure_complete:
+        reasons.append("Script structure is incomplete for downstream pipeline stages.")
+        fixes.append("Ensure title/logline/theme/locations plus balanced action/dialogue are present.")
+
     passed = (
         duration_ok
         and not undeclared_speakers
@@ -95,6 +126,11 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         and adjacent_character_violations == 0
         and multi_action_lines == 0
         and complex_visual_without_closeup == 0
+        and adjacent_same_background_pairs == 0
+        and tight_spatial_transition_pairs == 0
+        and fine_grained_visual_elements <= 2
+        and concept_alignment_ok
+        and structure_complete
     )
 
     return GateReport(
@@ -111,6 +147,11 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             "adjacent_character_violations": adjacent_character_violations,
             "multi_action_lines": multi_action_lines,
             "complex_visual_without_closeup": complex_visual_without_closeup,
+            "adjacent_same_background_pairs": adjacent_same_background_pairs,
+            "tight_spatial_transition_pairs": tight_spatial_transition_pairs,
+            "fine_grained_visual_elements": fine_grained_visual_elements,
+            "concept_alignment_pct": round(concept_alignment_pct, 2),
+            "structure_complete": structure_complete,
             "duration_target_s": config.duration_target_s,
         },
         reasons=reasons,
@@ -165,3 +206,115 @@ def _complex_visual_without_closeup(text: str) -> bool:
     )
     closeup_tokens = ("close-up", "close up", "macro", "extreme close")
     return any(token in lower for token in detail_tokens) and not any(token in lower for token in closeup_tokens)
+
+
+def _count_adjacent_same_background_pairs(script: ScriptArtifact) -> int:
+    keys = [_infer_background_key(line.text, script.locations) for line in script.lines]
+    count = 0
+    for prev, curr in zip(keys, keys[1:]):
+        if prev and curr and prev == curr:
+            count += 1
+    return count
+
+
+def _count_tight_spatial_transition_pairs(script: ScriptArtifact) -> int:
+    count = 0
+    spatial_tokens = (
+        "door",
+        "doorway",
+        "corridor",
+        "hallway",
+        "stair",
+        "elevator",
+        "entrance",
+        "exit",
+    )
+    movement_tokens = (
+        "enter",
+        "exit",
+        "move",
+        "walk",
+        "step",
+        "cross",
+        "through",
+        "toward",
+        "towards",
+        "from",
+        "to",
+    )
+
+    for prev_line, curr_line in zip(script.lines, script.lines[1:]):
+        prev_bg = _infer_background_key(prev_line.text, script.locations)
+        curr_bg = _infer_background_key(curr_line.text, script.locations)
+        if not prev_bg or not curr_bg or prev_bg == curr_bg:
+            continue
+
+        joined = f"{prev_line.text} {curr_line.text}".casefold()
+        if any(token in joined for token in spatial_tokens) and any(token in joined for token in movement_tokens):
+            count += 1
+    return count
+
+
+def _infer_background_key(text: str, locations: list[str]) -> str | None:
+    lower = text.casefold()
+
+    for location in sorted((item.casefold() for item in locations if item.strip()), key=len, reverse=True):
+        if location in lower:
+            return f"loc:{location}"
+
+    fallback_keywords = (
+        "mountain",
+        "desert",
+        "street",
+        "dining table",
+        "apartment",
+        "desk",
+        "void",
+        "pod",
+        "control room",
+        "lab",
+        "hospital",
+        "corridor",
+        "hallway",
+        "beach",
+        "forest",
+    )
+    for item in fallback_keywords:
+        if item in lower:
+            return f"kw:{item}"
+    return None
+
+
+def _has_fine_grained_visual_elements(text: str) -> bool:
+    lower = text.casefold()
+    tokens = (
+        "small text",
+        "tiny text",
+        "code",
+        "interface",
+        "screen",
+        "phone",
+        "monitor",
+        "label",
+        "document",
+        "photo",
+        "mirror",
+        "digits",
+    )
+    return any(token in lower for token in tokens)
+
+
+def _concept_alignment_pct(core_concepts: list[str], script: ScriptArtifact) -> float:
+    if not core_concepts:
+        return 100.0
+    haystack = " ".join([script.title, script.logline, script.theme, *(line.text for line in script.lines)]).casefold()
+    hits = sum(1 for concept in core_concepts if concept.strip() and concept.casefold() in haystack)
+    return (hits / len(core_concepts)) * 100.0
+
+
+def _is_structurally_complete(script: ScriptArtifact) -> bool:
+    has_header_fields = bool(script.title.strip() and script.logline.strip() and script.theme.strip())
+    has_locations = len([item for item in script.locations if item.strip()]) >= 2
+    has_actions = any(line.kind == "action" for line in script.lines)
+    has_dialogue = any(line.kind == "dialogue" for line in script.lines)
+    return has_header_fields and has_locations and has_actions and has_dialogue

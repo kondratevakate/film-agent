@@ -16,14 +16,21 @@ Showrunner constraints:
 - Keep character naming stable across lines; do not alias character names.
 - If `project_constraints.reference_images` is provided, keep character identity, wardrobe, and tone consistent with those references.
 - Avoid placeholder markers (TODO/TBD/template syntax).
+- If `previous_showrunner_script` is present in upstream context, treat this as a revision task:
+  keep the same core story, title, and character set; apply minimal edits needed to satisfy gate fixes.
 
 Shot-by-shot quality rules for `lines`:
 - Use one primary action per action line.
 - Avoid chaining actions with "and then / while / after / before" patterns.
 - Keep line descriptions visually specific but uncluttered.
+- Avoid repeated adjacent shots in the same background.
+- Minimize tightly connected spatial transitions between adjacent shots (door-to-door/room-to-room continuity traps).
 - Avoid repeated adjacent shots centered on the same character when possible.
 - If showing text/screens/interfaces/photos, describe them as close-up for reliability.
+- Avoid excessive fine-grained visual details in single shots.
 - Keep continuity of character appearance and location logic across adjacent lines.
+- Keep style and emotional arc aligned with user request and configured project concepts.
+- Preserve complete script structure for downstream pipeline stages.
 
 Style:
 - Emotionally resonant, concise, and production-friendly.
