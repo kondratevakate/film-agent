@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 from film_agent.config import RunConfig
 from film_agent.gates.scoring import (
@@ -61,11 +62,11 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig, gate1
             empty,
         )
 
-    assert isinstance(final_metrics, FinalMetrics)
-    assert isinstance(beat_bible, BeatBible)
-    assert isinstance(direction_pack, UserDirectionPack)
-    assert isinstance(dance_mapping, DanceMappingSpec)
-    assert isinstance(cinematography, CinematographyPackage)
+    final_metrics = cast(FinalMetrics, final_metrics)
+    beat_bible = cast(BeatBible, beat_bible)
+    direction_pack = cast(UserDirectionPack, direction_pack)
+    dance_mapping = cast(DanceMappingSpec, dance_mapping)
+    cinematography = cast(CinematographyPackage, cinematography)
 
     t = config.thresholds
     dryrun_video = float(getattr(dryrun, "videoscore2"))
@@ -104,6 +105,11 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig, gate1
         consistency=consistency,
         audio_sync=audio_sync,
     )
+    if scorecard.final_score < t.final_score_floor:
+        reasons.append("Final score below acceptance floor.")
+        fixes.append(
+            f"Raise final score to at least {t.final_score_floor:.2f} by improving weak dimensions."
+        )
 
     passed = not reasons
     report = GateReport(
@@ -117,6 +123,7 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig, gate1
             "video_regression": round(video_regression, 4),
             "physics_regression": round(physics_regression, 4),
             "epsilon": t.regression_epsilon,
+            "final_score_floor": t.final_score_floor,
             "science_clarity": round(scorecard.science_clarity, 2),
             "dance_mapping": round(scorecard.dance_mapping, 2),
             "cinematic_quality": round(scorecard.cinematic_quality, 2),

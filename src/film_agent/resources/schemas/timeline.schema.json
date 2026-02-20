@@ -1,0 +1,44 @@
+{
+  "$defs": {
+    "TimelineEntry": {
+      "properties": {
+        "duration_s": {
+          "exclusiveMinimum": 0,
+          "title": "Duration S",
+          "type": "number"
+        },
+        "shot_id": {
+          "title": "Shot Id",
+          "type": "string"
+        },
+        "start_s": {
+          "minimum": 0,
+          "title": "Start S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "shot_id",
+        "start_s",
+        "duration_s"
+      ],
+      "title": "TimelineEntry",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "entries": {
+      "items": {
+        "$ref": "#/$defs/TimelineEntry"
+      },
+      "minItems": 1,
+      "title": "Entries",
+      "type": "array"
+    }
+  },
+  "required": [
+    "entries"
+  ],
+  "title": "EditorialTimeline",
+  "type": "object"
+}

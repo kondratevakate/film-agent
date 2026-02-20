@@ -1,0 +1,46 @@
+{
+  "properties": {
+    "fps": {
+      "exclusiveMinimum": 0,
+      "title": "Fps",
+      "type": "integer"
+    },
+    "model_version": {
+      "title": "Model Version",
+      "type": "string"
+    },
+    "prompt_template_versions": {
+      "additionalProperties": {
+        "type": "string"
+      },
+      "title": "Prompt Template Versions",
+      "type": "object"
+    },
+    "resolution": {
+      "title": "Resolution",
+      "type": "string"
+    },
+    "sampler_settings": {
+      "additionalProperties": true,
+      "title": "Sampler Settings",
+      "type": "object"
+    },
+    "seed": {
+      "title": "Seed",
+      "type": "integer"
+    },
+    "video_provider": {
+      "title": "Video Provider",
+      "type": "string"
+    }
+  },
+  "required": [
+    "video_provider",
+    "model_version",
+    "seed",
+    "resolution",
+    "fps"
+  ],
+  "title": "RenderPackage",
+  "type": "object"
+}

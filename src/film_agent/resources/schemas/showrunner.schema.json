@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "Beat": {
+      "properties": {
+        "beat_id": {
+          "title": "Beat Id",
+          "type": "string"
+        },
+        "dance_metaphor": {
+          "title": "Dance Metaphor",
+          "type": "string"
+        },
+        "emotion_intention": {
+          "title": "Emotion Intention",
+          "type": "string"
+        },
+        "end_s": {
+          "exclusiveMinimum": 0,
+          "title": "End S",
+          "type": "number"
+        },
+        "science_claim": {
+          "title": "Science Claim",
+          "type": "string"
+        },
+        "science_status": {
+          "default": "ok",
+          "enum": [
+            "ok",
+            "critical_error"
+          ],
+          "title": "Science Status",
+          "type": "string"
+        },
+        "spoken_line": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Spoken Line"
+        },
+        "start_s": {
+          "minimum": 0,
+          "title": "Start S",
+          "type": "number"
+        },
+        "success_criteria": {
+          "title": "Success Criteria",
+          "type": "string"
+        },
+        "visual_motif": {
+          "title": "Visual Motif",
+          "type": "string"
+        }
+      },
+      "required": [
+        "beat_id",
+        "start_s",
+        "end_s",
+        "science_claim",
+        "dance_metaphor",
+        "visual_motif",
+        "emotion_intention",
+        "success_criteria"
+      ],
+      "title": "Beat",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "beats": {
+      "items": {
+        "$ref": "#/$defs/Beat"
+      },
+      "minItems": 1,
+      "title": "Beats",
+      "type": "array"
+    },
+    "concept_thesis": {
+      "title": "Concept Thesis",
+      "type": "string"
+    }
+  },
+  "required": [
+    "concept_thesis",
+    "beats"
+  ],
+  "title": "BeatBible",
+  "type": "object"
+}

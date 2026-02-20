@@ -104,17 +104,13 @@ def submit_artifact(run_path: Path, state: RunStateData, agent: str, input_file:
 
 
 def transition_state_after_submit(state: RunStateData, agent: str) -> None:
-    if state.current_state == RunState.COLLECT_SHOWRUNNER and agent == "showrunner":
-        state.current_state = RunState.COLLECT_DIRECTION
-        return
-    if state.current_state == RunState.COLLECT_DIRECTION and agent == "direction":
-        state.current_state = RunState.COLLECT_DANCE_MAPPING
-        return
-    if state.current_state == RunState.COLLECT_DANCE_MAPPING and agent == "dance_mapping":
-        state.current_state = RunState.COLLECT_CINEMATOGRAPHY
-        return
-    if state.current_state == RunState.COLLECT_CINEMATOGRAPHY and agent == "cinematography":
-        state.current_state = RunState.COLLECT_AUDIO
-        return
-    if state.current_state == RunState.COLLECT_AUDIO and agent == "audio":
-        state.current_state = RunState.LOCK_PREPROD
+    transitions: dict[tuple[str, str], str] = {
+        (RunState.COLLECT_SHOWRUNNER, "showrunner"): RunState.COLLECT_DIRECTION,
+        (RunState.COLLECT_DIRECTION, "direction"): RunState.COLLECT_DANCE_MAPPING,
+        (RunState.COLLECT_DANCE_MAPPING, "dance_mapping"): RunState.COLLECT_CINEMATOGRAPHY,
+        (RunState.COLLECT_CINEMATOGRAPHY, "cinematography"): RunState.COLLECT_AUDIO,
+        (RunState.COLLECT_AUDIO, "audio"): RunState.LOCK_PREPROD,
+    }
+    next_state = transitions.get((state.current_state, agent))
+    if next_state:
+        state.current_state = next_state

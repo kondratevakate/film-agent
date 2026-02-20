@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from enum import StrEnum
 from pathlib import Path
 
+from film_agent.resource_locator import find_resource_dir
+
 
 class RoleId(StrEnum):
     SHOWRUNNER = "showrunner"
@@ -69,7 +71,7 @@ def list_roles() -> list[RoleId]:
 
 
 def role_pack_root() -> Path:
-    return Path(__file__).resolve().parents[2] / "roles"
+    return find_resource_dir("roles")
 
 
 def role_pack_dir(role: RoleId) -> Path:

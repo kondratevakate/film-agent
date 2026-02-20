@@ -1,0 +1,32 @@
+{
+  "properties": {
+    "blocking_issues": {
+      "minimum": 0,
+      "title": "Blocking Issues",
+      "type": "integer"
+    },
+    "identity_drift": {
+      "minimum": 0,
+      "title": "Identity Drift",
+      "type": "number"
+    },
+    "vbench2_physics": {
+      "minimum": 0,
+      "title": "Vbench2 Physics",
+      "type": "number"
+    },
+    "videoscore2": {
+      "minimum": 0,
+      "title": "Videoscore2",
+      "type": "number"
+    }
+  },
+  "required": [
+    "videoscore2",
+    "vbench2_physics",
+    "identity_drift",
+    "blocking_issues"
+  ],
+  "title": "DryRunMetrics",
+  "type": "object"
+}

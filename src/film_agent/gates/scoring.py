@@ -73,19 +73,34 @@ def compute_consistency(metrics: FinalMetrics) -> float:
 
 def compute_audio_sync(audio_plan: AudioPlan, final_metrics: FinalMetrics) -> float:
     if not audio_plan.cues and not audio_plan.voice_lines:
-        return final_metrics.audiosync_score
+        return clamp_score(final_metrics.audiosync_score)
 
-    max_t = max(
-        [cue.timestamp_s + cue.duration_s for cue in audio_plan.cues] + [0.0],
+    event_points = [line.timestamp_s for line in audio_plan.voice_lines]
+    for cue in audio_plan.cues:
+        event_points.extend((cue.timestamp_s, cue.timestamp_s + cue.duration_s))
+
+    min_t = min(event_points) if event_points else 0.0
+    max_t = max(event_points) if event_points else 0.0
+    markers = audio_plan.sync_markers
+
+    is_sorted = all(markers[i] <= markers[i + 1] for i in range(max(len(markers) - 1, 0)))
+    order_score = 100.0 if is_sorted else 40.0
+    marker_presence_score = 100.0 if markers else 35.0
+
+    if markers:
+        in_window = sum(1 for marker in markers if min_t <= marker <= max_t)
+        marker_coverage_score = (in_window / len(markers)) * 100.0
+    else:
+        marker_coverage_score = 35.0
+
+    duration_score = 100.0 if max_t > min_t else 30.0
+    rule_based = (
+        0.30 * order_score
+        + 0.30 * marker_coverage_score
+        + 0.20 * marker_presence_score
+        + 0.20 * duration_score
     )
-    is_sorted = all(
-        audio_plan.sync_markers[i] <= audio_plan.sync_markers[i + 1]
-        for i in range(max(len(audio_plan.sync_markers) - 1, 0))
-    )
-    marker_validity = 100.0 if is_sorted else 70.0
-    timing_component = 100.0 if max_t >= 0 else 0.0
-    rule_based = 0.5 * marker_validity + 0.5 * timing_component
-    return clamp_score(0.7 * final_metrics.audiosync_score + 0.3 * rule_based)
+    return clamp_score(0.65 * final_metrics.audiosync_score + 0.35 * rule_based)
 
 
 def build_final_scorecard(

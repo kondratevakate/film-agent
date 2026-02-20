@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
@@ -32,7 +33,7 @@ def evaluate_gate2(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             fix_instructions=fixes,
         )
 
-    assert isinstance(cinematography, CinematographyPackage)
+    cinematography = cast(CinematographyPackage, cinematography)
     shots = cinematography.shots
     schema_completeness_pct = 100.0
 

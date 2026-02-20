@@ -1,0 +1,41 @@
+{
+  "properties": {
+    "avoid": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Avoid",
+      "type": "array"
+    },
+    "iteration_goal": {
+      "title": "Iteration Goal",
+      "type": "string"
+    },
+    "must_include": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Must Include",
+      "type": "array"
+    },
+    "notes": {
+      "default": "",
+      "title": "Notes",
+      "type": "string"
+    },
+    "style_references": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Style References",
+      "type": "array"
+    }
+  },
+  "required": [
+    "iteration_goal",
+    "style_references"
+  ],
+  "title": "UserDirectionPack",
+  "type": "object"
+}

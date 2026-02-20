@@ -29,3 +29,11 @@ film-agent = "film_agent.cli:app"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+film_agent = [
+  "resources/prompts/*.md",
+  "resources/roles/*/*.md",
+  "resources/roles/*/*.json",
+  "resources/schemas/*.json",
+]

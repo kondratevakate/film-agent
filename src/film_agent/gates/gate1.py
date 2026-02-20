@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import cast
 
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
@@ -48,9 +49,9 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             fix_instructions=fixes,
         )
 
-    assert isinstance(beat_bible, BeatBible)
-    assert isinstance(direction, UserDirectionPack)
-    assert isinstance(dance_mapping, DanceMappingSpec)
+    beat_bible = cast(BeatBible, beat_bible)
+    direction = cast(UserDirectionPack, direction)
+    dance_mapping = cast(DanceMappingSpec, dance_mapping)
 
     total_duration = sum(beat.end_s - beat.start_s for beat in beat_bible.beats)
     coverage_ok = 90.0 <= total_duration <= 105.0

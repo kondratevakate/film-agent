@@ -38,6 +38,7 @@ class Thresholds(BaseModel):
     shot_variety_min_types: int = 3
     max_consecutive_identical_framing: int = 2
     variety_score_threshold: float = 70.0
+    final_score_floor: float = 70.0
 
 
 class RetryLimits(BaseModel):

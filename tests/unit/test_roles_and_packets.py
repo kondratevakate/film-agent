@@ -34,3 +34,5 @@ def test_prompt_lint_for_showrunner_passes() -> None:
 def test_show_prompt_stack_available() -> None:
     value = get_prompt_stack("showrunner")
     assert "SYSTEM OVERLAY" in value
+    assert "Return JSON only." in value
+    assert "Shot-by-shot Script: Minimum of 10 shots" not in value

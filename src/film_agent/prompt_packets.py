@@ -11,6 +11,7 @@ from film_agent.config import load_config
 from film_agent.io.hashing import sha256_json
 from film_agent.io.json_io import dump_canonical_json, load_json
 from film_agent.prompts import get_prompt_stack
+from film_agent.resource_locator import find_resource_dir
 from film_agent.roles import ROLE_PACKS, RoleId
 from film_agent.schemas.registry import AGENT_ARTIFACTS
 from film_agent.state_machine.state_store import iteration_key, load_state, run_dir
@@ -142,10 +143,19 @@ def _collect_inputs(run_path: Path, state, iteration: int, required_inputs: tupl
 
 
 def _load_schema_text(base_dir: Path, relative_schema_path: str) -> str:
-    path = base_dir / relative_schema_path
-    if not path.exists():
+    direct = base_dir / relative_schema_path
+    if direct.exists():
+        return direct.read_text(encoding="utf-8")
+
+    schema_name = Path(relative_schema_path).name
+    try:
+        fallback = find_resource_dir("schemas") / schema_name
+    except FileNotFoundError:
         return "{}"
-    return path.read_text(encoding="utf-8")
+
+    if not fallback.exists():
+        return "{}"
+    return fallback.read_text(encoding="utf-8")
 
 
 def _compose_prompt(

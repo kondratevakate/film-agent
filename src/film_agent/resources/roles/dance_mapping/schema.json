@@ -1,0 +1,57 @@
+{
+  "$defs": {
+    "DanceMappingItem": {
+      "properties": {
+        "beat_id": {
+          "title": "Beat Id",
+          "type": "string"
+        },
+        "contrast_pattern": {
+          "title": "Contrast Pattern",
+          "type": "string"
+        },
+        "motif_tag": {
+          "title": "Motif Tag",
+          "type": "string"
+        },
+        "motion_description": {
+          "title": "Motion Description",
+          "type": "string"
+        },
+        "symbolism": {
+          "title": "Symbolism",
+          "type": "string"
+        }
+      },
+      "required": [
+        "beat_id",
+        "motion_description",
+        "symbolism",
+        "motif_tag",
+        "contrast_pattern"
+      ],
+      "title": "DanceMappingItem",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "direction_pack_id": {
+      "title": "Direction Pack Id",
+      "type": "string"
+    },
+    "mappings": {
+      "items": {
+        "$ref": "#/$defs/DanceMappingItem"
+      },
+      "minItems": 1,
+      "title": "Mappings",
+      "type": "array"
+    }
+  },
+  "required": [
+    "direction_pack_id",
+    "mappings"
+  ],
+  "title": "DanceMappingSpec",
+  "type": "object"
+}

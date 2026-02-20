@@ -1,5 +1,5 @@
 project_name: film-agent
-science_source_pdf: references/2508.08487v5.pdf
+science_source_pdf: ../references/2508.08487v5.pdf
 duration_target_s: 95
 core_concepts:
   - attention
@@ -40,6 +40,7 @@ thresholds:
   shot_variety_min_types: 3
   max_consecutive_identical_framing: 2
   variety_score_threshold: 70
+  final_score_floor: 70
 
 retry_limits:
   gate1: 3

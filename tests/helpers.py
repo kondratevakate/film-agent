@@ -6,7 +6,27 @@ from pathlib import Path
 from film_agent.io.json_io import dump_canonical_json
 
 
-def write_config(path: Path, core_concepts: list[str] | None = None) -> Path:
+def write_config(
+    path: Path,
+    core_concepts: list[str] | None = None,
+    threshold_overrides: dict[str, float | int] | None = None,
+) -> Path:
+    thresholds = {
+        "gate0_physics_floor": 0.7,
+        "gate0_human_fidelity_floor": 0.7,
+        "gate0_identity_floor": 0.7,
+        "videoscore2_threshold": 0.7,
+        "vbench2_physics_floor": 0.7,
+        "identity_drift_ceiling": 0.2,
+        "regression_epsilon": 0.08,
+        "shot_variety_min_types": 3,
+        "max_consecutive_identical_framing": 2,
+        "variety_score_threshold": 70,
+        "final_score_floor": 70,
+    }
+    if threshold_overrides:
+        thresholds.update(threshold_overrides)
+
     payload = {
         "project_name": "test-film-agent",
         "duration_target_s": 95,
@@ -30,18 +50,7 @@ def write_config(path: Path, core_concepts: list[str] | None = None) -> Path:
                 "identity": 0.9,
             }
         ],
-        "thresholds": {
-            "gate0_physics_floor": 0.7,
-            "gate0_human_fidelity_floor": 0.7,
-            "gate0_identity_floor": 0.7,
-            "videoscore2_threshold": 0.7,
-            "vbench2_physics_floor": 0.7,
-            "identity_drift_ceiling": 0.2,
-            "regression_epsilon": 0.08,
-            "shot_variety_min_types": 3,
-            "max_consecutive_identical_framing": 2,
-            "variety_score_threshold": 70,
-        },
+        "thresholds": thresholds,
         "retry_limits": {"gate1": 3, "gate2": 3, "gate3": 2},
     }
     out = path / "config.yaml"

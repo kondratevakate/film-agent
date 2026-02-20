@@ -11,13 +11,15 @@ from film_agent.schemas.registry import AGENT_ARTIFACTS
 
 def main() -> None:
     root = Path(__file__).resolve().parents[1]
-    out_dir = root / "schemas"
-    out_dir.mkdir(parents=True, exist_ok=True)
+    out_dirs = [root / "schemas", root / "src" / "film_agent" / "resources" / "schemas"]
+    for out_dir in out_dirs:
+        out_dir.mkdir(parents=True, exist_ok=True)
     for agent, entry in AGENT_ARTIFACTS.items():
         schema = entry.model.model_json_schema()
-        out_path = out_dir / f"{agent}.schema.json"
-        out_path.write_text(json.dumps(schema, indent=2, ensure_ascii=True, sort_keys=True) + "\n", encoding="utf-8")
-        print("wrote", out_path)
+        for out_dir in out_dirs:
+            out_path = out_dir / f"{agent}.schema.json"
+            out_path.write_text(json.dumps(schema, indent=2, ensure_ascii=True, sort_keys=True) + "\n", encoding="utf-8")
+            print("wrote", out_path)
 
 
 if __name__ == "__main__":

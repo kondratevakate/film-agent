@@ -5,9 +5,9 @@ from __future__ import annotations
 from pathlib import Path
 
 from film_agent.roles import RoleId, role_pack_dir
+from film_agent.resource_locator import find_resource_dir
 
 
-PROMPTS_DIR = Path(__file__).resolve().parents[2] / "prompts"
 MAIN_AGENT_OVERLAY = "main_agent_overlay.md"
 
 AGENT_PROMPT_FILES: dict[str, str] = {
@@ -24,11 +24,15 @@ def list_agents() -> list[str]:
     return sorted(AGENT_PROMPT_FILES.keys())
 
 
+def prompts_dir() -> Path:
+    return find_resource_dir("prompts")
+
+
 def get_prompt_stack(agent: str) -> str:
     if agent not in AGENT_PROMPT_FILES:
         raise ValueError(f"Unsupported prompt agent '{agent}'. Available: {', '.join(list_agents())}")
 
-    agent_path = PROMPTS_DIR / AGENT_PROMPT_FILES[agent]
+    agent_path = prompts_dir() / AGENT_PROMPT_FILES[agent]
     if not agent_path.exists():
         raise ValueError(f"Agent prompt file not found: {agent_path}")
 
@@ -36,7 +40,7 @@ def get_prompt_stack(agent: str) -> str:
 
     # The main overlay is applied to the main (showrunner) agent.
     if agent == "showrunner":
-        overlay_path = PROMPTS_DIR / MAIN_AGENT_OVERLAY
+        overlay_path = prompts_dir() / MAIN_AGENT_OVERLAY
         if not overlay_path.exists():
             raise ValueError(f"Main agent overlay file not found: {overlay_path}")
         overlay_text = overlay_path.read_text(encoding="utf-8").strip()

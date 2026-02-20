@@ -38,18 +38,21 @@ class CommandResult:
 
 
 def create_run(base_dir: Path, config_path: Path) -> CommandResult:
-    config = load_config(config_path)
-    state = new_state(config_path, config)
+    resolved_config_path = config_path.expanduser().resolve()
+    config = load_config(resolved_config_path)
+    state = new_state(resolved_config_path, config)
     path = run_dir(base_dir, state.run_id)
     ensure_run_layout(path)
 
     if config.science_source_pdf:
-        pdf_path = Path(config.science_source_pdf)
+        pdf_path = Path(config.science_source_pdf).expanduser()
+        if not pdf_path.is_absolute():
+            pdf_path = resolved_config_path.parent / pdf_path
         if pdf_path.exists():
             state.science_source_hash = sha256_file(pdf_path)
 
     save_state(path, state)
-    append_event(path, "run_created", {"run_id": state.run_id, "config_path": str(config_path)})
+    append_event(path, "run_created", {"run_id": state.run_id, "config_path": str(resolved_config_path)})
     return CommandResult(state.run_id, state.current_state, {"path": str(path)})
 
 
