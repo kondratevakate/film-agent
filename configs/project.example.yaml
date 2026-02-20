@@ -1,0 +1,47 @@
+project_name: film-agent
+science_source_pdf: references/2508.08487v5.pdf
+duration_target_s: 95
+core_concepts:
+  - attention
+  - memory
+  - uncertainty
+  - prediction
+seed: 42
+resolution: 1920x1080
+fps: 24
+
+providers:
+  audio: elevenlabs
+  image_primary: openai_images
+  image_secondary: nanobanana
+  video_primary: openai_video
+  video_fallback: hugsfield
+
+model_candidates:
+  - name: openai-video-prod
+    weighted_score: 0.91
+    physics: 0.87
+    human_fidelity: 0.9
+    identity: 0.86
+  - name: hugsfield-video
+    weighted_score: 0.84
+    physics: 0.79
+    human_fidelity: 0.83
+    identity: 0.8
+
+thresholds:
+  gate0_physics_floor: 0.75
+  gate0_human_fidelity_floor: 0.8
+  gate0_identity_floor: 0.78
+  videoscore2_threshold: 0.72
+  vbench2_physics_floor: 0.75
+  identity_drift_ceiling: 0.2
+  regression_epsilon: 0.08
+  shot_variety_min_types: 3
+  max_consecutive_identical_framing: 2
+  variety_score_threshold: 70
+
+retry_limits:
+  gate1: 3
+  gate2: 3
+  gate3: 2
