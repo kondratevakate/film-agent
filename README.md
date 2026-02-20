@@ -133,3 +133,8 @@ Lock manifest now includes an immutable `spec_hash` and Gate4 requires `final_me
 - Main overlay for principal scriptwriter: `prompts/main_agent_overlay.md`
 - Showrunner addendum: `prompts/showrunner.md`
 - Other role prompts: `prompts/*.md`
+
+## Image Generation Best Practices
+
+- Method-by-method notes based on OpenAI official docs:
+  `references/openai_image_generation_best_practices/README.md`
