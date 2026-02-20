@@ -1,0 +1,36 @@
+{
+  "approved_character_registry": [
+    "Ilya (Simulated Photographer)",
+    "Mira",
+    "Lev",
+    "System Voice"
+  ],
+  "approved_story_facts": [
+    "Ilya, a simulated photographer, repeats the act of taking photos, prioritizing capture over human connection.",
+    "The narrative begins at dawn as Ilya prepares to take a photo, emphasizing the act of holding still for a frame.",
+    "Ilya chooses the camera over personal interaction, including during dinner with his family.",
+    "Mira and Lev are present in Ilya\u2019s life, urging him to engage and offering him the camera.",
+    "A motif of repetition and increasing isolation is established as years pass, gestures repeat, and warmth fades.",
+    "Ilya believes that keeping photographic frames will preserve memory.",
+    "A system voice intrudes, signaling a disruption with 'Signal instability detected, remain still.'",
+    "Reality breaks apart visually, and Ilya is revealed within a clinical, artificial simulation.",
+    "System Voice confirms the session is over and that an upgrade is required.",
+    "Ilya requests to repeat the experience without the camera, but is told by the System Voice that living is excluded\u2014only viewing is allowed.",
+    "Ilya chooses to restart the simulation, closing his eyes and asking for another run.",
+    "The cycle begins again, reinforcing that Ilya has no real control over his own experience.",
+    "Mira\u2019s closing plea, 'If you can hear me, choose us this time,' underscores the emotional loss and Ilya\u2019s detachment.",
+    "The themes throughout are memory, perception, simulation, and lack of control as a consequence of substituting real life for observation."
+  ],
+  "lock_story_facts": true,
+  "revision_notes": [
+    "Ensure that each shot has only one primary action and avoid multi-action lines.",
+    "Visually clarify transitions between simulated and clinical/simulation-breaking environments for continuity.",
+    "When referencing the system voice or simulation effects (fracturing, glitching), use decisive visual strategies (blocks, artificial lighting cues).",
+    "Action lines involving technology or interface disruption should be reinforced with close-ups or audibly distinct elements.",
+    "Consider slightly varying Mira and Lev\u2019s appearances or actions across repeated cycles to signal time passage and simulation variance.",
+    "Explicitly anchor the beginning and end of the cycle in consistent visual motifs for thematic reinforcement."
+  ],
+  "script_hash_hint": null,
+  "script_version": 1,
+  "unresolved_items": []
+}

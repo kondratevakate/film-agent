@@ -110,6 +110,45 @@ OPENAI_API_KEY=...
 OPENAI_SDK=...
 ```
 
+Standard runbook for `contrast-infinity-castle` (no project script):
+
+```bash
+film-agent new-run --config configs/project.contrast-infinity-castle.yaml
+film-agent auto-run --run-id <RUN_ID> --model gpt-4.1 --until complete
+```
+
+Note: current auto-run flow stops at `FINAL_RENDER` (preprod locked).  
+To reach `COMPLETE`, submit `final_metrics` and run `gate4` manually.
+
+Dramaturgy review artifacts (canonical):
+
+- `runs/<RUN_ID>/gate_reports/gate1.iter-*.json`
+- `runs/<RUN_ID>/iterations/iter-XX/artifacts/script_review.json`
+
+Repeat runs via one-off PowerShell loop (without committing scripts):
+
+```powershell
+1..2 | ForEach-Object {
+  $created = film-agent new-run --config configs/project.contrast-infinity-castle.yaml | ConvertFrom-Json
+  $runId = $created.run_id
+  film-agent auto-run --run-id $runId --model gpt-4.1 --until complete | Out-Null
+  $state = Get-Content -Raw ("runs/{0}/state.json" -f $runId) | ConvertFrom-Json
+  [pscustomobject]@{
+    run_id = $runId
+    state = $state.current_state
+    iteration = $state.current_iteration
+  }
+} | Format-Table -AutoSize
+```
+
+Replay authoritative local inputs through the run flow (strict submit + gate order):
+
+```bash
+film-agent replay-inputs --run-id <RUN_ID>
+# optional:
+film-agent replay-inputs --run-id <RUN_ID> --inputs-dir configs/the-trace/inputs --prefer-current
+```
+
 ## Roles (explicit agent profiles)
 
 - `showrunner`

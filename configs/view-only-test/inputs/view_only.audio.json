@@ -1,0 +1,74 @@
+{
+  "global_negative_constraints": [
+    "No unnatural vocal texture, robotic or exaggerated delivery, whispering, shouting, or stylized theatrical voices; all spoken lines must be emotionally flat and honest, true to character.",
+    "No audible mouth sounds, no over-enunciation, no breathy or melodramatic readings.",
+    "No musical overcompression, pumping, or excessive reverb; naturalistic decay only\u2014never cavernous.",
+    "No abrupt sound cuts or audio drop-outs (except precisely-timed glitch in s4); no crossover of glitch effects into other shots.",
+    "No anachronistic or synthetic-sounding acoustic instruments; avoid music with lyrics, overt melodies, or genre stylings outside described ambiance.",
+    "No ambient noise (e.g., appliances, crowds, outdoor city sounds) inconsistent with scene\u2014naturalistic room tone, environmental detail only as specified.",
+    "Do not let ambient sound or music mask dialogue or narration; maintain clarity for all lines.",
+    "No jump scares, horror cues, comedic accents, sentimental swells, or emotionally manipulative musical climaxes.",
+    "No overlapping dialogue or TTS lines during moments of peak audio; musical motifs must duck to preserve spoken clarity."
+  ],
+  "image_prompt_package_id": "08c385485e654cf8be1fd0baca1b8f2b4449d75f8de7ad21d830d0e3729e2fa6",
+  "music_prompt": "Score begins with soft, airy ambient pads and distant, minimal piano motif\u2014gentle, repeating, and emotionally neutral. Recurring piano theme connects memory scenes. For simulation breakdowns (notably shot s4), introduce abrupt digital glitch textures and cold, synthetic pulses, using defined distortion effects and a sudden transient or processed noise. For clinical/control scenes, music shifts to hollow, sterile textures, with absence of warmth. All transitions are gradual and restrained. At final shots, theme returns but is faded and subtly synthetic, never sentimental or lush.",
+  "selected_images_id": "8f5288a51c7dc12a12f91b99e0230830e7ecdddca0235f4a048a3b8a24db507b",
+  "shot_prompts": [
+    {
+      "audio_prompt": "Light wind moving across open space; ambient background pads, distant repeating piano motif enters quietly (theme); subtle birdsong at edge of hearing.",
+      "duration_s": 10.0,
+      "shot_id": "s1",
+      "tts_text": "Every dawn, I return to this place. I remember the first light most clearly.",
+      "video_prompt": "Wide establishing shot, Ilya stands on mountaintop at sunrise, camera raised, dawn light, fog below. Early 2000s realism."
+    },
+    {
+      "audio_prompt": "Soft cutlery and glass sounds, low indistinct voices; piano motif gently overlaps, cool and distant, with subtle tape hiss in the room. Lamplight hum underlines separation.",
+      "duration_s": 13.0,
+      "shot_id": "s2",
+      "tts_text": "Even when we gather, I stay apart. The lens becomes my barrier and my refuge.",
+      "video_prompt": "Medium shot: Ilya at dinner table with Mira and Lev, warm lamplight. Ilya looks at his camera, not meeting family\u2019s eyes; underlying tension."
+    },
+    {
+      "audio_prompt": "Multiple clock ticks layered, fading and overlapping. Dinnerware sounds become muted, piano motif slows and grows sparse with thinning ambiance. Room tone cools with each segment.",
+      "duration_s": 12.0,
+      "shot_id": "s3",
+      "tts_text": "Years pass, but the table grows emptier. We freeze between frames, moving further apart.",
+      "video_prompt": "Montage: Ilya in repeated pose at dining table yearly, faces age, centerpiece and lighting subtly change, emotional distance grows."
+    },
+    {
+      "audio_prompt": "Sudden harsh digital distortion: short burst of bitcrush and glitch; underlying synthetic drones abruptly glitch and fracture the piano motif, static pushes in then cuts out sharply.",
+      "duration_s": 12.0,
+      "shot_id": "s4",
+      "tts_text": "Can you feel the world cracking? Memory slips\u2014nothing stays whole.",
+      "video_prompt": "Close-up: Ilya's face fragmenting with digital glitches. Apartment background dissolves to digital noise, cold harsh light."
+    },
+    {
+      "audio_prompt": "Continuous low mechanical hum, occasional distant monitor beeps with steady, air-handling whoosh. Music now minimal\u2014just thin, echoing tones, stripped of motif.",
+      "duration_s": 13.0,
+      "shot_id": "s5",
+      "tts_text": "Was it ever real beyond these walls? If I reach far enough, do I wake or vanish?",
+      "video_prompt": "High angle: Ilya restrained in white clinical cradle, sterile LED-lit room, memory monitors on walls, camera just out of reach."
+    },
+    {
+      "audio_prompt": "Soft heartbeat, quiet breathing; single reverberant bell note echoes and fades; delicate ambient pad slowly rising in volume then dissolving.",
+      "duration_s": 8.0,
+      "shot_id": "s6",
+      "tts_text": "All I want is to see that light again. Just one more time.",
+      "video_prompt": "Extreme close-up: Ilya\u2019s closed eyes, tear sheen reflecting the sunrise, faint clinical light, expression longing."
+    },
+    {
+      "audio_prompt": "Ambient wind returns, no birds, muted repetition of earlier piano theme but less clear and shortened, underpinned by subtle synthetic textures\u2014detached and drained.",
+      "duration_s": 12.0,
+      "shot_id": "s7",
+      "tts_text": "The cycle repeats. Each time less vivid, a memory copying itself until I\u2019m hollow.",
+      "video_prompt": "Wide shot: Ilya on mountaintop again, horizon higher, colors flat, posture slumped, mechanically holding the camera."
+    },
+    {
+      "audio_prompt": "Long, sustained string note; room nearly silent except Mira\u2019s steady breath. Sparse, tentative piano notes return for closing, expressing muted hope.",
+      "duration_s": 10.0,
+      "shot_id": "s8",
+      "tts_text": "Ilya, if you can hear me\u2014come back to us. Please.",
+      "video_prompt": "Medium close-up: Mira faces camera, sadness in eyes, sunset light behind, Ilya blurred in background, hand reaching out."
+    }
+  ]
+}

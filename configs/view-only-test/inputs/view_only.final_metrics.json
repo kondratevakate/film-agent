@@ -1,0 +1,9 @@
+﻿{
+  "videoscore2": 0.88,
+  "vbench2_physics": 0.86,
+  "identity_drift": 0.1,
+  "audiosync_score": 90,
+  "consistency_score": 88,
+  "spec_hash": "REPLACE_WITH_LOCKED_SPEC_HASH",
+  "one_shot_render": true
+}

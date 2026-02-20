@@ -1,0 +1,62 @@
+{
+  "image_prompts": [
+    {
+      "duration_s": 10.0,
+      "image_prompt": "Wide shot: A young man (Ilya), in a worn gray sweater and jeans, stands on a mountaintop at sunrise, facing the horizon. He lifts an old SLR camera to eye level, angled just upward to catch the first orange-pink rays. Fog lingers below; gentle cold mist; serene natural landscape. Wardrobe and look consistent with early 2000s realism; recurring throughout. Cinematic golden hour lighting, morning hush.",
+      "intent": "Establish Ilya at dawn, camera raised toward first light, evoking hope and ritual.",
+      "negative_prompt": "No crowds, no other characters, no futuristic clothing, no handheld devices, no urban elements, no smiling, no high-contrast, no dramatic poses.",
+      "shot_id": "s1"
+    },
+    {
+      "duration_s": 13.0,
+      "image_prompt": "Medium shot: Evening, small family apartment dining table, cozy lamplight. Ilya sits at the table with Mira and Lev (both muted tones, late 20s-30s), his gaze fixed on his camera aimed at the table, not making eye contact. Steam rises from simple dishes. Mira looks toward him, concern clear. Slightly cluttered but lived-in aesthetic.",
+      "intent": "Demonstrate Ilya's detachment from others during family dinner by focusing on his camera rather than interaction.",
+      "negative_prompt": "No smiling faces, no modern technology, no luxuries, no background TV, no pets, no messy food, no pure night (keep warm evening).",
+      "shot_id": "s2"
+    },
+    {
+      "duration_s": 12.0,
+      "image_prompt": "Side-by-side composite or montage: Ilya standing in identical pose year after year, holding the same camera, but with subtly aging faces of Mira and Lev moving further from him, table centerpiece changing subtly (flowers wilting, candles burning down). Lighting shifts from warm to cool with each panel, symbolizing time passage and emotional coldness.",
+      "intent": "Visualize the emotional distance as years pass\u2014a repeating gesture in increasing silence.",
+      "negative_prompt": "No drastic changes in character appearances, no missing characters, no time-lapse artifacts, no visible photographic timestamps.",
+      "shot_id": "s3"
+    },
+    {
+      "duration_s": 12.0,
+      "image_prompt": "Close-up: Ilya\u2019s face as digital artifacts (blocky pixelation, geometric fractures) creep in from the edges. Background\u2014simple apartment\u2014fragmenting into cubes and static. Harsh, artificial cold light casts stark shadows, disrupting the previous soft tones.",
+      "intent": "Visually express the moment the simulation breaks\u2014fractured reality and glitching world.",
+      "negative_prompt": "No traditional film grain, no color distortion outside glitches, no extraneous camera gear, no background people, no horror elements, no digital screens.",
+      "shot_id": "s4"
+    },
+    {
+      "duration_s": 13.0,
+      "image_prompt": "High angle: Ilya lies immobilized in a white medical cradle, metallic restraints on his arms, seamless sterile room. Blue-white LED lights reflect off polished surfaces. Transparent monitors display distorted memory images along the walls. Color palette cold and minimal. Camera, if visible, sits just out of reach.",
+      "intent": "Reveal Ilya restrained in a clinical suite\u2014fully expose the artificial, controlled simulation environment.",
+      "negative_prompt": "No visible other people, no vivid color, no medical staff, no open wounds, no blood, no messiness, no clutter, no practical windows.",
+      "shot_id": "s5"
+    },
+    {
+      "duration_s": 8.0,
+      "image_prompt": "Extreme close-up: Ilya\u2019s closed eyes, faint reflection of simulated sunrise in tears or sheen on lashes. Hints of the white clinical light bleed in. Face relaxed but marked by longing. No visible restraints, just vulnerability.",
+      "intent": "Emphasize Ilya\u2019s desire to relive the simulation\u2014his longing for experience but lack of agency.",
+      "negative_prompt": "No visible hands, no open eyes, no surroundings, no monitors, no background detail.",
+      "shot_id": "s6"
+    },
+    {
+      "duration_s": 12.0,
+      "image_prompt": "Wide shot: Repeat of the original sunrise mountaintop, but with subtle framing difference\u2014slightly higher horizon, flatter colors, Ilya\u2019s posture more slumped, holding the camera mechanically. Atmosphere tinged with artificial perfection, but emotionally flat. Landscape unchanged.",
+      "intent": "The cycle restarts: Ilya in original position at dawn with camera, a sense of resignation and repetition.",
+      "negative_prompt": "No joyous expression, no additional people, no significant environment shifts, no vibrant sunlight, no visible glitches this time.",
+      "shot_id": "s7"
+    },
+    {
+      "duration_s": 10.0,
+      "image_prompt": "Medium close-up: Mira faces the viewer directly, subdued sadness in her eyes. Soft sunset light outside window behind her. Blurred figure of Ilya in deep background with camera. Mira\u2019s hand gently reaches out (not quite touching lens). Simple, neutral clothing, no makeup, realism prioritized.",
+      "intent": "End with Mira addressing Ilya, her face near the camera, last plea underscoring loss and hope.",
+      "negative_prompt": "No smiling, no other characters sharing frame, no bright artificial lights, no glare, no text overlays, no props besides Mira\u2019s outstretched hand.",
+      "shot_id": "s8"
+    }
+  ],
+  "script_review_id": "f5f3cb4a27b793da0531dcea913f97a64f80e1a65753bb0259ca66424f9eb0f2",
+  "style_anchor": "Photorealistic cinematic style with consistent wardrobe and color palette: subdued blues, grays, and natural earth tones; soft morning and evening natural lighting for memory/simulation scenes; harsh, cool high-key white and blue-white clinical lighting for artificial spaces. Reliably realistic skin textures, worn early 2000s clothing, subtle environmental wear. Framing alternates between wide and close-up, keeping depth and separation. Depth of field draws attention to subject, with balanced tonal contrast. No artificial saturation or stylization. Visual reference: the atmosphere and tone of Kieslowski\u2019s \u2018Three Colors: Blue,\u2019 the authentic mood of Tarkovsky\u2019s \u2018Stalker,\u2019 and anchor photography matching reference e1c6ddc2c44af33ef2c61d495fcf02b5d2f56b50bd40f05e40dc9bb610eafe1c. Key attributes: visually grounded, emotionally detached, minimal grain or bloom, anchored in realistic visual cohesion and repeated character costuming throughout."
+}

@@ -1,0 +1,47 @@
+{
+  "image_prompt_package_id": "08c385485e654cf8be1fd0baca1b8f2b4449d75f8de7ad21d830d0e3729e2fa6",
+  "selected_images": [
+    {
+      "image_path": "PATH_TO_IMAGE_s1",
+      "image_sha256": null,
+      "notes": "Strong opening wide shot introducing Ilya and the core visual motif of the camera at sunrise. Clear environment, consistent wardrobe, and establishes the primary tone and setting for the film's memory/simulation theme.",
+      "shot_id": "s1"
+    },
+    {
+      "image_path": "PATH_TO_IMAGE_s3",
+      "image_sha256": null,
+      "notes": "Montage shot visually expresses the progression of time and deepening emotional rift, key for memory and perception concepts. Consistent character presence, aging logic, and environment connects to previous dinner context without redundancy.",
+      "shot_id": "s3"
+    },
+    {
+      "image_path": "PATH_TO_IMAGE_s4",
+      "image_sha256": null,
+      "notes": "Dramatic visual transition as reality fractures\u2014a close-up with strong action readability. Showcases simulation breakdown for core narrative beat, while composition remains clean and artifact-free.",
+      "shot_id": "s4"
+    },
+    {
+      "image_path": "PATH_TO_IMAGE_s5",
+      "image_sha256": null,
+      "notes": "Reveals the true artificial environment and control structure of the narrative, with Ilya restrained in a clinical suite. Maintains continuity in character look, unique environment, and crucial for the simulation/control core concepts.",
+      "shot_id": "s5"
+    },
+    {
+      "image_path": "PATH_TO_IMAGE_s6",
+      "image_sha256": null,
+      "notes": "Intimate extreme close-up captures Ilya\u2019s longing and loss of agency, visually bridging the clinical reality and internal memory desire. No background distractions\u2014focused emotional clarity and continuity in style.",
+      "shot_id": "s6"
+    },
+    {
+      "image_path": "PATH_TO_IMAGE_s7",
+      "image_sha256": null,
+      "notes": "Returns to the mountaintop for visual cyclicality\u2014a mirror of shot s1 but altered with drained color and posture. Highlights cyclical simulation, identity drift, and resignation, without redundant composition.",
+      "shot_id": "s7"
+    },
+    {
+      "image_path": "PATH_TO_IMAGE_s8",
+      "image_sha256": null,
+      "notes": "Ends with Mira\u2019s direct emotional address and clear action, offering a final anchor to relationships and hope. Clean close-up, distinct from earlier family/dinner shots, underlining narrative closure and clarity.",
+      "shot_id": "s8"
+    }
+  ]
+}

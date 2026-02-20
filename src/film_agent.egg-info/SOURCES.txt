@@ -4,11 +4,18 @@ src/film_agent/__init__.py
 src/film_agent/cli.py
 src/film_agent/config.py
 src/film_agent/constants.py
+src/film_agent/continuity.py
+src/film_agent/final_mix.py
 src/film_agent/prompt_packets.py
 src/film_agent/prompts.py
+src/film_agent/render_api.py
+src/film_agent/render_qc.py
+src/film_agent/replay_inputs.py
 src/film_agent/reporting.py
 src/film_agent/resource_locator.py
 src/film_agent/roles.py
+src/film_agent/vimax_bridge.py
+src/film_agent/vimax_pipeline.py
 src/film_agent.egg-info/PKG-INFO
 src/film_agent.egg-info/SOURCES.txt
 src/film_agent.egg-info/dependency_links.txt
@@ -38,6 +45,7 @@ src/film_agent/providers/image_openai.py
 src/film_agent/providers/video_hugsfield.py
 src/film_agent/providers/video_openai.py
 src/film_agent/providers/video_sora.py
+src/film_agent/providers/video_veo_yunwu.py
 src/film_agent/resources/prompts/audio.md
 src/film_agent/resources/prompts/cinematography.md
 src/film_agent/resources/prompts/dance_mapping.md

@@ -11,6 +11,7 @@ from film_agent.automation import auto_run_sdk_loop
 from film_agent.io.package_export import package_iteration
 from film_agent.prompt_packets import build_all_prompt_packets, build_prompt_packet
 from film_agent.prompts import get_prompt_stack, get_role_pack, list_agents
+from film_agent.replay_inputs import replay_inputs_for_run
 from film_agent.render_api import render_run_via_api
 from film_agent.reporting import build_final_report
 from film_agent.roles import RoleId, list_roles
@@ -122,6 +123,45 @@ def auto_run(
             max_cycles=max_cycles,
             until=until,
             self_eval_rounds=self_eval_rounds,
+        )
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+    _emit(result)
+
+
+@app.command("replay-inputs")
+def replay_inputs(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    inputs_dir: Path | None = typer.Option(
+        None,
+        "--inputs-dir",
+        help="Optional explicit directory with authoritative input JSON files.",
+    ),
+    prefer_current: bool = typer.Option(
+        True,
+        "--prefer-current/--prefer-base",
+        help="Prefer *.current.json variants when duplicate inputs exist.",
+    ),
+    warn_only_missing: bool = typer.Option(
+        True,
+        "--warn-only-missing/--error-on-missing",
+        help="Warn instead of raising when an expected input file is missing.",
+    ),
+    stop_on_missing: bool = typer.Option(
+        True,
+        "--stop-on-missing/--continue-on-missing",
+        help="Stop replay on first missing input (default) or continue scanning.",
+    ),
+) -> None:
+    try:
+        result = replay_inputs_for_run(
+            _base_dir(),
+            run_id,
+            inputs_dir=inputs_dir.resolve() if inputs_dir else None,
+            prefer_current=prefer_current,
+            warn_only_missing=warn_only_missing,
+            stop_on_missing=stop_on_missing,
         )
     except Exception as exc:
         _emit({"error": str(exc)})
