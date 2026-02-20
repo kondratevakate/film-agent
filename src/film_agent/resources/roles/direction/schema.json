@@ -1,41 +1,63 @@
 {
   "properties": {
-    "avoid": {
-      "items": {
-        "type": "string"
-      },
-      "title": "Avoid",
-      "type": "array"
-    },
-    "iteration_goal": {
-      "title": "Iteration Goal",
-      "type": "string"
-    },
-    "must_include": {
-      "items": {
-        "type": "string"
-      },
-      "title": "Must Include",
-      "type": "array"
-    },
-    "notes": {
-      "default": "",
-      "title": "Notes",
-      "type": "string"
-    },
-    "style_references": {
+    "approved_character_registry": {
       "items": {
         "type": "string"
       },
       "minItems": 1,
-      "title": "Style References",
+      "title": "Approved Character Registry",
+      "type": "array"
+    },
+    "approved_story_facts": {
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1,
+      "title": "Approved Story Facts",
+      "type": "array"
+    },
+    "lock_story_facts": {
+      "default": true,
+      "title": "Lock Story Facts",
+      "type": "boolean"
+    },
+    "revision_notes": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Revision Notes",
+      "type": "array"
+    },
+    "script_hash_hint": {
+      "anyOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Script Hash Hint"
+    },
+    "script_version": {
+      "minimum": 1,
+      "title": "Script Version",
+      "type": "integer"
+    },
+    "unresolved_items": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Unresolved Items",
       "type": "array"
     }
   },
   "required": [
-    "iteration_goal",
-    "style_references"
+    "script_version",
+    "approved_story_facts",
+    "approved_character_registry"
   ],
-  "title": "UserDirectionPack",
+  "title": "ScriptReviewArtifact",
   "type": "object"
 }

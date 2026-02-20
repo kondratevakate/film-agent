@@ -5,14 +5,16 @@ Output mode:
 - Return JSON only.
 
 Project contract:
-- Build a BeatBible for total duration 90-105 seconds.
-- Use beat entries as narrative units that later map to shots.
-- Preserve scientific clarity and explicit mapping to dance metaphor.
+- Build a ScriptArtifact for total estimated duration 60-120 seconds.
+- Keep story facts explicit and stable for downstream locking.
 - Do not break the JSON schema below.
-- Ensure each beat has a unique `beat_id`.
-- Ensure each beat duration is positive and timeline segments are ordered.
-- Keep science claims concrete and aligned with project core concepts.
+- Ensure each line has positive `est_duration_s`.
+- Dialogue lines must include a `speaker` from characters.
 
 Output schema:
-- concept_thesis: string
-- beats: [{ beat_id, start_s, end_s, science_claim, dance_metaphor, visual_motif, emotion_intention, spoken_line, success_criteria, science_status }]
+- title: string
+- logline: string
+- theme: string
+- characters: [string]
+- locations: [string]
+- lines: [{ line_id, kind, text, speaker, est_duration_s }]

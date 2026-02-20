@@ -1,4 +1,4 @@
-"""Gate 3: dry-run quality checks."""
+"""Gate 3: image prompt package checks."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from typing import cast
 
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
-from film_agent.schemas.artifacts import DryRunMetrics, GateReport
+from film_agent.schemas.artifacts import GateReport, ImagePromptPackage
 from film_agent.state_machine.state_store import RunStateData
 
 
@@ -15,40 +15,60 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
     reasons: list[str] = []
     fixes: list[str] = []
 
-    dryrun = load_artifact_for_agent(run_path, state, "dryrun_metrics")
-    if dryrun is None:
-        reasons.append("Missing dryrun_metrics artifact.")
-        fixes.append("Submit dryrun metrics JSON before Gate3 validation.")
+    image_prompts = load_artifact_for_agent(run_path, state, "dance_mapping")
+    if image_prompts is None:
+        reasons.append("Missing image prompt package artifact.")
+        fixes.append("Submit image prompt package JSON before Gate3 validation.")
         return GateReport(
             gate="gate3",
             passed=False,
             iteration=state.current_iteration,
-            metrics={},
+            metrics={
+                "shot_count": 0,
+                "shot_count_ok": False,
+                "duplicate_shot_ids": 999,
+                "short_prompts": 999,
+                "review_link_ok": False,
+            },
             reasons=reasons,
             fix_instructions=fixes,
         )
 
-    dryrun = cast(DryRunMetrics, dryrun)
-    t = config.thresholds
+    image_prompts = cast(ImagePromptPackage, image_prompts)
+    items = image_prompts.image_prompts
+    shot_count = len(items)
+    shot_count_ok = 3 <= shot_count <= 10
+    if not shot_count_ok:
+        reasons.append(f"Image prompt count {shot_count} is outside [3, 10].")
+        fixes.append("Provide between 3 and 10 representative image prompts.")
 
-    if dryrun.videoscore2 < t.videoscore2_threshold:
-        reasons.append("VideoScore2 below threshold.")
-        fixes.append("Adjust prompts/shots and rerun cheap dry-runs.")
-    if dryrun.vbench2_physics < t.vbench2_physics_floor:
-        reasons.append("VBench2 physics below floor.")
-        fixes.append("Reduce implausible motion/object interactions.")
-    if dryrun.identity_drift > t.identity_drift_ceiling:
-        reasons.append("Identity drift above ceiling.")
-        fixes.append("Strengthen identity tokens/shot continuity prompts.")
-    if dryrun.blocking_issues > 0:
-        reasons.append("Blocking issues reported by QA.")
-        fixes.append("Resolve blocking issues before final one-shot render.")
+    shot_ids = [item.shot_id for item in items]
+    duplicate_shot_ids = max(0, len(shot_ids) - len(set(shot_ids)))
+    if duplicate_shot_ids > 0:
+        reasons.append("Image prompt package contains duplicate shot_id values.")
+        fixes.append("Ensure each image prompt uses a unique shot_id.")
+
+    short_prompts = sum(1 for item in items if len(item.image_prompt.strip()) < 24)
+    if short_prompts > 0:
+        reasons.append("Some image prompts are too short to be reliably controllable.")
+        fixes.append("Expand weak prompts with subject/action/composition details.")
+
+    missing_negative_constraints = sum(1 for item in items if not item.negative_prompt.strip())
+    if missing_negative_constraints > 0:
+        reasons.append("Some image prompts do not include negative constraints.")
+        fixes.append("Add minimal negative constraints to reduce drift in previews.")
+
+    review_link_ok = bool(state.latest_direction_pack_id and image_prompts.script_review_id == state.latest_direction_pack_id)
+    if not review_link_ok:
+        reasons.append("Image prompt package is not linked to current approved script review.")
+        fixes.append("Rebuild prompt package with the latest script review id.")
 
     passed = (
-        dryrun.videoscore2 >= t.videoscore2_threshold
-        and dryrun.vbench2_physics >= t.vbench2_physics_floor
-        and dryrun.identity_drift <= t.identity_drift_ceiling
-        and dryrun.blocking_issues == 0
+        shot_count_ok
+        and duplicate_shot_ids == 0
+        and short_prompts == 0
+        and missing_negative_constraints == 0
+        and review_link_ok
     )
 
     return GateReport(
@@ -56,13 +76,13 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         passed=passed,
         iteration=state.current_iteration,
         metrics={
-            "videoscore2": dryrun.videoscore2,
-            "vbench2_physics": dryrun.vbench2_physics,
-            "identity_drift": dryrun.identity_drift,
-            "blocking_issues": dryrun.blocking_issues,
-            "videoscore2_threshold": t.videoscore2_threshold,
-            "vbench2_physics_floor": t.vbench2_physics_floor,
-            "identity_drift_ceiling": t.identity_drift_ceiling,
+            "shot_count": shot_count,
+            "shot_count_ok": shot_count_ok,
+            "duplicate_shot_ids": duplicate_shot_ids,
+            "short_prompts": short_prompts,
+            "missing_negative_constraints": missing_negative_constraints,
+            "review_link_ok": review_link_ok,
+            "duration_target_s": config.duration_target_s,
         },
         reasons=reasons,
         fix_instructions=fixes,

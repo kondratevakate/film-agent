@@ -92,7 +92,7 @@ def submit_agent(base_dir: Path, run_id: str, agent: str, artifact_file: Path) -
     if state.current_state == RunState.LOCK_PREPROD:
         lock = lock_preprod_artifacts(path, state)
         lock_path = str(lock)
-        state.current_state = RunState.GATE1
+        state.current_state = RunState.FINAL_RENDER
         append_event(path, "preprod_locked", {"iteration": state.current_iteration, "lock_path": str(lock)})
 
     save_state(path, state)
@@ -124,14 +124,12 @@ def validate_gate(base_dir: Path, run_id: str, gate: int) -> CommandResult:
         report = evaluate_gate2(path, state, config)
         _apply_gate2_transition(path, state, config, report)
     elif gate == 3:
-        _ensure_state(state, {RunState.DRYRUN, RunState.GATE3})
+        _ensure_state(state, {RunState.GATE3})
         report = evaluate_gate3(path, state, config)
         _apply_gate3_transition(path, state, config, report)
     else:
         _ensure_state(state, {RunState.FINAL_RENDER, RunState.GATE4})
-        gate1_report = _load_gate_report(path, "gate1", state.current_iteration)
-        gate2_report = _load_gate_report(path, "gate2", state.current_iteration)
-        report, scorecard = evaluate_gate4(path, state, config, gate1_report, gate2_report)
+        report, scorecard = evaluate_gate4(path, state, config)
         _apply_gate4_transition(state, report)
 
     out = write_report(path, report)
@@ -153,58 +151,42 @@ def validate_gate(base_dir: Path, run_id: str, gate: int) -> CommandResult:
 def _apply_gate1_transition(path: Path, state: RunStateData, config: RunConfig, report: GateReport) -> None:
     state.gate_status["gate1"] = "passed" if report.passed else "failed"
     if report.passed:
-        state.current_state = RunState.GATE2
+        state.current_state = RunState.COLLECT_DIRECTION
         return
     state.retry_counts["gate1"] += 1
     if state.retry_counts["gate1"] > config.retry_limits.gate1:
         state.current_state = RunState.FAILED
         return
-    start_next_iteration(path, state, reason="gate1_failed", carry_forward=True)
+    start_next_iteration(path, state, reason="gate1_failed", carry_forward=False)
     state.current_state = RunState.COLLECT_SHOWRUNNER
 
 
 def _apply_gate2_transition(path: Path, state: RunStateData, config: RunConfig, report: GateReport) -> None:
     state.gate_status["gate2"] = "passed" if report.passed else "failed"
     if report.passed:
-        state.current_state = RunState.DRYRUN
+        state.current_state = RunState.COLLECT_DANCE_MAPPING
         return
     state.retry_counts["gate2"] += 1
     if state.retry_counts["gate2"] > config.retry_limits.gate2:
         state.current_state = RunState.FAILED
         return
     start_next_iteration(path, state, reason="gate2_failed", carry_forward=True)
-    state.current_state = RunState.COLLECT_CINEMATOGRAPHY
+    state.current_state = RunState.COLLECT_DIRECTION
 
 
 def _apply_gate3_transition(path: Path, state: RunStateData, config: RunConfig, report: GateReport) -> None:
     state.gate_status["gate3"] = "passed" if report.passed else "failed"
     if report.passed:
-        state.current_state = RunState.FINAL_RENDER
+        state.current_state = RunState.COLLECT_CINEMATOGRAPHY
         return
 
     state.retry_counts["gate3"] += 1
-    primary = state.provider_policy.get("video_primary")
-    fallback = state.provider_policy.get("video_fallback")
-    blocking_issues = int(report.metrics.get("blocking_issues", 0))
-
-    if (
-        blocking_issues > 0
-        and primary
-        and fallback
-        and state.active_video_provider == primary
-        and fallback != primary
-    ):
-        start_next_iteration(path, state, reason="gate3_blocking_switch_to_fallback", carry_forward=True)
-        state.active_video_provider = fallback
-        state.current_state = RunState.DRYRUN
-        return
-
     if state.retry_counts["gate3"] > config.retry_limits.gate3:
         state.current_state = RunState.FAILED
         return
 
     start_next_iteration(path, state, reason="gate3_failed", carry_forward=True)
-    state.current_state = RunState.COLLECT_CINEMATOGRAPHY
+    state.current_state = RunState.COLLECT_DANCE_MAPPING
 
 
 def _apply_gate4_transition(state: RunStateData, report: GateReport) -> None:
@@ -241,18 +223,9 @@ def _check_agent_allowed_for_state(state: RunStateData, agent: str) -> None:
         RunState.COLLECT_DANCE_MAPPING: {"dance_mapping"},
         RunState.COLLECT_CINEMATOGRAPHY: {"cinematography"},
         RunState.COLLECT_AUDIO: {"audio"},
-        RunState.DRYRUN: {"dryrun_metrics", "timeline", "render_package"},
-        RunState.FINAL_RENDER: {"final_metrics", "timeline", "render_package"},
+        RunState.FINAL_RENDER: {"dryrun_metrics", "final_metrics", "timeline", "render_package"},
     }
     allowed = expected.get(state.current_state, set())
-    if agent in {"timeline", "render_package"} and state.current_state in {
-        RunState.COLLECT_SHOWRUNNER,
-        RunState.COLLECT_DIRECTION,
-        RunState.COLLECT_DANCE_MAPPING,
-        RunState.COLLECT_CINEMATOGRAPHY,
-        RunState.COLLECT_AUDIO,
-    }:
-        return
     if not allowed or agent not in allowed:
         raise ValueError(
             f"Agent '{agent}' cannot submit in state '{state.current_state}'. "

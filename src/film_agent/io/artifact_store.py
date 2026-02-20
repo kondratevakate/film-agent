@@ -67,11 +67,32 @@ def submit_artifact(run_path: Path, state: RunStateData, agent: str, input_file:
 
     if agent == "dance_mapping":
         if not state.latest_direction_pack_id:
-            raise ArtifactError("UserDirectionPack is required before dance mapping.")
-        if artifact.direction_pack_id != state.latest_direction_pack_id:
+            raise ArtifactError("Script review artifact is required before image prompt package.")
+        if artifact.script_review_id != state.latest_direction_pack_id:
             raise ArtifactError(
-                "DanceMappingSpec.direction_pack_id must match current UserDirectionPack id "
+                "ImagePromptPackage.script_review_id must match current ScriptReview id "
                 f"({state.latest_direction_pack_id})."
+            )
+    if agent == "cinematography":
+        if not state.latest_image_prompt_package_id:
+            raise ArtifactError("Image prompt package is required before selected images.")
+        if artifact.image_prompt_package_id != state.latest_image_prompt_package_id:
+            raise ArtifactError(
+                "SelectedImagesArtifact.image_prompt_package_id must match current image prompt package id "
+                f"({state.latest_image_prompt_package_id})."
+            )
+    if agent == "audio":
+        if not state.latest_image_prompt_package_id or not state.latest_selected_images_id:
+            raise ArtifactError("Image prompt package and selected images are required before AV prompts.")
+        if artifact.image_prompt_package_id != state.latest_image_prompt_package_id:
+            raise ArtifactError(
+                "AVPromptPackage.image_prompt_package_id must match current image prompt package id "
+                f"({state.latest_image_prompt_package_id})."
+            )
+        if artifact.selected_images_id != state.latest_selected_images_id:
+            raise ArtifactError(
+                "AVPromptPackage.selected_images_id must match current selected images id "
+                f"({state.latest_selected_images_id})."
             )
 
     target = artifact_path_for_agent(run_path, state.current_iteration, agent)
@@ -87,6 +108,10 @@ def submit_artifact(run_path: Path, state: RunStateData, agent: str, input_file:
 
     if agent == "direction":
         state.latest_direction_pack_id = sha256_json(artifact.model_dump(mode="json"))
+    if agent == "dance_mapping":
+        state.latest_image_prompt_package_id = sha256_json(artifact.model_dump(mode="json"))
+    if agent == "cinematography":
+        state.latest_selected_images_id = sha256_json(artifact.model_dump(mode="json"))
 
     append_event(
         run_path,
@@ -105,9 +130,9 @@ def submit_artifact(run_path: Path, state: RunStateData, agent: str, input_file:
 
 def transition_state_after_submit(state: RunStateData, agent: str) -> None:
     transitions: dict[tuple[str, str], str] = {
-        (RunState.COLLECT_SHOWRUNNER, "showrunner"): RunState.COLLECT_DIRECTION,
-        (RunState.COLLECT_DIRECTION, "direction"): RunState.COLLECT_DANCE_MAPPING,
-        (RunState.COLLECT_DANCE_MAPPING, "dance_mapping"): RunState.COLLECT_CINEMATOGRAPHY,
+        (RunState.COLLECT_SHOWRUNNER, "showrunner"): RunState.GATE1,
+        (RunState.COLLECT_DIRECTION, "direction"): RunState.GATE2,
+        (RunState.COLLECT_DANCE_MAPPING, "dance_mapping"): RunState.GATE3,
         (RunState.COLLECT_CINEMATOGRAPHY, "cinematography"): RunState.COLLECT_AUDIO,
         (RunState.COLLECT_AUDIO, "audio"): RunState.LOCK_PREPROD,
     }

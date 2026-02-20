@@ -50,7 +50,10 @@ class RunStateData(BaseModel):
     provider_policy: dict[str, str] = Field(default_factory=dict)
     active_video_provider: str | None = None
     latest_direction_pack_id: str | None = None
+    latest_image_prompt_package_id: str | None = None
+    latest_selected_images_id: str | None = None
     preprod_locked_iteration: int | None = None
+    locked_spec_hash: str | None = None
     iterations: dict[str, IterationRecord] = Field(default_factory=dict)
 
 

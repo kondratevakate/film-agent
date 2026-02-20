@@ -49,6 +49,7 @@ def test_audio_sync_penalizes_unordered_or_out_of_range_markers() -> None:
             "identity_drift": 0.1,
             "audiosync_score": 80.0,
             "consistency_score": 85.0,
+            "spec_hash": "locked-spec",
         }
     )
     good = AudioPlan.model_validate(

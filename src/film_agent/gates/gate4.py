@@ -1,4 +1,4 @@
-"""Gate 4: final acceptance + final scoring."""
+"""Gate 4: final acceptance against immutable render contract."""
 
 from __future__ import annotations
 
@@ -6,42 +6,30 @@ from pathlib import Path
 from typing import cast
 
 from film_agent.config import RunConfig
-from film_agent.gates.scoring import (
-    build_final_scorecard,
-    compute_audio_sync,
-    compute_cinematic_quality,
-    compute_consistency,
-    compute_dance_mapping_score,
-    compute_science_clarity,
-)
 from film_agent.io.artifact_store import load_artifact_for_agent
+from film_agent.io.json_io import load_json
 from film_agent.schemas.artifacts import (
-    BeatBible,
-    CinematographyPackage,
-    DanceMappingSpec,
+    AVPromptPackage,
     FinalMetrics,
     FinalScorecard,
     GateReport,
-    UserDirectionPack,
+    ImagePromptPackage,
+    SelectedImagesArtifact,
 )
 from film_agent.state_machine.state_store import RunStateData
 
 
-def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig, gate1_report: GateReport, gate2_report: GateReport) -> tuple[GateReport, FinalScorecard]:
+def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig) -> tuple[GateReport, FinalScorecard]:
     reasons: list[str] = []
     fixes: list[str] = []
 
-    dryrun = load_artifact_for_agent(run_path, state, "dryrun_metrics")
+    image_prompts = load_artifact_for_agent(run_path, state, "dance_mapping")
+    selected_images = load_artifact_for_agent(run_path, state, "cinematography")
+    av_prompts = load_artifact_for_agent(run_path, state, "audio")
     final_metrics = load_artifact_for_agent(run_path, state, "final_metrics")
-    beat_bible = load_artifact_for_agent(run_path, state, "showrunner")
-    direction_pack = load_artifact_for_agent(run_path, state, "direction")
-    dance_mapping = load_artifact_for_agent(run_path, state, "dance_mapping")
-    cinematography = load_artifact_for_agent(run_path, state, "cinematography")
-    audio = load_artifact_for_agent(run_path, state, "audio")
-
-    if any(item is None for item in (dryrun, final_metrics, beat_bible, direction_pack, dance_mapping, cinematography, audio)):
+    if any(item is None for item in (image_prompts, selected_images, av_prompts, final_metrics)):
         reasons.append("Missing one or more required artifacts for Gate4 scoring.")
-        fixes.append("Ensure dryrun_metrics, final_metrics and pre-production artifacts are submitted.")
+        fixes.append("Ensure image prompts, selected images, AV prompts and final metrics are submitted.")
         empty = FinalScorecard(
             science_clarity=0.0,
             dance_mapping=0.0,
@@ -62,54 +50,98 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig, gate1
             empty,
         )
 
+    image_prompts = cast(ImagePromptPackage, image_prompts)
+    selected_images = cast(SelectedImagesArtifact, selected_images)
+    av_prompts = cast(AVPromptPackage, av_prompts)
     final_metrics = cast(FinalMetrics, final_metrics)
-    beat_bible = cast(BeatBible, beat_bible)
-    direction_pack = cast(UserDirectionPack, direction_pack)
-    dance_mapping = cast(DanceMappingSpec, dance_mapping)
-    cinematography = cast(CinematographyPackage, cinematography)
+    lock_payload = _load_lock_payload(run_path, state)
+    spec_hash = lock_payload.get("spec_hash", "")
+    if not spec_hash:
+        reasons.append("Missing immutable spec hash in lock manifest.")
+        fixes.append("Lock pre-production artifacts before final render.")
+
+    if state.locked_spec_hash and spec_hash and state.locked_spec_hash != spec_hash:
+        reasons.append("Run state locked_spec_hash does not match lock manifest.")
+        fixes.append("Do not mutate lock manifest; recreate run if contract changed.")
+
+    if not final_metrics.spec_hash:
+        reasons.append("Final metrics must include the spec_hash used for render.")
+        fixes.append("Populate final_metrics.spec_hash from the lock manifest.")
+    elif spec_hash and final_metrics.spec_hash != spec_hash:
+        reasons.append("Final metrics spec_hash does not match locked render contract.")
+        fixes.append("Re-render with locked contract or restart as a new run.")
+
+    if not final_metrics.one_shot_render:
+        reasons.append("Final render must be flagged as one-shot execution.")
+        fixes.append("Set one_shot_render=true only for single immutable render pass.")
+
+    selected_count = len(selected_images.selected_images)
+    selected_shot_ids = {item.shot_id for item in selected_images.selected_images}
+    prompt_shot_ids = {item.shot_id for item in image_prompts.image_prompts}
+    av_shot_ids = {item.shot_id for item in av_prompts.shot_prompts}
+
+    selected_coverage = (len(selected_shot_ids & prompt_shot_ids) / max(len(selected_shot_ids), 1)) * 100.0
+    av_coverage = (len(selected_shot_ids & av_shot_ids) / max(len(selected_shot_ids), 1)) * 100.0
+
+    if selected_count < 3 or selected_count > 10:
+        reasons.append("Selected images count must be between 3 and 10.")
+        fixes.append("Select 3-10 representative images for the run manifest.")
+
+    if selected_coverage < 100.0:
+        reasons.append("Selected images include shot_ids missing from image prompt package.")
+        fixes.append("Only select images from declared prompt shot_ids.")
+
+    if av_coverage < 100.0:
+        reasons.append("AV prompt package does not cover all selected shot_ids.")
+        fixes.append("Add missing AV prompts for every selected shot.")
+
+    if selected_images.image_prompt_package_id != state.latest_image_prompt_package_id:
+        reasons.append("Selected images manifest is not linked to current image prompt package id.")
+        fixes.append("Regenerate selected images manifest for the active prompt package.")
+
+    if av_prompts.image_prompt_package_id != state.latest_image_prompt_package_id:
+        reasons.append("AV prompt package image_prompt_package_id drifted from locked pre-production id.")
+        fixes.append("Regenerate AV prompts from current image prompt package.")
+
+    if av_prompts.selected_images_id != state.latest_selected_images_id:
+        reasons.append("AV prompt package selected_images_id drifted from selected image manifest id.")
+        fixes.append("Regenerate AV prompts after final image selection.")
 
     t = config.thresholds
-    dryrun_video = float(getattr(dryrun, "videoscore2"))
-    dryrun_physics = float(getattr(dryrun, "vbench2_physics"))
-
-    video_regression = dryrun_video - final_metrics.videoscore2
-    physics_regression = dryrun_physics - final_metrics.vbench2_physics
-
     if final_metrics.videoscore2 < t.videoscore2_threshold:
         reasons.append("Final VideoScore2 below threshold.")
-        fixes.append("Tune final render prompts/settings and rerun as new run.")
+        fixes.append("Tune prompts/settings and rerun as a new run.")
     if final_metrics.vbench2_physics < t.vbench2_physics_floor:
         reasons.append("Final VBench2 physics below floor.")
-        fixes.append("Fix motion plausibility before final render.")
+        fixes.append("Improve motion/physics controllability and rerun.")
     if final_metrics.identity_drift > t.identity_drift_ceiling:
         reasons.append("Final identity drift above ceiling.")
-        fixes.append("Tighten identity constraints in generation scripts.")
-    if video_regression > t.regression_epsilon or physics_regression > t.regression_epsilon:
-        reasons.append("Final regression exceeds epsilon versus dry-run.")
-        fixes.append("Investigate prompt/model/settings drift between dry-run and final.")
+        fixes.append("Strengthen identity anchors and rerun.")
 
-    concept_coverage = float(gate1_report.metrics.get("concept_coverage_pct", 0.0))
-    critical_errors = int(gate1_report.metrics.get("critical_science_errors", 0))
-    science_clarity = compute_science_clarity(beat_bible, concept_coverage, critical_errors)
-    dance_score = compute_dance_mapping_score(beat_bible, dance_mapping, direction_pack)
-
-    continuity_violations = int(gate2_report.metrics.get("continuity_violations", 0))
-    variety_score = float(gate2_report.metrics.get("variety_score", 0.0))
-    cinematic_quality = compute_cinematic_quality(cinematography, continuity_violations, variety_score)
-    consistency = compute_consistency(final_metrics)
-    audio_sync = compute_audio_sync(audio, final_metrics)
-    scorecard = build_final_scorecard(
-        science_clarity=science_clarity,
-        dance_mapping=dance_score,
-        cinematic_quality=cinematic_quality,
-        consistency=consistency,
-        audio_sync=audio_sync,
+    script_lock_score = selected_coverage
+    prompt_alignment_score = av_coverage
+    cinematic_quality = max(0.0, min(100.0, final_metrics.videoscore2 * 100.0))
+    consistency = max(0.0, min(100.0, (1.0 - final_metrics.identity_drift) * 100.0))
+    audio_sync = max(0.0, min(100.0, final_metrics.audiosync_score))
+    final_score = (
+        0.35 * script_lock_score
+        + 0.25 * prompt_alignment_score
+        + 0.20 * cinematic_quality
+        + 0.10 * consistency
+        + 0.10 * audio_sync
     )
+    scorecard = FinalScorecard(
+        science_clarity=round(script_lock_score, 2),
+        dance_mapping=round(prompt_alignment_score, 2),
+        cinematic_quality=round(cinematic_quality, 2),
+        consistency=round(consistency, 2),
+        audio_sync=round(audio_sync, 2),
+        final_score=round(max(0.0, min(100.0, final_score)), 2),
+    )
+
     if scorecard.final_score < t.final_score_floor:
         reasons.append("Final score below acceptance floor.")
-        fixes.append(
-            f"Raise final score to at least {t.final_score_floor:.2f} by improving weak dimensions."
-        )
+        fixes.append(f"Raise final score to at least {t.final_score_floor:.2f}.")
 
     passed = not reasons
     report = GateReport(
@@ -120,9 +152,12 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig, gate1
             "videoscore2": final_metrics.videoscore2,
             "vbench2_physics": final_metrics.vbench2_physics,
             "identity_drift": final_metrics.identity_drift,
-            "video_regression": round(video_regression, 4),
-            "physics_regression": round(physics_regression, 4),
-            "epsilon": t.regression_epsilon,
+            "spec_hash": final_metrics.spec_hash,
+            "locked_spec_hash": spec_hash,
+            "one_shot_render": final_metrics.one_shot_render,
+            "selected_images_count": selected_count,
+            "selected_coverage_pct": round(selected_coverage, 2),
+            "av_coverage_pct": round(av_coverage, 2),
             "final_score_floor": t.final_score_floor,
             "science_clarity": round(scorecard.science_clarity, 2),
             "dance_mapping": round(scorecard.dance_mapping, 2),
@@ -135,3 +170,15 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig, gate1
         fix_instructions=fixes,
     )
     return report, scorecard
+
+
+def _load_lock_payload(run_path: Path, state: RunStateData) -> dict[str, object]:
+    if state.preprod_locked_iteration is None:
+        return {}
+    lock_path = run_path / "locks" / f"preprod.iter-{state.preprod_locked_iteration:02d}.lock.json"
+    if not lock_path.exists():
+        return {}
+    payload = load_json(lock_path)
+    if isinstance(payload, dict):
+        return payload
+    return {}

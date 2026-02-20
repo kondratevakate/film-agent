@@ -1,2 +1,2 @@
 # Audio Task
-Prepare cues, voice lines, motifs and sync markers.
+Create per-shot AV prompts linked to selected images and image prompt package.

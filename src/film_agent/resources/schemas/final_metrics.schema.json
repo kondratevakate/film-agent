@@ -17,6 +17,15 @@
       "title": "Identity Drift",
       "type": "number"
     },
+    "one_shot_render": {
+      "default": true,
+      "title": "One Shot Render",
+      "type": "boolean"
+    },
+    "spec_hash": {
+      "title": "Spec Hash",
+      "type": "string"
+    },
     "vbench2_physics": {
       "minimum": 0,
       "title": "Vbench2 Physics",
@@ -33,7 +42,8 @@
     "vbench2_physics",
     "identity_drift",
     "audiosync_score",
-    "consistency_score"
+    "consistency_score",
+    "spec_hash"
   ],
   "title": "FinalMetrics",
   "type": "object"

@@ -1,3 +1,2 @@
 # Cinematography Task
-Convert beats and dance mapping into shot sheets.
-Ensure shot variety and continuity.
+Select 3-10 generated images and produce selected-images manifest.

@@ -1,8 +1,9 @@
 Return JSON only.
 
-Map beat IDs to embodied motion using current user direction pack.
-Do not invent style outside user references.
+Build image prompts from the locked script review.
+Produce 3-10 prompts with explicit intent and negative constraints.
 
 Output schema:
-- direction_pack_id: string
-- mappings: [{ beat_id, motion_description, symbolism, motif_tag, contrast_pattern }]
+- script_review_id: string
+- style_anchor: string
+- image_prompts: [{ shot_id, intent, image_prompt, negative_prompt, duration_s }]

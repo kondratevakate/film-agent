@@ -75,7 +75,7 @@ def auto_run_sdk_loop(
             agent = ROLE_TO_AGENT[role]
 
             payload = _call_model_for_json(client, model, prompt_text)
-            if role == RoleId.DANCE_MAPPING:
+            if role in {RoleId.DANCE_MAPPING, RoleId.CINEMATOGRAPHY, RoleId.AUDIO}:
                 payload = _inject_direction_pack_if_missing(state, payload)
 
             tmp_dir = run_path / "tmp" / f"iter-{state.current_iteration:02d}"
@@ -91,9 +91,12 @@ def auto_run_sdk_loop(
         if state.current_state == RunState.GATE2:
             validate_gate(base_dir, run_id, 2)
             continue
+        if state.current_state == RunState.GATE3:
+            validate_gate(base_dir, run_id, 3)
+            continue
 
         # For later stages that need external benchmark metrics, stop and export.
-        if state.current_state in {RunState.DRYRUN, RunState.GATE3, RunState.FINAL_RENDER, RunState.GATE4}:
+        if state.current_state in {RunState.DRYRUN, RunState.FINAL_RENDER, RunState.GATE4}:
             break
 
         break
@@ -163,14 +166,36 @@ def _extract_json_object(text: str) -> Any:
 
 def _inject_direction_pack_if_missing(state, payload: dict[str, Any]) -> dict[str, Any]:
     updated = dict(payload)
-    if not updated.get("direction_pack_id") and state.latest_direction_pack_id:
-        updated["direction_pack_id"] = state.latest_direction_pack_id
+    if not updated.get("script_review_id") and state.latest_direction_pack_id:
+        updated["script_review_id"] = state.latest_direction_pack_id
+    if not updated.get("image_prompt_package_id") and state.latest_image_prompt_package_id:
+        updated["image_prompt_package_id"] = state.latest_image_prompt_package_id
+    if not updated.get("selected_images_id") and state.latest_selected_images_id:
+        updated["selected_images_id"] = state.latest_selected_images_id
     return updated
 
 
 def _target_reached(current_state: str, until: str) -> bool:
     if until == "gate2":
-        return current_state in {RunState.DRYRUN, RunState.GATE3, RunState.FINAL_RENDER, RunState.GATE4, RunState.COMPLETE}
+        return current_state in {
+            RunState.COLLECT_DANCE_MAPPING,
+            RunState.GATE3,
+            RunState.COLLECT_CINEMATOGRAPHY,
+            RunState.COLLECT_AUDIO,
+            RunState.FINAL_RENDER,
+            RunState.GATE4,
+            RunState.COMPLETE,
+        }
     if until == "gate1":
-        return current_state in {RunState.GATE2, RunState.DRYRUN, RunState.GATE3, RunState.FINAL_RENDER, RunState.GATE4, RunState.COMPLETE}
+        return current_state in {
+            RunState.COLLECT_DIRECTION,
+            RunState.GATE2,
+            RunState.COLLECT_DANCE_MAPPING,
+            RunState.GATE3,
+            RunState.COLLECT_CINEMATOGRAPHY,
+            RunState.COLLECT_AUDIO,
+            RunState.FINAL_RENDER,
+            RunState.GATE4,
+            RunState.COMPLETE,
+        }
     return current_state == RunState.COMPLETE

@@ -8,7 +8,7 @@ Global Rules:
 - Preserve user intent and provided project constraints.
 
 Scope:
-- This stage creates planning artifacts, not a screenplay.
+- This stage creates typed production artifacts (including screenplay-level script data).
 - Prefer concise, technically actionable fields over stylistic prose.
 - Keep outputs deterministic and easy to validate in downstream gates.
 

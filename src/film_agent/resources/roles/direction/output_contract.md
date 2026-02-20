@@ -1,2 +1,2 @@
 # Output Contract
-Submit artifact as `direction` -> `user_direction_pack.json`.
+Submit artifact as `direction` -> `script_review.json`.

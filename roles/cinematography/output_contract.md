@@ -1,2 +1,2 @@
 # Output Contract
-Submit artifact as `cinematography` -> `shot_design_sheets.json`.
+Submit artifact as `cinematography` -> `selected_images.json`.

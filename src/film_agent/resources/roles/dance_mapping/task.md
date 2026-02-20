@@ -1,2 +1,2 @@
 # Dance Mapping Task
-Create mapping for every beat_id with symbolism, motif tag and contrast pattern.
+Create an image prompt package (3-10 prompts) linked to current script review id.

@@ -1,57 +1,63 @@
 {
   "$defs": {
-    "DanceMappingItem": {
+    "ImagePromptItem": {
       "properties": {
-        "beat_id": {
-          "title": "Beat Id",
+        "duration_s": {
+          "exclusiveMinimum": 0,
+          "title": "Duration S",
+          "type": "number"
+        },
+        "image_prompt": {
+          "title": "Image Prompt",
           "type": "string"
         },
-        "contrast_pattern": {
-          "title": "Contrast Pattern",
+        "intent": {
+          "title": "Intent",
           "type": "string"
         },
-        "motif_tag": {
-          "title": "Motif Tag",
+        "negative_prompt": {
+          "default": "",
+          "title": "Negative Prompt",
           "type": "string"
         },
-        "motion_description": {
-          "title": "Motion Description",
-          "type": "string"
-        },
-        "symbolism": {
-          "title": "Symbolism",
+        "shot_id": {
+          "title": "Shot Id",
           "type": "string"
         }
       },
       "required": [
-        "beat_id",
-        "motion_description",
-        "symbolism",
-        "motif_tag",
-        "contrast_pattern"
+        "shot_id",
+        "intent",
+        "image_prompt",
+        "duration_s"
       ],
-      "title": "DanceMappingItem",
+      "title": "ImagePromptItem",
       "type": "object"
     }
   },
   "properties": {
-    "direction_pack_id": {
-      "title": "Direction Pack Id",
-      "type": "string"
-    },
-    "mappings": {
+    "image_prompts": {
       "items": {
-        "$ref": "#/$defs/DanceMappingItem"
+        "$ref": "#/$defs/ImagePromptItem"
       },
       "minItems": 1,
-      "title": "Mappings",
+      "title": "Image Prompts",
       "type": "array"
+    },
+    "script_review_id": {
+      "title": "Script Review Id",
+      "type": "string"
+    },
+    "style_anchor": {
+      "title": "Style Anchor",
+      "type": "string"
     }
   },
   "required": [
-    "direction_pack_id",
-    "mappings"
+    "script_review_id",
+    "style_anchor",
+    "image_prompts"
   ],
-  "title": "DanceMappingSpec",
+  "title": "ImagePromptPackage",
   "type": "object"
 }

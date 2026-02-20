@@ -1,3 +1,3 @@
 # Handoff
 Handoff target: direction
-Pass BeatBible summary and unresolved questions for user direction.
+Pass locked script summary and open story concerns for review.

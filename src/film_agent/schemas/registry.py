@@ -8,15 +8,15 @@ from typing import Type
 from pydantic import BaseModel
 
 from .artifacts import (
-    AudioPlan,
-    BeatBible,
-    CinematographyPackage,
-    DanceMappingSpec,
+    AVPromptPackage,
     DryRunMetrics,
     EditorialTimeline,
     FinalMetrics,
+    ImagePromptPackage,
     RenderPackage,
-    UserDirectionPack,
+    ScriptArtifact,
+    ScriptReviewArtifact,
+    SelectedImagesArtifact,
 )
 
 
@@ -27,11 +27,11 @@ class AgentArtifact:
 
 
 AGENT_ARTIFACTS: dict[str, AgentArtifact] = {
-    "showrunner": AgentArtifact(BeatBible, "beat_bible.json"),
-    "direction": AgentArtifact(UserDirectionPack, "user_direction_pack.json"),
-    "dance_mapping": AgentArtifact(DanceMappingSpec, "dance_mapping_spec.json"),
-    "cinematography": AgentArtifact(CinematographyPackage, "shot_design_sheets.json"),
-    "audio": AgentArtifact(AudioPlan, "audio_plan.json"),
+    "showrunner": AgentArtifact(ScriptArtifact, "script.json"),
+    "direction": AgentArtifact(ScriptReviewArtifact, "script_review.json"),
+    "dance_mapping": AgentArtifact(ImagePromptPackage, "image_prompt_package.json"),
+    "cinematography": AgentArtifact(SelectedImagesArtifact, "selected_images.json"),
+    "audio": AgentArtifact(AVPromptPackage, "av_prompt_package.json"),
     "dryrun_metrics": AgentArtifact(DryRunMetrics, "dryrun_metrics.json"),
     "final_metrics": AgentArtifact(FinalMetrics, "final_metrics.json"),
     "timeline": AgentArtifact(EditorialTimeline, "editorial_timeline.json"),

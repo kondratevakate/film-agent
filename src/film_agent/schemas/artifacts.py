@@ -8,6 +8,81 @@ from typing import Any, Literal
 from pydantic import BaseModel, Field, model_validator
 
 
+class ScriptLine(BaseModel):
+    line_id: str
+    kind: Literal["action", "dialogue"]
+    text: str
+    speaker: str | None = None
+    est_duration_s: float = Field(gt=0)
+
+    @model_validator(mode="after")
+    def validate_dialogue_speaker(self) -> "ScriptLine":
+        if self.kind == "dialogue" and not (self.speaker or "").strip():
+            raise ValueError("dialogue lines must set speaker")
+        return self
+
+
+class ScriptArtifact(BaseModel):
+    title: str
+    logline: str
+    theme: str = ""
+    characters: list[str] = Field(min_length=1)
+    locations: list[str] = Field(default_factory=list)
+    lines: list[ScriptLine] = Field(min_length=1)
+
+
+class ScriptReviewArtifact(BaseModel):
+    script_version: int = Field(ge=1)
+    script_hash_hint: str | None = None
+    approved_story_facts: list[str] = Field(min_length=1)
+    approved_character_registry: list[str] = Field(min_length=1)
+    revision_notes: list[str] = Field(default_factory=list)
+    unresolved_items: list[str] = Field(default_factory=list)
+    lock_story_facts: bool = True
+
+
+class ImagePromptItem(BaseModel):
+    shot_id: str
+    intent: str
+    image_prompt: str
+    negative_prompt: str = ""
+    duration_s: float = Field(gt=0)
+
+
+class ImagePromptPackage(BaseModel):
+    script_review_id: str
+    style_anchor: str
+    image_prompts: list[ImagePromptItem] = Field(min_length=1)
+
+
+class SelectedImage(BaseModel):
+    shot_id: str
+    image_path: str
+    image_sha256: str | None = None
+    notes: str = ""
+
+
+class SelectedImagesArtifact(BaseModel):
+    image_prompt_package_id: str
+    selected_images: list[SelectedImage] = Field(min_length=3, max_length=10)
+
+
+class AVPromptItem(BaseModel):
+    shot_id: str
+    video_prompt: str
+    audio_prompt: str
+    tts_text: str | None = None
+    duration_s: float = Field(gt=0)
+
+
+class AVPromptPackage(BaseModel):
+    image_prompt_package_id: str
+    selected_images_id: str
+    music_prompt: str
+    shot_prompts: list[AVPromptItem] = Field(min_length=1)
+    global_negative_constraints: list[str] = Field(default_factory=list)
+
+
 class Beat(BaseModel):
     beat_id: str
     start_s: float = Field(ge=0)
@@ -141,6 +216,8 @@ class FinalMetrics(BaseModel):
     identity_drift: float = Field(ge=0)
     audiosync_score: float = Field(ge=0, le=100)
     consistency_score: float = Field(ge=0, le=100)
+    spec_hash: str
+    one_shot_render: bool = True
 
 
 class GateReport(BaseModel):

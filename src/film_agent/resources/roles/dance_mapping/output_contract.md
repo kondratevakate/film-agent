@@ -1,3 +1,3 @@
 # Output Contract
-Submit artifact as `dance_mapping` -> `dance_mapping_spec.json`.
-`direction_pack_id` must match current direction pack hash.
+Submit artifact as `dance_mapping` -> `image_prompt_package.json`.
+`script_review_id` must match current script review hash.

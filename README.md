@@ -5,7 +5,7 @@ Multi-role film pipeline with strict JSON artifacts, gate validation, and SDK-dr
 ## Core Flow
 
 - State machine:
-  `INIT -> GATE0 -> COLLECT_SHOWRUNNER -> COLLECT_DIRECTION -> COLLECT_DANCE_MAPPING -> COLLECT_CINEMATOGRAPHY -> COLLECT_AUDIO -> LOCK_PREPROD -> GATE1 -> GATE2 -> DRYRUN -> GATE3 -> FINAL_RENDER -> GATE4`
+  `INIT -> GATE0 -> COLLECT_SHOWRUNNER(script) -> GATE1 -> COLLECT_DIRECTION(script_review) -> GATE2 -> COLLECT_DANCE_MAPPING(image_prompts) -> GATE3 -> COLLECT_CINEMATOGRAPHY(selected_images) -> COLLECT_AUDIO(av_prompts) -> LOCK_PREPROD(spec lock) -> FINAL_RENDER -> GATE4`
 - Roles are explicit role packs under `roles/`.
 - Artifacts are strict JSON and validated on submit.
 
@@ -26,7 +26,7 @@ pip install -e .[providers]
 ```bash
 film-agent new-run --config configs/project.example.yaml
 film-agent gate0 --run-id <RUN_ID>
-film-agent submit --run-id <RUN_ID> --agent showrunner --file beat_bible.json
+film-agent submit --run-id <RUN_ID> --agent showrunner --file script.json
 film-agent validate --run-id <RUN_ID> --gate 1
 film-agent package-iteration --run-id <RUN_ID> --iter 1
 film-agent final-report --run-id <RUN_ID>
@@ -116,13 +116,15 @@ film-agent show-prompt --agent showrunner
 
 ## Canonical JSON Artifacts
 
-- `showrunner` -> `BeatBible`
-- `direction` -> `UserDirectionPack`
-- `dance_mapping` -> `DanceMappingSpec`
-- `cinematography` -> `CinematographyPackage`
-- `audio` -> `AudioPlan`
+- `showrunner` -> `ScriptArtifact`
+- `direction` -> `ScriptReviewArtifact`
+- `dance_mapping` -> `ImagePromptPackage`
+- `cinematography` -> `SelectedImagesArtifact`
+- `audio` -> `AVPromptPackage`
 - `dryrun_metrics` -> `DryRunMetrics`
 - `final_metrics` -> `FinalMetrics`
+
+Lock manifest now includes an immutable `spec_hash` and Gate4 requires `final_metrics.spec_hash` to match that locked hash.
 
 ## Prompt Stack
 

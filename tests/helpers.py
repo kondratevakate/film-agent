@@ -64,135 +64,116 @@ def write_json(path: Path, payload: dict) -> Path:
 
 
 def sample_beat_bible(critical: bool = False) -> dict:
-    beats = []
-    start = 0.0
-    for idx in range(9):
-        end = start + 10.0
-        beats.append(
+    lines = []
+    for idx in range(12):
+        kind = "dialogue" if idx % 3 == 0 else "action"
+        speaker = "Narrator" if kind == "dialogue" else None
+        text = "TODO placeholder" if critical and idx == 0 else f"Story line {idx + 1}"
+        lines.append(
             {
-                "beat_id": f"b{idx+1}",
-                "start_s": start,
-                "end_s": end,
-                "science_claim": f"concept-{idx+1}",
-                "dance_metaphor": f"move-{idx+1}",
-                "visual_motif": "ring",
-                "emotion_intention": "focus",
-                "spoken_line": None,
-                "success_criteria": "clear mapping",
-                "science_status": "critical_error" if critical and idx == 0 else "ok",
+                "line_id": f"l{idx+1}",
+                "kind": kind,
+                "text": text,
+                "speaker": speaker,
+                "est_duration_s": 8.0,
             }
         )
-        start = end
     return {
-        "concept_thesis": "I will explain X by dancing Y because Z.",
-        "beats": beats,
+        "title": "Test Film",
+        "logline": "A compact narrative for testing gates.",
+        "theme": "consistency under constraints",
+        "characters": ["Narrator", "Lead"],
+        "locations": ["stage-a", "hallway"],
+        "lines": lines,
     }
 
 
 def sample_direction(must_include: list[str] | None = None) -> dict:
     return {
-        "iteration_goal": "Lean into grounded contemporary style.",
-        "style_references": ["Pina Bausch", "minimal staging"],
-        "must_include": must_include or ["spiral"],
-        "avoid": ["acrobatics"],
-        "notes": "User-defined direction for this iteration.",
+        "script_version": 1,
+        "script_hash_hint": "script-v1",
+        "approved_story_facts": [
+            "Lead enters stage and delivers a focused narrative.",
+            "No additional characters are introduced.",
+        ],
+        "approved_character_registry": ["Narrator", "Lead"],
+        "revision_notes": must_include or ["tighten opening action"],
+        "unresolved_items": [],
+        "lock_story_facts": True,
     }
 
 
 def sample_dance_mapping(direction_pack_id: str) -> dict:
-    mappings = []
-    for idx in range(9):
-        mappings.append(
+    prompts = []
+    for idx in range(5):
+        prompts.append(
             {
-                "beat_id": f"b{idx+1}",
-                "motion_description": "spiral arm sweep with grounded footwork",
-                "symbolism": "represents uncertainty and integration",
-                "motif_tag": "spiral",
-                "contrast_pattern": "stillness to burst",
+                "shot_id": f"s{idx+1}",
+                "intent": "clear character action with stable framing",
+                "image_prompt": (
+                    f"Shot s{idx+1}: cinematic still of Lead in stage-a, "
+                    "single action, grounded movement, realistic lighting"
+                ),
+                "negative_prompt": "blurry, deformed face, extra limbs",
+                "duration_s": 5.0,
             }
         )
-    return {"direction_pack_id": direction_pack_id, "mappings": mappings}
+    return {"script_review_id": direction_pack_id, "style_anchor": "clean kinetic realism", "image_prompts": prompts}
 
 
-def sample_cinematography() -> dict:
+def sample_cinematography(image_prompt_package_id: str) -> dict:
     return {
-        "character_bank": {
-            "characters": [
-                {
-                    "name": "Lead",
-                    "identity_token": "lead-v1",
-                    "costume_style_constraints": ["white shirt"],
-                    "forbidden_drift_rules": ["no mask"],
-                }
-            ]
-        },
-        "shots": [
+        "image_prompt_package_id": image_prompt_package_id,
+        "selected_images": [
             {
                 "shot_id": "s1",
-                "beat_id": "b1",
-                "character": "Lead",
-                "identity_token": "lead-v1",
-                "background": "studio",
-                "pose_action": "opening stance",
-                "props": [],
-                "camera": "dolly in",
-                "framing": "wide",
-                "lighting": "soft key",
-                "style_constraints": ["minimal"],
-                "duration_s": 3.0,
-                "location": "stage-a",
-                "continuity_reset": False,
+                "image_path": "images/s1.png",
+                "image_sha256": "a" * 64,
+                "notes": "good identity match",
             },
             {
                 "shot_id": "s2",
-                "beat_id": "b1",
-                "character": "Lead",
-                "identity_token": "lead-v1",
-                "background": "studio",
-                "pose_action": "turn",
-                "props": [],
-                "camera": "static",
-                "framing": "medium",
-                "lighting": "soft key",
-                "style_constraints": ["minimal"],
-                "duration_s": 3.0,
-                "location": "stage-a",
-                "continuity_reset": False,
+                "image_path": "images/s2.png",
+                "image_sha256": "b" * 64,
+                "notes": "strong composition",
             },
             {
                 "shot_id": "s3",
-                "beat_id": "b2",
-                "character": "Lead",
-                "identity_token": "lead-v1",
-                "background": "studio",
-                "pose_action": "close expression",
-                "props": [],
-                "camera": "handheld",
-                "framing": "close",
-                "lighting": "backlight",
-                "style_constraints": ["minimal"],
-                "duration_s": 3.0,
-                "location": "stage-a",
-                "continuity_reset": False,
+                "image_path": "images/s3.png",
+                "image_sha256": "c" * 64,
+                "notes": "usable for transition",
             },
         ],
     }
 
 
-def sample_audio_plan() -> dict:
+def sample_audio_plan(image_prompt_package_id: str, selected_images_id: str) -> dict:
     return {
-        "motifs": ["pulse"],
-        "voice_lines": [
-            {"line_id": "l1", "timestamp_s": 5.0, "speaker": "Narrator", "text": "This is a line."}
-        ],
-        "cues": [
+        "image_prompt_package_id": image_prompt_package_id,
+        "selected_images_id": selected_images_id,
+        "music_prompt": "subtle cinematic pulse with sparse rhythm",
+        "shot_prompts": [
             {
-                "cue_id": "c1",
-                "timestamp_s": 0.0,
-                "duration_s": 20.0,
-                "cue_type": "music",
-                "description": "intro pulse",
-            }
+                "shot_id": "s1",
+                "video_prompt": "Start with a medium shot of Lead, single deliberate gesture.",
+                "audio_prompt": "light ambience with soft impact accent",
+                "tts_text": "We begin in uncertainty.",
+                "duration_s": 5.0,
+            },
+            {
+                "shot_id": "s2",
+                "video_prompt": "Cut to close-up preserving facial identity and lighting.",
+                "audio_prompt": "brief swell and quiet bed",
+                "tts_text": "Then attention tightens.",
+                "duration_s": 5.0,
+            },
+            {
+                "shot_id": "s3",
+                "video_prompt": "Wide resolve shot, stable direction and smooth motion.",
+                "audio_prompt": "resolve tone and tail",
+                "tts_text": "Finally the pattern resolves.",
+                "duration_s": 5.0,
+            },
         ],
-        "sync_markers": [0.0, 5.0, 10.0],
+        "global_negative_constraints": ["identity drift", "camera teleport"],
     }

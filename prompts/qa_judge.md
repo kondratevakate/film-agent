@@ -1,11 +1,13 @@
 Return JSON only.
 
 Judge current iteration against gates and provide fix instructions.
-DanceMapping score must be based on current UserDirectionPack compliance, not fixed choreography style.
+Verify final metrics against locked spec hash and one-shot render policy.
 
 Output schema:
-- gate: string
-- passed: boolean
-- metrics: object
-- reasons: [string]
-- fix_instructions: [string]
+- videoscore2: number
+- vbench2_physics: number
+- identity_drift: number
+- audiosync_score: number
+- consistency_score: number
+- spec_hash: string
+- one_shot_render: boolean

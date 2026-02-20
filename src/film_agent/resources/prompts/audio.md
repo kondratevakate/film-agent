@@ -1,9 +1,11 @@
 Return JSON only.
 
-Create music and voice timing aligned to beats.
+Create AV prompts using selected images and image prompt package.
+Every selected shot_id must have a shot prompt entry.
 
 Output schema:
-- motifs: [string]
-- voice_lines: [{ line_id, timestamp_s, speaker, text }]
-- cues: [{ cue_id, timestamp_s, duration_s, cue_type, description }]
-- sync_markers: [number]
+- image_prompt_package_id: string
+- selected_images_id: string
+- music_prompt: string
+- shot_prompts: [{ shot_id, video_prompt, audio_prompt, tts_text, duration_s }]
+- global_negative_constraints: [string]

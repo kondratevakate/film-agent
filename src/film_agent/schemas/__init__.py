@@ -1,6 +1,8 @@
 """Schema exports."""
 
 from .artifacts import (
+    AVPromptItem,
+    AVPromptPackage,
     AudioCue,
     AudioPlan,
     Beat,
@@ -15,7 +17,14 @@ from .artifacts import (
     FinalMetrics,
     FinalScorecard,
     GateReport,
+    ImagePromptItem,
+    ImagePromptPackage,
     RenderPackage,
+    ScriptArtifact,
+    ScriptLine,
+    ScriptReviewArtifact,
+    SelectedImage,
+    SelectedImagesArtifact,
     ShotDesignSheet,
     TimelineEntry,
     UserDirectionPack,
@@ -23,6 +32,8 @@ from .artifacts import (
 )
 
 __all__ = [
+    "AVPromptItem",
+    "AVPromptPackage",
     "AudioCue",
     "AudioPlan",
     "Beat",
@@ -37,7 +48,14 @@ __all__ = [
     "FinalMetrics",
     "FinalScorecard",
     "GateReport",
+    "ImagePromptItem",
+    "ImagePromptPackage",
     "RenderPackage",
+    "ScriptArtifact",
+    "ScriptLine",
+    "ScriptReviewArtifact",
+    "SelectedImage",
+    "SelectedImagesArtifact",
     "ShotDesignSheet",
     "TimelineEntry",
     "UserDirectionPack",

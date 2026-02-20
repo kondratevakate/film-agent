@@ -28,7 +28,10 @@ def build_final_report(base_dir: Path, run_id: str) -> Path:
         "gate_status": state.gate_status,
         "active_video_provider": state.active_video_provider,
         "latest_direction_pack_id": state.latest_direction_pack_id,
+        "latest_image_prompt_package_id": state.latest_image_prompt_package_id,
+        "latest_selected_images_id": state.latest_selected_images_id,
         "preprod_locked_iteration": state.preprod_locked_iteration,
+        "locked_spec_hash": state.locked_spec_hash,
         "gate_reports": gate_reports,
         "final_scorecard": scorecard,
     }

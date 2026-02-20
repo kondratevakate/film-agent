@@ -77,92 +77,94 @@ def _write_prompt_scripts(export_dir: Path) -> None:
 
 
 def _write_plan_summary_script(scripts_out: Path, artifacts: Path) -> None:
-    beat_path = artifacts / "beat_bible.json"
-    direction_path = artifacts / "user_direction_pack.json"
+    script_path = artifacts / "script.json"
+    review_path = artifacts / "script_review.json"
 
     lines = ["# Plan Summary", ""]
-    if beat_path.exists():
-        beat_bible = load_json(beat_path)
-        lines.append(f"Concept thesis: {beat_bible.get('concept_thesis', '')}")
+    if script_path.exists():
+        script = load_json(script_path)
+        lines.append(f"Title: {script.get('title', '')}")
+        lines.append(f"Logline: {script.get('logline', '')}")
+        lines.append(f"Theme: {script.get('theme', '')}")
         lines.append("")
-        lines.append("## Beats")
-        for beat in beat_bible.get("beats", []):
+        lines.append("## Script Lines")
+        for line in script.get("lines", []):
+            speaker = line.get("speaker") or "-"
             lines.append(
-                f"- {beat.get('beat_id')} [{beat.get('start_s')}s-{beat.get('end_s')}s]: "
-                f"{beat.get('science_claim')} | metaphor: {beat.get('dance_metaphor')}"
+                f"- {line.get('line_id')} ({line.get('kind')}) speaker={speaker} "
+                f"duration={line.get('est_duration_s')}s: {line.get('text')}"
             )
     else:
-        lines.append("Beat bible artifact is missing.")
+        lines.append("Script artifact is missing.")
 
-    if direction_path.exists():
-        direction = load_json(direction_path)
+    if review_path.exists():
+        review = load_json(review_path)
         lines.extend(
             [
                 "",
-                "## User Direction",
-                f"- Goal: {direction.get('iteration_goal', '')}",
-                f"- References: {', '.join(direction.get('style_references', []))}",
-                f"- Must include: {', '.join(direction.get('must_include', []))}",
-                f"- Avoid: {', '.join(direction.get('avoid', []))}",
-                f"- Notes: {direction.get('notes', '')}",
+                "## Script Review",
+                f"- Version: {review.get('script_version', '')}",
+                f"- lock_story_facts: {review.get('lock_story_facts', False)}",
+                f"- Approved facts: {', '.join(review.get('approved_story_facts', []))}",
+                f"- Character registry: {', '.join(review.get('approved_character_registry', []))}",
+                f"- Unresolved: {', '.join(review.get('unresolved_items', []))}",
             ]
         )
 
     (scripts_out / "plan_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _shot_prompt(shot: dict[str, Any]) -> str:
+def _image_prompt_line(item: dict[str, Any]) -> str:
     return (
-        f"Shot {shot.get('shot_id')}: "
-        f"character={shot.get('character')}; "
-        f"action={shot.get('pose_action')}; "
-        f"background={shot.get('background')}; "
-        f"camera={shot.get('camera')}; "
-        f"framing={shot.get('framing')}; "
-        f"lighting={shot.get('lighting')}; "
-        f"location={shot.get('location')}; "
-        f"style={'; '.join(shot.get('style_constraints', []))}"
+        f"Shot {item.get('shot_id')}: intent={item.get('intent')}; "
+        f"duration={item.get('duration_s')}s; "
+        f"prompt={item.get('image_prompt')}; "
+        f"negative={item.get('negative_prompt')}"
     )
 
 
 def _write_image_prompt_sheet(scripts_out: Path, artifacts: Path) -> None:
-    shot_path = artifacts / "shot_design_sheets.json"
+    prompt_path = artifacts / "image_prompt_package.json"
     lines = ["# Image Prompt Sheet", ""]
-    if not shot_path.exists():
-        lines.append("Shot design sheets artifact is missing.")
+    if not prompt_path.exists():
+        lines.append("Image prompt package artifact is missing.")
     else:
-        data = load_json(shot_path)
-        for shot in data.get("shots", []):
-            lines.append(f"- {_shot_prompt(shot)}")
+        data = load_json(prompt_path)
+        lines.append(f"style_anchor: {data.get('style_anchor', '')}")
+        lines.append("")
+        for item in data.get("image_prompts", []):
+            lines.append(f"- {_image_prompt_line(item)}")
     (scripts_out / "images_prompts.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def _write_sora_prompt_sheet(scripts_out: Path, artifacts: Path) -> None:
-    shot_path = artifacts / "shot_design_sheets.json"
+    av_path = artifacts / "av_prompt_package.json"
     lines = ["# Sora Prompt Sheet", "", "Use one prompt per shot in order."]
-    if not shot_path.exists():
-        lines.append("Shot design sheets artifact is missing.")
+    if not av_path.exists():
+        lines.append("AV prompt package artifact is missing.")
     else:
-        data = load_json(shot_path)
-        for shot in data.get("shots", []):
+        data = load_json(av_path)
+        for shot in data.get("shot_prompts", []):
             lines.append(
                 f"\n## {shot.get('shot_id')}\n"
-                f"{_shot_prompt(shot)}. Keep action simple and single-action in 5 seconds."
+                f"{shot.get('video_prompt')}"
             )
     (scripts_out / "sora_prompts.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
 def _write_elevenlabs_sheet(scripts_out: Path, artifacts: Path) -> None:
-    audio_path = artifacts / "audio_plan.json"
+    av_path = artifacts / "av_prompt_package.json"
     lines = ["# ElevenLabs Voice Lines", ""]
-    if not audio_path.exists():
-        lines.append("Audio plan artifact is missing.")
+    if not av_path.exists():
+        lines.append("AV prompt package artifact is missing.")
     else:
-        data = load_json(audio_path)
-        for line in data.get("voice_lines", []):
+        data = load_json(av_path)
+        for line in data.get("shot_prompts", []):
+            if not (line.get("tts_text") or "").strip():
+                continue
             lines.append(
-                f"- {line.get('line_id')} @ {line.get('timestamp_s')}s | "
-                f"speaker={line.get('speaker')} | text={line.get('text')}"
+                f"- shot={line.get('shot_id')} duration={line.get('duration_s')}s | "
+                f"text={line.get('tts_text')}"
             )
     (scripts_out / "elevenlabs_voice_lines.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 

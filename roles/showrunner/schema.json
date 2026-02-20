@@ -1,38 +1,25 @@
 {
   "$defs": {
-    "Beat": {
+    "ScriptLine": {
       "properties": {
-        "beat_id": {
-          "title": "Beat Id",
-          "type": "string"
-        },
-        "dance_metaphor": {
-          "title": "Dance Metaphor",
-          "type": "string"
-        },
-        "emotion_intention": {
-          "title": "Emotion Intention",
-          "type": "string"
-        },
-        "end_s": {
+        "est_duration_s": {
           "exclusiveMinimum": 0,
-          "title": "End S",
+          "title": "Est Duration S",
           "type": "number"
         },
-        "science_claim": {
-          "title": "Science Claim",
-          "type": "string"
-        },
-        "science_status": {
-          "default": "ok",
+        "kind": {
           "enum": [
-            "ok",
-            "critical_error"
+            "action",
+            "dialogue"
           ],
-          "title": "Science Status",
+          "title": "Kind",
           "type": "string"
         },
-        "spoken_line": {
+        "line_id": {
+          "title": "Line Id",
+          "type": "string"
+        },
+        "speaker": {
           "anyOf": [
             {
               "type": "string"
@@ -42,54 +29,67 @@
             }
           ],
           "default": null,
-          "title": "Spoken Line"
+          "title": "Speaker"
         },
-        "start_s": {
-          "minimum": 0,
-          "title": "Start S",
-          "type": "number"
-        },
-        "success_criteria": {
-          "title": "Success Criteria",
-          "type": "string"
-        },
-        "visual_motif": {
-          "title": "Visual Motif",
+        "text": {
+          "title": "Text",
           "type": "string"
         }
       },
       "required": [
-        "beat_id",
-        "start_s",
-        "end_s",
-        "science_claim",
-        "dance_metaphor",
-        "visual_motif",
-        "emotion_intention",
-        "success_criteria"
+        "line_id",
+        "kind",
+        "text",
+        "est_duration_s"
       ],
-      "title": "Beat",
+      "title": "ScriptLine",
       "type": "object"
     }
   },
   "properties": {
-    "beats": {
+    "characters": {
       "items": {
-        "$ref": "#/$defs/Beat"
+        "type": "string"
       },
       "minItems": 1,
-      "title": "Beats",
+      "title": "Characters",
       "type": "array"
     },
-    "concept_thesis": {
-      "title": "Concept Thesis",
+    "lines": {
+      "items": {
+        "$ref": "#/$defs/ScriptLine"
+      },
+      "minItems": 1,
+      "title": "Lines",
+      "type": "array"
+    },
+    "locations": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Locations",
+      "type": "array"
+    },
+    "logline": {
+      "title": "Logline",
+      "type": "string"
+    },
+    "theme": {
+      "default": "",
+      "title": "Theme",
+      "type": "string"
+    },
+    "title": {
+      "title": "Title",
       "type": "string"
     }
   },
   "required": [
-    "concept_thesis",
-    "beats"
+    "title",
+    "logline",
+    "characters",
+    "lines"
   ],
-  "title": "BeatBible",
+  "title": "ScriptArtifact",
   "type": "object"
 }

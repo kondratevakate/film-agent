@@ -1,2 +1,2 @@
 # Direction Task
-Create or refine UserDirectionPack for the current iteration.
+Create a script-review artifact that locks facts and character continuity.

@@ -1,106 +1,82 @@
 {
   "$defs": {
-    "AudioCue": {
+    "AVPromptItem": {
       "properties": {
-        "cue_id": {
-          "title": "Cue Id",
-          "type": "string"
-        },
-        "cue_type": {
-          "enum": [
-            "music",
-            "voiceover",
-            "silence",
-            "fx"
-          ],
-          "title": "Cue Type",
-          "type": "string"
-        },
-        "description": {
-          "title": "Description",
+        "audio_prompt": {
+          "title": "Audio Prompt",
           "type": "string"
         },
         "duration_s": {
-          "minimum": 0,
+          "exclusiveMinimum": 0,
           "title": "Duration S",
           "type": "number"
         },
-        "timestamp_s": {
-          "minimum": 0,
-          "title": "Timestamp S",
-          "type": "number"
+        "shot_id": {
+          "title": "Shot Id",
+          "type": "string"
+        },
+        "tts_text": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tts Text"
+        },
+        "video_prompt": {
+          "title": "Video Prompt",
+          "type": "string"
         }
       },
       "required": [
-        "cue_id",
-        "timestamp_s",
-        "duration_s",
-        "cue_type",
-        "description"
+        "shot_id",
+        "video_prompt",
+        "audio_prompt",
+        "duration_s"
       ],
-      "title": "AudioCue",
-      "type": "object"
-    },
-    "VoiceLine": {
-      "properties": {
-        "line_id": {
-          "title": "Line Id",
-          "type": "string"
-        },
-        "speaker": {
-          "title": "Speaker",
-          "type": "string"
-        },
-        "text": {
-          "title": "Text",
-          "type": "string"
-        },
-        "timestamp_s": {
-          "minimum": 0,
-          "title": "Timestamp S",
-          "type": "number"
-        }
-      },
-      "required": [
-        "line_id",
-        "timestamp_s",
-        "speaker",
-        "text"
-      ],
-      "title": "VoiceLine",
+      "title": "AVPromptItem",
       "type": "object"
     }
   },
   "properties": {
-    "cues": {
-      "items": {
-        "$ref": "#/$defs/AudioCue"
-      },
-      "title": "Cues",
-      "type": "array"
-    },
-    "motifs": {
+    "global_negative_constraints": {
       "items": {
         "type": "string"
       },
-      "title": "Motifs",
+      "title": "Global Negative Constraints",
       "type": "array"
     },
-    "sync_markers": {
-      "items": {
-        "type": "number"
-      },
-      "title": "Sync Markers",
-      "type": "array"
+    "image_prompt_package_id": {
+      "title": "Image Prompt Package Id",
+      "type": "string"
     },
-    "voice_lines": {
+    "music_prompt": {
+      "title": "Music Prompt",
+      "type": "string"
+    },
+    "selected_images_id": {
+      "title": "Selected Images Id",
+      "type": "string"
+    },
+    "shot_prompts": {
       "items": {
-        "$ref": "#/$defs/VoiceLine"
+        "$ref": "#/$defs/AVPromptItem"
       },
-      "title": "Voice Lines",
+      "minItems": 1,
+      "title": "Shot Prompts",
       "type": "array"
     }
   },
-  "title": "AudioPlan",
+  "required": [
+    "image_prompt_package_id",
+    "selected_images_id",
+    "music_prompt",
+    "shot_prompts"
+  ],
+  "title": "AVPromptPackage",
   "type": "object"
 }

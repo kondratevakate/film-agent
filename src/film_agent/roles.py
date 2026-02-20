@@ -47,13 +47,13 @@ ROLE_PACKS: dict[RoleId, RolePackManifest] = {
     ),
     RoleId.CINEMATOGRAPHY: RolePackManifest(
         role=RoleId.CINEMATOGRAPHY,
-        required_inputs=("showrunner", "direction", "dance_mapping"),
+        required_inputs=("dance_mapping",),
         output_schema="schemas/cinematography.schema.json",
         handoff_target=RoleId.AUDIO.value,
     ),
     RoleId.AUDIO: RolePackManifest(
         role=RoleId.AUDIO,
-        required_inputs=("showrunner", "direction", "dance_mapping"),
+        required_inputs=("dance_mapping", "cinematography"),
         output_schema="schemas/audio.schema.json",
         handoff_target=RoleId.QA_JUDGE.value,
     ),

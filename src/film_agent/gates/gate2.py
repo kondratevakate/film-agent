@@ -1,4 +1,4 @@
-"""Gate 2: Shot sheet validity + cinematic constraints."""
+"""Gate 2: script review / script doctor gate."""
 
 from __future__ import annotations
 
@@ -7,7 +7,7 @@ from typing import cast
 
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
-from film_agent.schemas.artifacts import CinematographyPackage, GateReport
+from film_agent.schemas.artifacts import GateReport, ScriptArtifact, ScriptReviewArtifact
 from film_agent.state_machine.state_store import RunStateData
 
 
@@ -15,99 +15,94 @@ def evaluate_gate2(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
     reasons: list[str] = []
     fixes: list[str] = []
 
-    cinematography = load_artifact_for_agent(run_path, state, "cinematography")
-    if cinematography is None:
-        reasons.append("Missing cinematography artifact.")
-        fixes.append("Submit CinematographyPackage before running Gate2.")
+    script = load_artifact_for_agent(run_path, state, "showrunner")
+    if script is None:
+        reasons.append("Missing script artifact.")
+        fixes.append("Submit script JSON before running Gate2.")
         return GateReport(
             gate="gate2",
             passed=False,
             iteration=state.current_iteration,
             metrics={
-                "schema_completeness_pct": 0.0,
-                "continuity_violations": 999,
-                "variety_score": 0.0,
-                "max_consecutive_identical_framing": 999,
+                "review_present": 0.0,
+                "lock_story_facts": False,
+                "character_registry_coverage_pct": 0.0,
+                "unresolved_items": 999,
             },
             reasons=reasons,
             fix_instructions=fixes,
         )
 
-    cinematography = cast(CinematographyPackage, cinematography)
-    shots = cinematography.shots
-    schema_completeness_pct = 100.0
+    review = load_artifact_for_agent(run_path, state, "direction")
+    if review is None:
+        reasons.append("Missing script review artifact.")
+        fixes.append("Submit ScriptReview JSON before running Gate2.")
+        return GateReport(
+            gate="gate2",
+            passed=False,
+            iteration=state.current_iteration,
+            metrics={
+                "review_present": 0.0,
+                "lock_story_facts": False,
+                "character_registry_coverage_pct": 0.0,
+                "unresolved_items": 999,
+            },
+            reasons=reasons,
+            fix_instructions=fixes,
+        )
 
-    identity_tokens: dict[str, str] = {}
-    continuity_violations = 0
-    for shot in shots:
-        existing = identity_tokens.get(shot.character)
-        if existing is None:
-            identity_tokens[shot.character] = shot.identity_token
-        elif existing != shot.identity_token:
-            continuity_violations += 1
-            reasons.append(f"Identity token drift for character {shot.character}.")
+    script = cast(ScriptArtifact, script)
+    review = cast(ScriptReviewArtifact, review)
 
-    for idx in range(1, len(shots)):
-        prev = shots[idx - 1]
-        cur = shots[idx]
-        if prev.beat_id == cur.beat_id and prev.location != cur.location and not cur.continuity_reset:
-            continuity_violations += 1
-            reasons.append(
-                f"Location jump without continuity_reset between {prev.shot_id} and {cur.shot_id}."
-            )
+    script_chars = {item.strip() for item in script.characters if item.strip()}
+    reviewed_chars = {item.strip() for item in review.approved_character_registry if item.strip()}
+    coverage_pct = (len(script_chars & reviewed_chars) / max(len(script_chars), 1)) * 100.0
+    if coverage_pct < 100.0:
+        reasons.append("Script review does not cover all declared script characters.")
+        fixes.append("Update approved_character_registry to include every script character.")
 
-    framing_count: dict[str, int] = {}
-    for shot in shots:
-        framing_count[shot.framing] = framing_count.get(shot.framing, 0) + 1
+    unresolved_items = sum(1 for item in review.unresolved_items if item.strip())
+    if unresolved_items > 0:
+        reasons.append("Script review still has unresolved continuity/story items.")
+        fixes.append("Resolve unresolved_items before promotion.")
 
-    distinct_framings = len(framing_count)
-    variety_score = min(100.0, (distinct_framings / max(config.thresholds.shot_variety_min_types, 1)) * 100.0)
-    max_streak = _max_identical_streak([shot.framing for shot in shots])
-
-    if continuity_violations > 0:
-        fixes.append("Fix identity/location continuity in shot sheets.")
-    if variety_score < config.thresholds.variety_score_threshold:
-        reasons.append("Shot variety score below threshold.")
-        fixes.append("Increase framing diversity across the sequence.")
-    if max_streak > config.thresholds.max_consecutive_identical_framing:
-        reasons.append("Too many consecutive shots with identical framing.")
-        fixes.append("Break framing streaks with alternate shot sizes/camera plans.")
-
-    passed = (
-        schema_completeness_pct == 100.0
-        and continuity_violations == 0
-        and variety_score >= config.thresholds.variety_score_threshold
-        and max_streak <= config.thresholds.max_consecutive_identical_framing
+    todo_notes = sum(
+        1
+        for item in [*review.revision_notes, *review.unresolved_items]
+        if "todo" in item.lower() or "tbd" in item.lower() or "??" in item
     )
+    if todo_notes > 0:
+        reasons.append("Script review contains TODO/TBD markers.")
+        fixes.append("Replace temporary notes with explicit decisions.")
+
+    if not review.lock_story_facts:
+        reasons.append("lock_story_facts must be true before downstream prompt generation.")
+        fixes.append("Set lock_story_facts=true only after final review pass.")
+
+    if review.script_hash_hint and len(review.script_hash_hint.strip()) < 8:
+        reasons.append("script_hash_hint is present but too short to be useful.")
+        fixes.append("Use a stable hash/id reference for the approved script version.")
+
+    passed = coverage_pct == 100.0 and unresolved_items == 0 and todo_notes == 0 and review.lock_story_facts
 
     return GateReport(
         gate="gate2",
         passed=passed,
         iteration=state.current_iteration,
         metrics={
-            "schema_completeness_pct": schema_completeness_pct,
-            "continuity_violations": continuity_violations,
-            "variety_score": round(variety_score, 2),
-            "distinct_framing_types": distinct_framings,
-            "max_consecutive_identical_framing": max_streak,
+            "review_present": 100.0,
+            "script_version": review.script_version,
+            "lock_story_facts": review.lock_story_facts,
+            "character_registry_coverage_pct": round(coverage_pct, 2),
+            "approved_story_facts": len(review.approved_story_facts),
+            "unresolved_items": unresolved_items,
+            "todo_notes": todo_notes,
+            "direction_pack_id": state.latest_direction_pack_id,
+            "duration_target_s": config.duration_target_s,
         },
         reasons=_unique(reasons),
         fix_instructions=_unique(fixes),
     )
-
-
-def _max_identical_streak(values: list[str]) -> int:
-    if not values:
-        return 0
-    current = 1
-    maximum = 1
-    for idx in range(1, len(values)):
-        if values[idx] == values[idx - 1]:
-            current += 1
-            maximum = max(maximum, current)
-        else:
-            current = 1
-    return maximum
 
 
 def _unique(items: list[str]) -> list[str]:

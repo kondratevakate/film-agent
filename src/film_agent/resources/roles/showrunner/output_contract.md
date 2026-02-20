@@ -1,3 +1,3 @@
 # Output Contract
-Submit artifact as `showrunner` -> `beat_bible.json`.
+Submit artifact as `showrunner` -> `script.json`.
 Must validate against role schema.
