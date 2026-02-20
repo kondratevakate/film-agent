@@ -2,11 +2,15 @@
 
 from __future__ import annotations
 
+import logging
+import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from film_agent.final_mix import FinalMixResult, build_final_mix
+
+logger = logging.getLogger(__name__)
 from film_agent.io.json_io import dump_canonical_json, load_json
 from film_agent.render_api import (
     build_video_prompt_text,
@@ -49,9 +53,11 @@ def run_vimax_pipeline(
     shot_retry_limit: int = 2,
     poll_interval_s: float = 2.0,
     timeout_s: float = 900.0,
+    pipeline_timeout_s: float = 14400.0,  # 4 hours default
     tts_model: str = "gpt-4o-mini-tts",
     tts_voice: str = "alloy",
     dry_run: bool = False,
+    progress_callback: Callable[[str, int, int], None] | None = None,
 ) -> VimaxPipelineRunResult:
     prepared = prepare_vimax_inputs(
         base_dir,
@@ -131,8 +137,18 @@ def run_vimax_pipeline(
     client = YunwuVeoClient(api_key=yunwu_api_key)
 
     qc_rows: list[dict[str, Any]] = []
+    pipeline_start_time = time.time()
+    total_shots = len([line for line in lines if isinstance(line, dict) and str(line.get("shot_id", "")).strip()])
 
     for idx, line in enumerate(lines, start=1):
+        # Check pipeline timeout
+        elapsed = time.time() - pipeline_start_time
+        if elapsed >= pipeline_timeout_s:
+            logger.warning(
+                f"Pipeline timeout reached after {elapsed:.1f}s. "
+                f"Processed {idx - 1}/{total_shots} shots."
+            )
+            break
         if not isinstance(line, dict):
             continue
         shot_id = str(line.get("shot_id", "")).strip()
@@ -157,6 +173,18 @@ def run_vimax_pipeline(
         final_judgement: dict[str, Any] | None = None
 
         while True:
+            # Check pipeline timeout inside retry loop
+            if time.time() - pipeline_start_time >= pipeline_timeout_s:
+                final_judgement = {
+                    "shot_id": shot_id,
+                    "score": None,
+                    "decision": "fail",
+                    "retries_used": retries_used,
+                    "reason_codes": ["pipeline_timeout"],
+                    "summary": "Pipeline timeout reached during QC retry loop.",
+                }
+                break
+
             output_path = Path(str(render_row.get("output_path", "")))
             if not output_path.exists() or str(render_row.get("status")) != "completed":
                 if retries_used < shot_retry_limit:
@@ -252,6 +280,14 @@ def run_vimax_pipeline(
 
         assert final_judgement is not None
         qc_rows.append(final_judgement)
+
+        # Log progress
+        logger.info(
+            f"Shot {idx}/{total_shots} ({shot_id}): {final_judgement.get('decision', 'unknown')} "
+            f"(retries: {retries_used}, elapsed: {time.time() - pipeline_start_time:.1f}s)"
+        )
+        if progress_callback is not None:
+            progress_callback(shot_id, idx, total_shots)
 
     # persist any rerender updates
     dump_canonical_json(render_result.manifest_path, manifest)

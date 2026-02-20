@@ -3,13 +3,17 @@
 from __future__ import annotations
 
 import base64
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from datetime import datetime, timezone
 import json
+import logging
 from pathlib import Path
 import re
 from typing import Any
 from urllib.request import urlopen
+
+logger = logging.getLogger(__name__)
 
 from film_agent.io.artifact_store import load_artifact_for_agent
 from film_agent.io.hashing import sha256_file, sha256_json
@@ -88,7 +92,9 @@ def prepare_vimax_inputs(
     client = _build_openai_client(api_key=api_key) if not dry_run else None
     rows: list[dict[str, Any]] = []
     shot_anchor_trace: list[dict[str, Any]] = []
+    generation_tasks: list[dict[str, Any]] = []
 
+    # Phase 1: Prepare all rows and collect generation tasks
     for index, line in enumerate(lines, start=1):
         shot_id = str(line["shot_id"])
         refined_prompt = build_reference_prompt(
@@ -149,23 +155,57 @@ def prepare_vimax_inputs(
             shot_anchor_trace.append(_build_shot_anchor_trace(row, anchor_records))
             continue
 
-        assert client is not None
-        image_bytes = _generate_openai_image_bytes(
-            client=client,
-            model=image_model,
-            prompt=refined_prompt,
-            size=final_size,
-        )
-        target.write_bytes(image_bytes)
-        row["reference_status"] = "generated"
-        generated += 1
-        cache[shot_id] = {
-            "prompt_hash": prompt_hash,
-            "path": str(target),
-            "updated_at": datetime.now(timezone.utc).isoformat(),
-        }
+        # Queue for parallel generation
+        row["reference_status"] = "pending"
         rows.append(row)
         shot_anchor_trace.append(_build_shot_anchor_trace(row, anchor_records))
+        generation_tasks.append({
+            "row_index": len(rows) - 1,
+            "shot_id": shot_id,
+            "prompt": refined_prompt,
+            "target": target,
+            "prompt_hash": prompt_hash,
+        })
+
+    # Phase 2: Parallel image generation
+    if generation_tasks and client is not None:
+        max_workers = min(5, len(generation_tasks))  # Limit concurrent requests
+        logger.info(f"Generating {len(generation_tasks)} images in parallel (max_workers={max_workers})")
+
+        def generate_single(task: dict[str, Any]) -> tuple[dict[str, Any], bytes]:
+            image_bytes = _generate_openai_image_bytes(
+                client=client,
+                model=image_model,
+                prompt=task["prompt"],
+                size=final_size,
+            )
+            return task, image_bytes
+
+        with ThreadPoolExecutor(max_workers=max_workers) as executor:
+            futures = {executor.submit(generate_single, task): task for task in generation_tasks}
+            for future in as_completed(futures):
+                task = futures[future]
+                try:
+                    _, image_bytes = future.result()
+                    task["target"].write_bytes(image_bytes)
+
+                    # Update row status
+                    row_idx = task["row_index"]
+                    rows[row_idx]["reference_status"] = "generated"
+                    generated += 1
+
+                    # Update cache
+                    cache[task["shot_id"]] = {
+                        "prompt_hash": task["prompt_hash"],
+                        "path": str(task["target"]),
+                        "updated_at": datetime.now(timezone.utc).isoformat(),
+                    }
+                    logger.debug(f"Generated image for shot {task['shot_id']}")
+                except Exception as e:
+                    logger.error(f"Failed to generate image for shot {task['shot_id']}: {e}")
+                    row_idx = task["row_index"]
+                    rows[row_idx]["reference_status"] = "failed"
+                    rows[row_idx]["error"] = str(e)
 
     lines_payload = {
         "run_id": run_id,

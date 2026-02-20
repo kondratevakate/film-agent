@@ -3,14 +3,18 @@
 from __future__ import annotations
 
 import json
+import logging
 import os
 from pathlib import Path
 import re
 from typing import Any
 
+logger = logging.getLogger(__name__)
+
 from film_agent.constants import RunState
 from film_agent.io.json_io import dump_canonical_json
 from film_agent.io.package_export import package_iteration
+from film_agent.io.response_parsing import extract_json_object, extract_response_text
 from film_agent.prompt_packets import build_all_prompt_packets, build_prompt_packet
 from film_agent.roles import RoleId
 from film_agent.state_machine.orchestrator import run_gate0, submit_agent, validate_gate
@@ -58,9 +62,27 @@ def auto_run_sdk_loop(
     judge_model = evaluator_model or model
 
     cycles = 0
+    previous_state: str | None = None
+    stuck_count = 0
+    max_stuck_cycles = 3  # Max cycles without state change before warning
+
     while cycles < max_cycles:
         cycles += 1
         state = load_state(run_path)
+
+        # Detect stuck state (no progress)
+        if previous_state == state.current_state:
+            stuck_count += 1
+            if stuck_count >= max_stuck_cycles:
+                logger.warning(
+                    f"State '{state.current_state}' unchanged for {stuck_count} cycles. "
+                    "Possible infinite loop or blocked gate."
+                )
+        else:
+            if previous_state is not None:
+                logger.info(f"State transition: {previous_state} -> {state.current_state}")
+            stuck_count = 0
+        previous_state = state.current_state
 
         if state.current_state == RunState.GATE0:
             run_gate0(base_dir, run_id)
@@ -143,47 +165,11 @@ def _call_model_for_json(client, model: str, prompt_text: str) -> dict[str, Any]
 
 def _call_model_for_json_messages(client, model: str, messages: list[dict[str, str]]) -> dict[str, Any]:
     response = client.responses.create(model=model, input=messages)
-    text = getattr(response, "output_text", "") or _extract_response_text(response)
-    payload = _extract_json_object(text)
+    text = getattr(response, "output_text", "") or extract_response_text(response)
+    payload = extract_json_object(text)
     if not isinstance(payload, dict):
         raise ValueError("SDK model output is not a JSON object.")
     return payload
-
-
-def _extract_response_text(response: Any) -> str:
-    data = response.model_dump() if hasattr(response, "model_dump") else {}
-    output = data.get("output", [])
-    chunks: list[str] = []
-    for item in output:
-        for content in item.get("content", []):
-            text = content.get("text")
-            if text:
-                chunks.append(text)
-    return "\n".join(chunks)
-
-
-def _extract_json_object(text: str) -> Any:
-    cleaned = text.strip()
-    if cleaned.startswith("```"):
-        cleaned = re.sub(r"^```(?:json)?\\s*", "", cleaned, flags=re.IGNORECASE)
-        cleaned = re.sub(r"\\s*```$", "", cleaned)
-
-    try:
-        return json.loads(cleaned)
-    except json.JSONDecodeError:
-        pass
-
-    # Try to find first JSON object block.
-    decoder = json.JSONDecoder()
-    for idx, char in enumerate(cleaned):
-        if char != "{":
-            continue
-        try:
-            obj, _end = decoder.raw_decode(cleaned[idx:])
-            return obj
-        except json.JSONDecodeError:
-            continue
-    raise ValueError("Could not parse JSON object from SDK response.")
 
 
 def _inject_linked_artifact_ids(state, payload: dict[str, Any]) -> dict[str, Any]:
@@ -210,16 +196,22 @@ def _refine_payload_with_evaluators(
         return payload
 
     current = dict(payload)
-    for _ in range(rounds):
+    for round_num in range(1, rounds + 1):
         try:
             review = _evaluate_payload(client, evaluator_model, role=role, prompt_text=prompt_text, payload=current)
-        except Exception:
+        except Exception as e:
+            logger.warning(
+                f"Evaluation failed for role {role.value} in round {round_num}: {e}. "
+                "Returning current payload without further refinement."
+            )
             return current
 
         if bool(review.get("approved")):
+            logger.debug(f"Payload approved for role {role.value} in round {round_num}")
             return current
 
         if not _review_has_issues(review):
+            logger.debug(f"No issues found for role {role.value} in round {round_num}")
             return current
 
         try:
@@ -231,7 +223,12 @@ def _refine_payload_with_evaluators(
                 payload=current,
                 review=review,
             )
-        except Exception:
+            logger.debug(f"Payload revised for role {role.value} in round {round_num}")
+        except Exception as e:
+            logger.warning(
+                f"Revision failed for role {role.value} in round {round_num}: {e}. "
+                "Returning current payload."
+            )
             return current
     return current
 
@@ -367,7 +364,11 @@ def _select_best_candidate_by_review(
     for idx, candidate in enumerate(candidates):
         try:
             review = _evaluate_payload(client, evaluator_model, role=role, prompt_text=prompt_text, payload=candidate)
-        except Exception:
+        except Exception as e:
+            logger.warning(
+                f"Candidate {idx} evaluation failed for role {role.value}: {e}. "
+                f"{'Using first candidate as fallback.' if idx == 0 else 'Skipping candidate.'}"
+            )
             if idx == 0:
                 return candidate
             continue
@@ -375,6 +376,7 @@ def _select_best_candidate_by_review(
         if score < best_score:
             best_score = score
             best_index = idx
+    logger.debug(f"Selected candidate {best_index} with score {best_score} for role {role.value}")
     return candidates[best_index]
 
 

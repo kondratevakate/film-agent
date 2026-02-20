@@ -132,28 +132,9 @@ def build_final_mix(
                 }
             )
 
-        shot_audio_prompt = str(row.get("audio_prompt") or "").strip()
-        if shot_audio_prompt:
-            segment_path = audio_dir / f"{idx:02d}_{shot_id}_audio_prompt.mp3"
-            if not dry_run:
-                _generate_tts_mp3(
-                    api_key=openai_api_key,
-                    text=shot_audio_prompt,
-                    out_path=segment_path,
-                    model=tts_model,
-                    voice=tts_voice,
-                )
-            audio_segments.append(
-                {
-                    "shot_id": shot_id,
-                    "kind": "audio_prompt_tts",
-                    "start_s": start_s,
-                    "duration_hint_s": duration,
-                    "path": str(segment_path),
-                    "status": "generated" if not dry_run else "planned",
-                    "text": shot_audio_prompt,
-                }
-            )
+        # NOTE: audio_prompt describes ambient sounds/music (e.g., "wind, piano motif")
+        # It is NOT converted to TTS - that would read the description aloud.
+        # audio_prompt is preserved in the manifest for future audio generation integration.
 
     total_duration = sum(float(item["duration_s"]) for item in shot_manifest)
 
@@ -252,13 +233,13 @@ def _compose_video_with_audio(*, shot_manifest: list[dict[str, Any]], audio_segm
 
     speech_clips = []
     for seg in audio_segments:
-        if seg.get("kind") not in {"tts", "audio_prompt_tts", "music_prompt_tts"}:
+        if seg.get("kind") not in {"tts", "music_prompt_tts"}:
             continue
         path = Path(str(seg.get("path")))
         if not path.exists():
             continue
         clip = AudioFileClip(str(path)).with_start(float(seg.get("start_s", 0.0)))
-        if seg.get("kind") in {"audio_prompt_tts", "music_prompt_tts"} and hasattr(clip, "with_volume_scaled"):
+        if seg.get("kind") == "music_prompt_tts" and hasattr(clip, "with_volume_scaled"):
             clip = clip.with_volume_scaled(0.35)
         speech_clips.append(clip)
 

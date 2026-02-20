@@ -92,35 +92,13 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         reasons.append("Script is too sparse for a coherent short film.")
         fixes.append("Provide at least 10 timed lines (action/dialogue).")
 
+    # Compute metrics for warnings (non-blocking quality issues)
     adjacent_character_violations = _count_adjacent_primary_character_violations(script)
-    if adjacent_character_violations > 0:
-        reasons.append("Same primary character appears in adjacent lines without separator shots.")
-        fixes.append("Insert a different character or non-character separator line between repeated character shots.")
-
     multi_action_lines = sum(1 for line in script.lines if line.kind == "action" and _has_multiple_primary_actions(line.text))
-    if multi_action_lines > 0:
-        reasons.append("Some action lines appear to contain multiple chained primary actions.")
-        fixes.append("Split chained actions into separate lines with one primary action each.")
-
     complex_visual_without_closeup = sum(1 for line in script.lines if _complex_visual_without_closeup(line.text))
-    if complex_visual_without_closeup > 0:
-        reasons.append("Screen/text/photo/interface details are used without close-up framing cues.")
-        fixes.append("Mark those lines as close-up to improve generation reliability.")
-
     adjacent_same_background_pairs = _count_adjacent_same_background_pairs(script)
-    if adjacent_same_background_pairs > 0:
-        reasons.append("Adjacent lines repeat the same background, reducing shot-level diversity and reliability.")
-        fixes.append("Alternate backgrounds or insert separator shots before returning to the same setting.")
-
     tight_spatial_transition_pairs = _count_tight_spatial_transition_pairs(script)
-    if tight_spatial_transition_pairs > 0:
-        reasons.append("Some adjacent lines imply tightly connected spatial transitions that are fragile in generation.")
-        fixes.append("Avoid door-to-door or room-to-room adjacency jumps; use looser transition shots.")
-
     fine_grained_visual_elements = sum(1 for line in script.lines if _has_fine_grained_visual_elements(line.text))
-    if fine_grained_visual_elements > 2:
-        reasons.append("Script contains too many fine-grained visual elements for reliable generation.")
-        fixes.append("Simplify tiny/textual/interface-heavy details and keep composition cleaner.")
 
     concept_alignment_pct = _concept_alignment_pct(config.core_concepts, script)
     concept_alignment_ok = concept_alignment_pct >= 75.0 if config.core_concepts else True
@@ -181,17 +159,31 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         reasons.append("Narrative coherence score is below configured floor.")
         fixes.append("Simplify adjacent transitions and preserve a stable beat progression.")
 
+    # Separate blocking issues from warnings
+    # Blocking: critical issues that prevent downstream processing
+    # Warnings: quality issues that should be addressed but don't block progress
+    warnings: list[str] = []
+
+    # Move non-critical issues to warnings instead of hard failures
+    if adjacent_character_violations > 0:
+        warnings.append(f"Adjacent character violations: {adjacent_character_violations} (consider adding separator shots)")
+    if multi_action_lines > 0:
+        warnings.append(f"Multi-action lines: {multi_action_lines} (consider splitting into separate lines)")
+    if complex_visual_without_closeup > 0:
+        warnings.append(f"Complex visuals without close-up: {complex_visual_without_closeup} (consider adding close-up framing)")
+    if adjacent_same_background_pairs > 0:
+        warnings.append(f"Adjacent same background pairs: {adjacent_same_background_pairs} (consider alternating backgrounds)")
+    if tight_spatial_transition_pairs > 0:
+        warnings.append(f"Tight spatial transitions: {tight_spatial_transition_pairs} (consider looser transition shots)")
+    if fine_grained_visual_elements > 2:
+        warnings.append(f"Fine-grained visual elements: {fine_grained_visual_elements} (consider simplifying details)")
+
+    # Blocking conditions only (critical for pipeline)
     passed = (
         duration_ok
         and not undeclared_speakers
         and placeholder_lines == 0
         and line_count >= 10
-        and adjacent_character_violations == 0
-        and multi_action_lines == 0
-        and complex_visual_without_closeup == 0
-        and adjacent_same_background_pairs == 0
-        and tight_spatial_transition_pairs == 0
-        and fine_grained_visual_elements <= 2
         and concept_alignment_ok
         and structure_complete
         and narrative_coherence_ok
@@ -228,6 +220,8 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             "duration_min_s": config.duration_min_s,
             "duration_max_s": config.duration_max_s,
             "duration_target_s": config.duration_target_s,
+            "warnings": warnings,  # Non-blocking quality issues
+            "warning_count": len(warnings),
         },
         reasons=reasons,
         fix_instructions=fixes,
