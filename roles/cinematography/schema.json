@@ -1,0 +1,162 @@
+{
+  "$defs": {
+    "Character": {
+      "properties": {
+        "costume_style_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Costume Style Constraints",
+          "type": "array"
+        },
+        "forbidden_drift_rules": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Forbidden Drift Rules",
+          "type": "array"
+        },
+        "identity_token": {
+          "title": "Identity Token",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "identity_token"
+      ],
+      "title": "Character",
+      "type": "object"
+    },
+    "CharacterBank": {
+      "properties": {
+        "characters": {
+          "items": {
+            "$ref": "#/$defs/Character"
+          },
+          "minItems": 1,
+          "title": "Characters",
+          "type": "array"
+        }
+      },
+      "required": [
+        "characters"
+      ],
+      "title": "CharacterBank",
+      "type": "object"
+    },
+    "ShotDesignSheet": {
+      "properties": {
+        "background": {
+          "title": "Background",
+          "type": "string"
+        },
+        "beat_id": {
+          "title": "Beat Id",
+          "type": "string"
+        },
+        "camera": {
+          "title": "Camera",
+          "type": "string"
+        },
+        "character": {
+          "title": "Character",
+          "type": "string"
+        },
+        "continuity_reset": {
+          "default": false,
+          "title": "Continuity Reset",
+          "type": "boolean"
+        },
+        "duration_s": {
+          "exclusiveMinimum": 0,
+          "title": "Duration S",
+          "type": "number"
+        },
+        "framing": {
+          "enum": [
+            "wide",
+            "medium",
+            "close",
+            "extreme_close",
+            "other"
+          ],
+          "title": "Framing",
+          "type": "string"
+        },
+        "identity_token": {
+          "title": "Identity Token",
+          "type": "string"
+        },
+        "lighting": {
+          "title": "Lighting",
+          "type": "string"
+        },
+        "location": {
+          "title": "Location",
+          "type": "string"
+        },
+        "pose_action": {
+          "title": "Pose Action",
+          "type": "string"
+        },
+        "props": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Props",
+          "type": "array"
+        },
+        "shot_id": {
+          "title": "Shot Id",
+          "type": "string"
+        },
+        "style_constraints": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Style Constraints",
+          "type": "array"
+        }
+      },
+      "required": [
+        "shot_id",
+        "beat_id",
+        "character",
+        "identity_token",
+        "background",
+        "pose_action",
+        "camera",
+        "framing",
+        "lighting",
+        "duration_s",
+        "location"
+      ],
+      "title": "ShotDesignSheet",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "character_bank": {
+      "$ref": "#/$defs/CharacterBank"
+    },
+    "shots": {
+      "items": {
+        "$ref": "#/$defs/ShotDesignSheet"
+      },
+      "minItems": 1,
+      "title": "Shots",
+      "type": "array"
+    }
+  },
+  "required": [
+    "character_bank",
+    "shots"
+  ],
+  "title": "CinematographyPackage",
+  "type": "object"
+}

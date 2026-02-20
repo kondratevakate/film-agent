@@ -1,12 +1,16 @@
-"""Iteration export bundle builder."""
+"""Iteration export bundle builder (prompt-first default)."""
 
 from __future__ import annotations
 
+import json
 import shutil
 from pathlib import Path
+from typing import Any
 
 from film_agent.io.hashing import sha256_file
-from film_agent.io.json_io import dump_canonical_json
+from film_agent.io.json_io import dump_canonical_json, load_json
+from film_agent.prompt_packets import schema_template_for_agent
+from film_agent.schemas.registry import AGENT_ARTIFACTS
 from film_agent.state_machine.state_store import iteration_key, load_state, run_dir
 
 
@@ -28,63 +32,166 @@ def package_iteration(base_dir: Path, run_id: str, iteration: int | None = None)
     artifacts_out = export_dir / "artifacts"
     shutil.copytree(src_artifacts, artifacts_out)
 
-    scripts_out = export_dir / "scripts"
-    scripts_out.mkdir(parents=True, exist_ok=True)
-    script_map = _write_generation_scripts(scripts_out, run_id, target_iter)
-
+    _copy_prompt_packets(run_path, export_dir, iter_key)
+    _write_submission_templates(export_dir)
+    _write_prompt_scripts(export_dir)
+    _write_legacy_optional_scripts(export_dir)
     _write_runbook(export_dir)
-    _write_env_example(export_dir)
     _write_readable_index(export_dir)
-    _write_all_scripts(export_dir, script_map)
     _write_hash_manifest(export_dir)
     return export_dir
 
 
-def _write_generation_scripts(scripts_out: Path, run_id: str, iteration: int) -> dict[str, str]:
-    scripts = {
-        "generate_audio_elevenlabs.py": _audio_script(run_id, iteration),
-        "generate_images_openai_nanobanana.py": _image_script(run_id, iteration),
-        "generate_video_openai.py": _video_openai_script(run_id, iteration),
-        "generate_video_hugsfield.py": _video_hugsfield_script(run_id, iteration),
-        "assemble_timeline.py": _timeline_script(run_id, iteration),
-    }
+def _copy_prompt_packets(run_path: Path, export_dir: Path, iter_key: str) -> None:
+    src = run_path / "iterations" / iter_key / "prompt_packets"
+    dst = export_dir / "prompt_packets"
+    if src.exists():
+        shutil.copytree(src, dst)
+        return
+    dst.mkdir(parents=True, exist_ok=True)
+    (dst / "README.md").write_text(
+        "No prompt packets found for this iteration. Use `film-agent packet build` first.\n",
+        encoding="utf-8",
+    )
 
-    for name, content in scripts.items():
-        (scripts_out / name).write_text(content, encoding="utf-8")
-    return scripts
+
+def _write_submission_templates(export_dir: Path) -> None:
+    out = export_dir / "submission_templates"
+    out.mkdir(parents=True, exist_ok=True)
+
+    for agent, entry in sorted(AGENT_ARTIFACTS.items()):
+        template = schema_template_for_agent(agent)
+        path = out / entry.filename
+        dump_canonical_json(path, template)
+
+
+def _write_prompt_scripts(export_dir: Path) -> None:
+    scripts_out = export_dir / "scripts"
+    scripts_out.mkdir(parents=True, exist_ok=True)
+
+    artifacts = export_dir / "artifacts"
+    _write_plan_summary_script(scripts_out, artifacts)
+    _write_image_prompt_sheet(scripts_out, artifacts)
+    _write_sora_prompt_sheet(scripts_out, artifacts)
+    _write_elevenlabs_sheet(scripts_out, artifacts)
+
+
+def _write_plan_summary_script(scripts_out: Path, artifacts: Path) -> None:
+    beat_path = artifacts / "beat_bible.json"
+    direction_path = artifacts / "user_direction_pack.json"
+
+    lines = ["# Plan Summary", ""]
+    if beat_path.exists():
+        beat_bible = load_json(beat_path)
+        lines.append(f"Concept thesis: {beat_bible.get('concept_thesis', '')}")
+        lines.append("")
+        lines.append("## Beats")
+        for beat in beat_bible.get("beats", []):
+            lines.append(
+                f"- {beat.get('beat_id')} [{beat.get('start_s')}s-{beat.get('end_s')}s]: "
+                f"{beat.get('science_claim')} | metaphor: {beat.get('dance_metaphor')}"
+            )
+    else:
+        lines.append("Beat bible artifact is missing.")
+
+    if direction_path.exists():
+        direction = load_json(direction_path)
+        lines.extend(
+            [
+                "",
+                "## User Direction",
+                f"- Goal: {direction.get('iteration_goal', '')}",
+                f"- References: {', '.join(direction.get('style_references', []))}",
+                f"- Must include: {', '.join(direction.get('must_include', []))}",
+                f"- Avoid: {', '.join(direction.get('avoid', []))}",
+                f"- Notes: {direction.get('notes', '')}",
+            ]
+        )
+
+    (scripts_out / "plan_summary.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _shot_prompt(shot: dict[str, Any]) -> str:
+    return (
+        f"Shot {shot.get('shot_id')}: "
+        f"character={shot.get('character')}; "
+        f"action={shot.get('pose_action')}; "
+        f"background={shot.get('background')}; "
+        f"camera={shot.get('camera')}; "
+        f"framing={shot.get('framing')}; "
+        f"lighting={shot.get('lighting')}; "
+        f"location={shot.get('location')}; "
+        f"style={'; '.join(shot.get('style_constraints', []))}"
+    )
+
+
+def _write_image_prompt_sheet(scripts_out: Path, artifacts: Path) -> None:
+    shot_path = artifacts / "shot_design_sheets.json"
+    lines = ["# Image Prompt Sheet", ""]
+    if not shot_path.exists():
+        lines.append("Shot design sheets artifact is missing.")
+    else:
+        data = load_json(shot_path)
+        for shot in data.get("shots", []):
+            lines.append(f"- {_shot_prompt(shot)}")
+    (scripts_out / "images_prompts.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_sora_prompt_sheet(scripts_out: Path, artifacts: Path) -> None:
+    shot_path = artifacts / "shot_design_sheets.json"
+    lines = ["# Sora Prompt Sheet", "", "Use one prompt per shot in order."]
+    if not shot_path.exists():
+        lines.append("Shot design sheets artifact is missing.")
+    else:
+        data = load_json(shot_path)
+        for shot in data.get("shots", []):
+            lines.append(
+                f"\n## {shot.get('shot_id')}\n"
+                f"{_shot_prompt(shot)}. Keep action simple and single-action in 5 seconds."
+            )
+    (scripts_out / "sora_prompts.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_elevenlabs_sheet(scripts_out: Path, artifacts: Path) -> None:
+    audio_path = artifacts / "audio_plan.json"
+    lines = ["# ElevenLabs Voice Lines", ""]
+    if not audio_path.exists():
+        lines.append("Audio plan artifact is missing.")
+    else:
+        data = load_json(audio_path)
+        for line in data.get("voice_lines", []):
+            lines.append(
+                f"- {line.get('line_id')} @ {line.get('timestamp_s')}s | "
+                f"speaker={line.get('speaker')} | text={line.get('text')}"
+            )
+    (scripts_out / "elevenlabs_voice_lines.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
+
+
+def _write_legacy_optional_scripts(export_dir: Path) -> None:
+    out = export_dir / "legacy_optional_scripts"
+    out.mkdir(parents=True, exist_ok=True)
+
+    note = """# Deprecated Optional Scripts
+
+These scripts are no longer part of the default pipeline.
+Use prompt packets and manual submission flow as the primary workflow.
+
+If you still want direct provider API execution, keep custom scripts here.
+"""
+    (out / "README.md").write_text(note, encoding="utf-8")
 
 
 def _write_runbook(export_dir: Path) -> None:
-    runbook = """# RUNBOOK
+    runbook = """# RUNBOOK (Prompt-First)
 
-1. Fill `.env.example` into `.env` with API keys and provider-specific settings.
-2. Review `artifacts/*.json` and confirm this iteration is the one you want to generate from.
-3. Generate voice/audio first:
-   `python scripts/generate_audio_elevenlabs.py`
-4. Generate key images:
-   `python scripts/generate_images_openai_nanobanana.py`
-5. Run dry-run video with primary provider:
-   `python scripts/generate_video_openai.py`
-6. If primary provider blocks/fails quality, run fallback:
-   `python scripts/generate_video_hugsfield.py`
-7. Assemble timeline references:
-   `python scripts/assemble_timeline.py`
-8. Submit produced metrics/artifacts back to the pipeline with `film-agent submit`.
+1. Open `prompt_packets/` and run role prompts in your chat interface.
+2. Save role outputs as strict JSON files.
+3. Submit with `film-agent submit --run-id <id> --agent <role> --file <json>`.
+4. Validate gates with `film-agent validate --run-id <id> --gate <n>`.
+5. Use `scripts/plan_summary.md`, `scripts/images_prompts.md`, `scripts/sora_prompts.md`, and
+   `scripts/elevenlabs_voice_lines.md` as copy-ready sheets for generation tools.
 """
     (export_dir / "RUNBOOK.md").write_text(runbook, encoding="utf-8")
-
-
-def _write_env_example(export_dir: Path) -> None:
-    payload = """OPENAI_API_KEY=
-ELEVENLABS_API_KEY=
-NANOBANANA_API_KEY=
-HUGSFIELD_API_KEY=
-
-# Optional endpoints
-NANOBANANA_BASE_URL=
-HUGSFIELD_BASE_URL=
-"""
-    (export_dir / ".env.example").write_text(payload, encoding="utf-8")
 
 
 def _write_readable_index(export_dir: Path) -> None:
@@ -97,17 +204,6 @@ def _write_readable_index(export_dir: Path) -> None:
     (export_dir / "readable_index.md").write_text("\n".join(lines) + "\n", encoding="utf-8")
 
 
-def _write_all_scripts(export_dir: Path, scripts: dict[str, str]) -> None:
-    lines = ["# All Scripts", ""]
-    for name, content in scripts.items():
-        lines.append(f"## {name}")
-        lines.append("```python")
-        lines.append(content.rstrip())
-        lines.append("```")
-        lines.append("")
-    (export_dir / "all_scripts.md").write_text("\n".join(lines), encoding="utf-8")
-
-
 def _write_hash_manifest(export_dir: Path) -> None:
     manifest: dict[str, str] = {}
     for path in sorted(export_dir.rglob("*")):
@@ -118,194 +214,3 @@ def _write_hash_manifest(export_dir: Path) -> None:
             continue
         manifest[rel] = sha256_file(path)
     dump_canonical_json(export_dir / "hash_manifest.json", manifest)
-
-
-def _audio_script(run_id: str, iteration: int) -> str:
-    return f'''#!/usr/bin/env python
-import json
-import os
-from pathlib import Path
-import requests
-
-ROOT = Path(__file__).resolve().parents[1]
-ART = ROOT / "artifacts" / "audio_plan.json"
-OUT = ROOT / "outputs" / "audio"
-OUT.mkdir(parents=True, exist_ok=True)
-
-api_key = os.environ.get("ELEVENLABS_API_KEY")
-if not api_key:
-    raise SystemExit("ELEVENLABS_API_KEY is required.")
-
-plan = json.loads(ART.read_text(encoding="utf-8"))
-voice_lines = plan.get("voice_lines", [])
-if not voice_lines:
-    print("No voice_lines found in audio_plan.json")
-    raise SystemExit(0)
-
-voice_id = os.environ.get("ELEVENLABS_VOICE_ID", "")
-if not voice_id:
-    raise SystemExit("Set ELEVENLABS_VOICE_ID to render voiceover lines.")
-
-for item in voice_lines:
-    line_id = item["line_id"]
-    text = item["text"]
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{{voice_id}}"
-    payload = {{
-        "text": text,
-        "model_id": "eleven_multilingual_v2",
-    }}
-    headers = {{
-        "xi-api-key": api_key,
-        "Content-Type": "application/json",
-    }}
-    response = requests.post(url, headers=headers, json=payload, timeout=120)
-    response.raise_for_status()
-    out_path = OUT / f"{{line_id}}.mp3"
-    out_path.write_bytes(response.content)
-    print("saved", out_path)
-'''
-
-
-def _image_script(run_id: str, iteration: int) -> str:
-    return f'''#!/usr/bin/env python
-import json
-import os
-from pathlib import Path
-from openai import OpenAI
-import requests
-
-ROOT = Path(__file__).resolve().parents[1]
-ART = ROOT / "artifacts" / "shot_design_sheets.json"
-OUT = ROOT / "outputs" / "images"
-OUT.mkdir(parents=True, exist_ok=True)
-
-client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-if not os.environ.get("OPENAI_API_KEY"):
-    raise SystemExit("OPENAI_API_KEY is required.")
-
-package = json.loads(ART.read_text(encoding="utf-8"))
-shots = package.get("shots", [])
-
-for shot in shots:
-    prompt = (
-        f"Shot {{shot['shot_id']}}; "
-        f"character={{shot['character']}}, action={{shot['pose_action']}}, "
-        f"camera={{shot['camera']}}, lighting={{shot['lighting']}}, "
-        f"background={{shot['background']}}, style={{'; '.join(shot.get('style_constraints', []))}}"
-    )
-    # Update model argument for your account/region.
-    response = client.images.generate(model="gpt-image-1", prompt=prompt, size="1024x1024")
-    b64 = response.data[0].b64_json
-    png_bytes = __import__("base64").b64decode(b64)
-    img_path = OUT / f"{{shot['shot_id']}}_openai.png"
-    img_path.write_bytes(png_bytes)
-    print("saved", img_path)
-
-    # Optional NanoBanana pass
-    nb_url = os.environ.get("NANOBANANA_BASE_URL")
-    nb_key = os.environ.get("NANOBANANA_API_KEY")
-    if nb_url and nb_key:
-        payload = {{"prompt": prompt}}
-        headers = {{"Authorization": f"Bearer {{nb_key}}", "Content-Type": "application/json"}}
-        nb_resp = requests.post(nb_url.rstrip("/") + "/generate", headers=headers, json=payload, timeout=120)
-        nb_resp.raise_for_status()
-        nb_out = OUT / f"{{shot['shot_id']}}_nanobanana.json"
-        nb_out.write_text(nb_resp.text, encoding="utf-8")
-        print("saved", nb_out)
-'''
-
-
-def _video_openai_script(run_id: str, iteration: int) -> str:
-    return f'''#!/usr/bin/env python
-import json
-import os
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-ART = ROOT / "artifacts" / "render_package.json"
-OUT = ROOT / "outputs" / "video_openai"
-OUT.mkdir(parents=True, exist_ok=True)
-
-if not os.environ.get("OPENAI_API_KEY"):
-    raise SystemExit("OPENAI_API_KEY is required.")
-
-if not ART.exists():
-    raise SystemExit("render_package.json is missing. Submit/render package artifact first.")
-
-render = json.loads(ART.read_text(encoding="utf-8"))
-payload = {{
-    "provider": "openai_video",
-    "note": "Fill concrete OpenAI video endpoint/model for your account.",
-    "render_package": render,
-    "run_id": "{run_id}",
-    "iteration": {iteration},
-}}
-
-out = OUT / "openai_video_request.json"
-out.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-print("prepared request payload", out)
-print("Use your OpenAI video API call and save generated clip metadata to outputs/video_openai/")
-'''
-
-
-def _video_hugsfield_script(run_id: str, iteration: int) -> str:
-    return f'''#!/usr/bin/env python
-import json
-import os
-from pathlib import Path
-import requests
-
-ROOT = Path(__file__).resolve().parents[1]
-ART = ROOT / "artifacts" / "render_package.json"
-OUT = ROOT / "outputs" / "video_hugsfield"
-OUT.mkdir(parents=True, exist_ok=True)
-
-base_url = os.environ.get("HUGSFIELD_BASE_URL")
-api_key = os.environ.get("HUGSFIELD_API_KEY")
-if not base_url or not api_key:
-    raise SystemExit("Set HUGSFIELD_BASE_URL and HUGSFIELD_API_KEY.")
-if not ART.exists():
-    raise SystemExit("render_package.json is missing.")
-
-render = json.loads(ART.read_text(encoding="utf-8"))
-payload = {{
-    "run_id": "{run_id}",
-    "iteration": {iteration},
-    "render_package": render,
-}}
-headers = {{"Authorization": f"Bearer {{api_key}}", "Content-Type": "application/json"}}
-resp = requests.post(base_url.rstrip("/") + "/generate", headers=headers, json=payload, timeout=300)
-resp.raise_for_status()
-out = OUT / "hugsfield_response.json"
-out.write_text(resp.text, encoding="utf-8")
-print("saved", out)
-'''
-
-
-def _timeline_script(run_id: str, iteration: int) -> str:
-    return f'''#!/usr/bin/env python
-import json
-from pathlib import Path
-
-ROOT = Path(__file__).resolve().parents[1]
-ART = ROOT / "artifacts" / "editorial_timeline.json"
-OUT = ROOT / "outputs" / "timeline"
-OUT.mkdir(parents=True, exist_ok=True)
-
-if not ART.exists():
-    raise SystemExit("editorial_timeline.json is missing.")
-
-timeline = json.loads(ART.read_text(encoding="utf-8"))
-entries = timeline.get("entries", [])
-lines = ["# ffmpeg concat input", ""]
-for item in entries:
-    shot_id = item["shot_id"]
-    lines.append(f"# shot {{shot_id}} duration={{item['duration_s']}}")
-    lines.append(f"file 'video/{{shot_id}}.mp4'")
-    lines.append(f"duration {{item['duration_s']}}")
-
-out = OUT / "concat.txt"
-out.write_text("\\n".join(lines) + "\\n", encoding="utf-8")
-print("saved", out)
-print("Then run: ffmpeg -f concat -safe 0 -i concat.txt -c copy final.mp4")
-'''

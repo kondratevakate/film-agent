@@ -14,11 +14,11 @@ providers:
   audio: elevenlabs
   image_primary: openai_images
   image_secondary: nanobanana
-  video_primary: openai_video
+  video_primary: sora
   video_fallback: hugsfield
 
 model_candidates:
-  - name: openai-video-prod
+  - name: sora-2
     weighted_score: 0.91
     physics: 0.87
     human_fidelity: 0.9

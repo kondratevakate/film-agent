@@ -21,7 +21,7 @@ class ProviderConfig(BaseModel):
     audio: str = "elevenlabs"
     image_primary: str = "openai_images"
     image_secondary: str = "nanobanana"
-    video_primary: str = "openai_video"
+    video_primary: str = "sora"
     video_fallback: str = "hugsfield"
 
 

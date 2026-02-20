@@ -1,0 +1,106 @@
+{
+  "$defs": {
+    "AudioCue": {
+      "properties": {
+        "cue_id": {
+          "title": "Cue Id",
+          "type": "string"
+        },
+        "cue_type": {
+          "enum": [
+            "music",
+            "voiceover",
+            "silence",
+            "fx"
+          ],
+          "title": "Cue Type",
+          "type": "string"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "duration_s": {
+          "minimum": 0,
+          "title": "Duration S",
+          "type": "number"
+        },
+        "timestamp_s": {
+          "minimum": 0,
+          "title": "Timestamp S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "cue_id",
+        "timestamp_s",
+        "duration_s",
+        "cue_type",
+        "description"
+      ],
+      "title": "AudioCue",
+      "type": "object"
+    },
+    "VoiceLine": {
+      "properties": {
+        "line_id": {
+          "title": "Line Id",
+          "type": "string"
+        },
+        "speaker": {
+          "title": "Speaker",
+          "type": "string"
+        },
+        "text": {
+          "title": "Text",
+          "type": "string"
+        },
+        "timestamp_s": {
+          "minimum": 0,
+          "title": "Timestamp S",
+          "type": "number"
+        }
+      },
+      "required": [
+        "line_id",
+        "timestamp_s",
+        "speaker",
+        "text"
+      ],
+      "title": "VoiceLine",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "cues": {
+      "items": {
+        "$ref": "#/$defs/AudioCue"
+      },
+      "title": "Cues",
+      "type": "array"
+    },
+    "motifs": {
+      "items": {
+        "type": "string"
+      },
+      "title": "Motifs",
+      "type": "array"
+    },
+    "sync_markers": {
+      "items": {
+        "type": "number"
+      },
+      "title": "Sync Markers",
+      "type": "array"
+    },
+    "voice_lines": {
+      "items": {
+        "$ref": "#/$defs/VoiceLine"
+      },
+      "title": "Voice Lines",
+      "type": "array"
+    }
+  },
+  "title": "AudioPlan",
+  "type": "object"
+}

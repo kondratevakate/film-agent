@@ -18,7 +18,7 @@ def write_config(path: Path, core_concepts: list[str] | None = None) -> Path:
             "audio": "elevenlabs",
             "image_primary": "openai_images",
             "image_secondary": "nanobanana",
-            "video_primary": "openai_video",
+            "video_primary": "sora",
             "video_fallback": "hugsfield",
         },
         "model_candidates": [

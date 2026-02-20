@@ -7,8 +7,12 @@ from pathlib import Path
 
 import typer
 
+from film_agent.automation import auto_run_sdk_loop
 from film_agent.io.package_export import package_iteration
+from film_agent.prompt_packets import build_all_prompt_packets, build_prompt_packet
+from film_agent.prompts import get_prompt_stack, get_role_pack, list_agents
 from film_agent.reporting import build_final_report
+from film_agent.roles import RoleId, list_roles
 from film_agent.state_machine.orchestrator import (
     command_result_payload,
     create_run,
@@ -18,6 +22,10 @@ from film_agent.state_machine.orchestrator import (
 )
 
 app = typer.Typer(help="Film-Agent manual pipeline CLI", add_completion=False)
+role_app = typer.Typer(help="Role pack commands", add_completion=False)
+packet_app = typer.Typer(help="Prompt packet commands", add_completion=False)
+app.add_typer(role_app, name="role")
+app.add_typer(packet_app, name="packet")
 
 
 def _base_dir() -> Path:
@@ -72,6 +80,82 @@ def package_iteration_cmd(
 def final_report(run_id: str = typer.Option(..., "--run-id", help="Run ID")) -> None:
     out = build_final_report(_base_dir(), run_id)
     _emit({"run_id": run_id, "report": str(out)})
+
+
+@app.command("show-prompt")
+def show_prompt(
+    agent: str = typer.Option(
+        ...,
+        "--agent",
+        help=f"Agent name ({', '.join(list_agents())})",
+    )
+) -> None:
+    try:
+        typer.echo(get_prompt_stack(agent))
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+
+
+@app.command("auto-run")
+def auto_run(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    model: str = typer.Option("gpt-4.1", "--model", help="OpenAI model for role generation"),
+    max_cycles: int = typer.Option(20, "--max-cycles", help="Maximum automation cycles"),
+    until: str = typer.Option("gate2", "--until", help="Target stage: gate1|gate2|complete"),
+) -> None:
+    try:
+        result = auto_run_sdk_loop(_base_dir(), run_id, model=model, max_cycles=max_cycles, until=until)
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+    _emit(result)
+
+
+@role_app.command("list")
+def role_list() -> None:
+    _emit({"roles": [role.value for role in list_roles()]})
+
+
+@role_app.command("show")
+def role_show(
+    role: str = typer.Option(..., "--role", help=f"Role name ({', '.join(item.value for item in list_roles())})")
+) -> None:
+    try:
+        pack = get_role_pack(role)
+        prompt_stack = get_prompt_stack(role if role != "qa_judge" else "qa_judge")
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+    _emit({"role": role, "pack": pack, "prompt_stack": prompt_stack})
+
+
+@packet_app.command("build")
+def packet_build(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    role: str = typer.Option(..., "--role", help=f"Role name ({', '.join(item.value for item in list_roles())})"),
+    iteration: int | None = typer.Option(None, "--iter", help="Iteration number; default current"),
+) -> None:
+    try:
+        path, manifest = build_prompt_packet(_base_dir(), run_id, RoleId(role), iteration=iteration)
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+    _emit({"run_id": run_id, "role": role, "packet": str(path), "manifest": str(manifest)})
+
+
+@packet_app.command("build-all")
+def packet_build_all(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    iteration: int | None = typer.Option(None, "--iter", help="Iteration number; default current"),
+) -> None:
+    try:
+        outputs = build_all_prompt_packets(_base_dir(), run_id, iteration=iteration)
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+    payload = [{"packet": str(packet), "manifest": str(manifest)} for packet, manifest in outputs]
+    _emit({"run_id": run_id, "outputs": payload})
 
 
 def main() -> None:

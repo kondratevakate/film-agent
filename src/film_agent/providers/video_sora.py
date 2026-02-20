@@ -1,9 +1,9 @@
-"""Backward-compatibility wrapper for legacy openai_video naming."""
+"""Sora payload helper."""
 
 from __future__ import annotations
 
 
-def build_openai_video_payload(prompt: str, duration_s: int, resolution: str, fps: int, seed: int) -> dict:
+def build_sora_video_payload(prompt: str, duration_s: int, resolution: str, fps: int, seed: int) -> dict:
     return {
         "model": "sora-2",
         "prompt": prompt,

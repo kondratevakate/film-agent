@@ -1,9 +1,14 @@
-Return JSON only.
+Agent-specific addendum for Showrunner.
+This addendum is intended to be used with `prompts/main_agent_overlay.md` as top-level system instructions.
 
-Goal:
-- Create a BeatBible for a 90-105 second film.
-- Keep all required fields for each beat.
-- Maintain scientific clarity.
+Output mode:
+- Return JSON only.
+
+Project contract:
+- Build a BeatBible for total duration 90-105 seconds.
+- Use beat entries as narrative units that later map to shots.
+- Preserve scientific clarity and explicit mapping to dance metaphor.
+- Do not break the JSON schema below.
 
 Output schema:
 - concept_thesis: string
