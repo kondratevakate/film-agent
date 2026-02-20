@@ -32,6 +32,11 @@ film-agent package-iteration --run-id <RUN_ID> --iter 1
 film-agent final-report --run-id <RUN_ID>
 ```
 
+Config note:
+
+- Use `reference_images` in config for visual anchors (recommended 2-3 images).
+- Example folder for inputs: `references/input/README.md`.
+
 ## Auto SDK Iteration
 
 Auto-run role prompts via OpenAI SDK until target stage:

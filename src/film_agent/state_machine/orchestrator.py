@@ -44,12 +44,20 @@ def create_run(base_dir: Path, config_path: Path) -> CommandResult:
     path = run_dir(base_dir, state.run_id)
     ensure_run_layout(path)
 
-    if config.science_source_pdf:
-        pdf_path = Path(config.science_source_pdf).expanduser()
-        if not pdf_path.is_absolute():
-            pdf_path = resolved_config_path.parent / pdf_path
-        if pdf_path.exists():
-            state.science_source_hash = sha256_file(pdf_path)
+    resolved_refs: list[str] = []
+    ref_hashes: dict[str, str] = {}
+    for item in config.reference_images:
+        ref_path = Path(item).expanduser()
+        if not ref_path.is_absolute():
+            ref_path = resolved_config_path.parent / ref_path
+        ref_path = ref_path.resolve()
+        if not ref_path.exists():
+            raise ValueError(f"Reference image not found: {ref_path}")
+        resolved = str(ref_path)
+        resolved_refs.append(resolved)
+        ref_hashes[resolved] = sha256_file(ref_path)
+    state.reference_images = resolved_refs
+    state.reference_image_hashes = ref_hashes
 
     save_state(path, state)
     append_event(path, "run_created", {"run_id": state.run_id, "config_path": str(resolved_config_path)})

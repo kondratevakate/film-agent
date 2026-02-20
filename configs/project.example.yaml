@@ -1,5 +1,8 @@
 project_name: film-agent
-science_source_pdf: ../references/2508.08487v5.pdf
+reference_images: []
+# reference_images:
+#   - ../references/input/ref_01.jpg
+#   - ../references/input/ref_02.jpg
 duration_target_s: 95
 core_concepts:
   - attention

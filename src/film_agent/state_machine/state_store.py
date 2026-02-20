@@ -41,8 +41,8 @@ class RunStateData(BaseModel):
     updated_at: str
     config_path: str
     config_hash: str
-    science_source_pdf: str | None = None
-    science_source_hash: str | None = None
+    reference_images: list[str] = Field(default_factory=list)
+    reference_image_hashes: dict[str, str] = Field(default_factory=dict)
     current_state: str = RunState.GATE0
     current_iteration: int = 1
     gate_status: dict[str, str] = Field(default_factory=dict)
@@ -90,7 +90,7 @@ def new_state(config_path: Path, config: RunConfig) -> RunStateData:
         updated_at=utc_now_iso(),
         config_path=str(config_path),
         config_hash=sha256_json(config_dict_for_hash(config)),
-        science_source_pdf=config.science_source_pdf,
+        reference_images=list(config.reference_images),
         current_state=RunState.GATE0,
         gate_status=default_gate_status(),
         retry_counts=default_retry_counts(),

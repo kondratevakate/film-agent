@@ -1,5 +1,7 @@
 project_name: view-only-test
-science_source_pdf: ../references/2508.08487v5.pdf
+reference_images:
+  - ../references/input/view_only/1598711967191014560.jpg
+  - ../references/input/view_only/images.jpg
 duration_target_s: 95
 core_concepts:
   - memory

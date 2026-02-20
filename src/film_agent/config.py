@@ -6,7 +6,7 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
 
 class ModelCandidate(BaseModel):
@@ -49,7 +49,7 @@ class RetryLimits(BaseModel):
 
 class RunConfig(BaseModel):
     project_name: str = "film-agent"
-    science_source_pdf: str | None = None
+    reference_images: list[str] = Field(default_factory=list)
     duration_target_s: int = Field(default=95, ge=90, le=105)
     core_concepts: list[str] = Field(default_factory=list)
     model_candidates: list[ModelCandidate] = Field(default_factory=list)
@@ -59,6 +59,12 @@ class RunConfig(BaseModel):
     seed: int = 42
     resolution: str = "1920x1080"
     fps: int = 24
+
+    @model_validator(mode="after")
+    def validate_reference_images(self) -> "RunConfig":
+        if self.reference_images and not 2 <= len(self.reference_images) <= 3:
+            raise ValueError("reference_images must contain 2-3 paths when provided.")
+        return self
 
 
 def load_config(config_path: Path) -> RunConfig:

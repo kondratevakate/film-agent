@@ -14,6 +14,7 @@ Showrunner constraints:
 - Provide at least 10 lines.
 - Dialogue lines must set `speaker` and use names declared in `characters`.
 - Keep character naming stable across lines; do not alias character names.
+- If `project_constraints.reference_images` is provided, keep character identity, wardrobe, and tone consistent with those references.
 - Avoid placeholder markers (TODO/TBD/template syntax).
 
 Shot-by-shot quality rules for `lines`:

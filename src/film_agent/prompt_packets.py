@@ -51,6 +51,8 @@ def build_prompt_packet(base_dir: Path, run_id: str, role: RoleId, iteration: in
         project_constraints={
             "duration_target_s": config.duration_target_s,
             "core_concepts": config.core_concepts,
+            "reference_images": state.reference_images,
+            "reference_image_hashes": state.reference_image_hashes,
             "thresholds": config.thresholds.model_dump(mode="json"),
         },
         source_payloads=source_payloads,
