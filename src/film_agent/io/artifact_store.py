@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
+from typing import cast
 
 from pydantic import ValidationError
 
+from film_agent.continuity import build_story_anchor
 from film_agent.constants import REQUIRED_PREPROD_ARTIFACTS, RunState
 from film_agent.io.hashing import sha256_file, sha256_json
 from film_agent.io.json_io import dump_canonical_json, load_json
+from film_agent.schemas.artifacts import ScriptArtifact
 from film_agent.schemas.registry import AGENT_ARTIFACTS
 from film_agent.state_machine.state_store import (
     IterationArtifactRecord,
@@ -113,6 +116,9 @@ def submit_artifact(run_path: Path, state: RunStateData, agent: str, input_file:
     if agent == "cinematography":
         state.latest_selected_images_id = sha256_json(artifact.model_dump(mode="json"))
 
+    if agent == "showrunner" and state.current_iteration == 1:
+        _ensure_story_anchor_from_first_script(run_path, state, cast(ScriptArtifact, artifact), source_sha=checksum)
+
     append_event(
         run_path,
         "artifact_submitted",
@@ -139,3 +145,35 @@ def transition_state_after_submit(state: RunStateData, agent: str) -> None:
     next_state = transitions.get((state.current_state, agent))
     if next_state:
         state.current_state = next_state
+
+
+def _ensure_story_anchor_from_first_script(
+    run_path: Path,
+    state: RunStateData,
+    script: ScriptArtifact,
+    *,
+    source_sha: str,
+) -> None:
+    iter1 = state.iterations.get(iteration_key(1))
+    if not iter1 or "story_anchor" in iter1.artifacts:
+        return
+
+    anchor = build_story_anchor(script, source_iteration=1, source_script_sha256=source_sha)
+    anchor_path = run_path / "iterations" / iteration_key(1) / "artifacts" / "story_anchor.json"
+    dump_canonical_json(anchor_path, anchor.model_dump(mode="json"))
+    anchor_sha = sha256_file(anchor_path)
+
+    iter1.artifacts["story_anchor"] = IterationArtifactRecord(
+        path=str(anchor_path),
+        sha256=anchor_sha,
+        submitted_at=utc_now_iso(),
+    )
+    append_event(
+        run_path,
+        "story_anchor_created",
+        {
+            "iteration": 1,
+            "path": str(anchor_path),
+            "sha256": anchor_sha,
+        },
+    )

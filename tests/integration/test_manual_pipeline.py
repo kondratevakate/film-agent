@@ -71,3 +71,28 @@ def test_direction_update_reflected_in_gate_and_export(tmp_path: Path) -> None:
 
     readable_index = (export_dir / "readable_index.md").read_text(encoding="utf-8")
     assert "artifacts/script_review.json" in readable_index
+
+
+def test_story_anchor_created_and_gate1_blocks_retry_drift(tmp_path: Path) -> None:
+    config = write_config(tmp_path)
+    run_id = create_run(tmp_path, config).run_id
+    run_gate0(tmp_path, run_id)
+
+    submit_agent(tmp_path, run_id, "showrunner", write_json(tmp_path / "showrunner_1.json", sample_beat_bible(critical=True)))
+    anchor_path = run_dir(tmp_path, run_id) / "iterations" / "iter-01" / "artifacts" / "story_anchor.json"
+    assert anchor_path.exists()
+    anchor = load_json(anchor_path)
+    assert anchor["title"] == "Test Film"
+
+    validate_gate(tmp_path, run_id, 1)
+
+    drifted = sample_beat_bible(critical=False)
+    drifted["title"] = "Different Film"
+    drifted["characters"] = ["Narrator", "Other Lead"]
+    submit_agent(tmp_path, run_id, "showrunner", write_json(tmp_path / "showrunner_2.json", drifted))
+    result = validate_gate(tmp_path, run_id, 1)
+    report = load_json(Path(result.detail["report"]))
+
+    assert result.state == "COLLECT_SHOWRUNNER"
+    assert any("title" in reason.lower() for reason in report["reasons"])
+    assert any("character" in reason.lower() for reason in report["reasons"])

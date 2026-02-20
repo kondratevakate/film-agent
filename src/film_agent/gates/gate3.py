@@ -5,6 +5,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import cast
 
+from film_agent.continuity import style_anchor_quality_score
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
 from film_agent.schemas.artifacts import GateReport, ImagePromptPackage
@@ -29,6 +30,9 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
                 "duplicate_shot_ids": 999,
                 "short_prompts": 999,
                 "review_link_ok": False,
+                "style_anchor_present": False,
+                "style_anchor_quality": 0.0,
+                "style_anchor_quality_ok": False,
             },
             reasons=reasons,
             fix_instructions=fixes,
@@ -53,6 +57,17 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         reasons.append("Some image prompts are too short to be reliably controllable.")
         fixes.append("Expand weak prompts with subject/action/composition details.")
 
+    style_anchor_present = bool(image_prompts.style_anchor.strip())
+    if not style_anchor_present:
+        reasons.append("Image prompt package is missing style_anchor.")
+        fixes.append("Provide a concise style anchor to preserve look and tone across shots.")
+
+    style_anchor_quality = style_anchor_quality_score(image_prompts.style_anchor)
+    style_anchor_quality_ok = style_anchor_quality >= config.thresholds.min_style_anchor_quality
+    if not style_anchor_quality_ok:
+        reasons.append("style_anchor quality is below configured floor.")
+        fixes.append("Use a more specific style anchor with stable visual attributes.")
+
     missing_negative_constraints = sum(1 for item in items if not item.negative_prompt.strip())
     if missing_negative_constraints > 0:
         reasons.append("Some image prompts do not include negative constraints.")
@@ -67,6 +82,8 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         shot_count_ok
         and duplicate_shot_ids == 0
         and short_prompts == 0
+        and style_anchor_present
+        and style_anchor_quality_ok
         and missing_negative_constraints == 0
         and review_link_ok
     )
@@ -80,6 +97,9 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             "shot_count_ok": shot_count_ok,
             "duplicate_shot_ids": duplicate_shot_ids,
             "short_prompts": short_prompts,
+            "style_anchor_present": style_anchor_present,
+            "style_anchor_quality": round(style_anchor_quality, 2),
+            "style_anchor_quality_ok": style_anchor_quality_ok,
             "missing_negative_constraints": missing_negative_constraints,
             "review_link_ok": review_link_ok,
             "duration_target_s": config.duration_target_s,

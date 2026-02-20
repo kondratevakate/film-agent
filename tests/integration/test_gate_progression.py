@@ -119,6 +119,28 @@ def test_gate3_failure_rolls_back_to_image_prompts_iteration(tmp_path: Path) -> 
     assert state.current_state == "COLLECT_DANCE_MAPPING"
 
 
+def test_gate3_fails_when_style_anchor_is_missing(tmp_path: Path) -> None:
+    config = write_config(tmp_path)
+    run_id = create_run(tmp_path, config).run_id
+    run_gate0(tmp_path, run_id)
+    submit_agent(tmp_path, run_id, "showrunner", write_json(tmp_path / "showrunner.json", sample_beat_bible()))
+    validate_gate(tmp_path, run_id, 1)
+    submit_agent(tmp_path, run_id, "direction", write_json(tmp_path / "direction.json", sample_direction()))
+    validate_gate(tmp_path, run_id, 2)
+
+    state = load_state(run_dir(tmp_path, run_id))
+    direction_pack_id = state.latest_direction_pack_id
+    assert direction_pack_id
+    bad_mapping = sample_dance_mapping(direction_pack_id)
+    bad_mapping["style_anchor"] = ""
+    submit_agent(tmp_path, run_id, "dance_mapping", write_json(tmp_path / "bad_mapping_style.json", bad_mapping))
+
+    result = validate_gate(tmp_path, run_id, 3)
+    report = load_json(Path(result.detail["report"]))
+    assert result.state == "COLLECT_DANCE_MAPPING"
+    assert any("style_anchor" in reason for reason in report["reasons"])
+
+
 def test_gate4_fails_when_final_score_is_below_floor(tmp_path: Path) -> None:
     run_id = _advance_to_post_gate3(tmp_path, threshold_overrides={"final_score_floor": 99})
     state = load_state(run_dir(tmp_path, run_id))

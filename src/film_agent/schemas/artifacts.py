@@ -31,6 +31,15 @@ class ScriptArtifact(BaseModel):
     lines: list[ScriptLine] = Field(min_length=1)
 
 
+class StoryAnchorArtifact(BaseModel):
+    title: str
+    canonical_characters: list[str] = Field(min_length=1)
+    must_keep_beats: list[str] = Field(min_length=1)
+    style_anchor: str
+    source_iteration: int = Field(ge=1, default=1)
+    source_script_sha256: str | None = None
+
+
 class ScriptReviewArtifact(BaseModel):
     script_version: int = Field(ge=1)
     script_hash_hint: str | None = None

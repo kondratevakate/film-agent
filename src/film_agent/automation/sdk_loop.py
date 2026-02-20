@@ -38,6 +38,7 @@ def auto_run_sdk_loop(
     base_dir: Path,
     run_id: str,
     model: str = "gpt-4.1",
+    evaluator_model: str | None = None,
     max_cycles: int = 20,
     until: str = "gate2",
     self_eval_rounds: int = 2,
@@ -54,6 +55,7 @@ def auto_run_sdk_loop(
 
     client = OpenAI(api_key=key)
     run_path = run_dir(base_dir, run_id)
+    judge_model = evaluator_model or model
 
     cycles = 0
     while cycles < max_cycles:
@@ -75,12 +77,16 @@ def auto_run_sdk_loop(
             prompt_text = prompt_path.read_text(encoding="utf-8")
             agent = ROLE_TO_AGENT[role]
 
-            payload = _call_model_for_json(client, model, prompt_text)
+            if role == RoleId.SHOWRUNNER:
+                payload = _generate_showrunner_candidate(client, model=model, evaluator_model=judge_model, prompt_text=prompt_text)
+            else:
+                payload = _call_model_for_json(client, model, prompt_text)
             if role in {RoleId.DANCE_MAPPING, RoleId.CINEMATOGRAPHY, RoleId.AUDIO}:
                 payload = _inject_linked_artifact_ids(state, payload)
             payload = _refine_payload_with_evaluators(
                 client,
-                model,
+                generator_model=model,
+                evaluator_model=judge_model,
                 role=role,
                 prompt_text=prompt_text,
                 payload=payload,
@@ -118,6 +124,8 @@ def auto_run_sdk_loop(
         "current_state": state.current_state,
         "current_iteration": state.current_iteration,
         "cycles": cycles,
+        "generator_model": model,
+        "evaluator_model": judge_model,
         "export_dir": str(export_dir),
     }
 
@@ -191,7 +199,8 @@ def _inject_linked_artifact_ids(state, payload: dict[str, Any]) -> dict[str, Any
 
 def _refine_payload_with_evaluators(
     client,
-    model: str,
+    generator_model: str,
+    evaluator_model: str,
     role: RoleId,
     prompt_text: str,
     payload: dict[str, Any],
@@ -203,7 +212,7 @@ def _refine_payload_with_evaluators(
     current = dict(payload)
     for _ in range(rounds):
         try:
-            review = _evaluate_payload(client, model, role=role, prompt_text=prompt_text, payload=current)
+            review = _evaluate_payload(client, evaluator_model, role=role, prompt_text=prompt_text, payload=current)
         except Exception:
             return current
 
@@ -216,7 +225,7 @@ def _refine_payload_with_evaluators(
         try:
             current = _revise_payload(
                 client,
-                model,
+                generator_model,
                 role=role,
                 prompt_text=prompt_text,
                 payload=current,
@@ -315,6 +324,64 @@ def _review_has_issues(review: dict[str, Any]) -> bool:
         review.get(key)
         for key in ("structure_issues", "content_issues", "style_issues", "fix_instructions")
     )
+
+
+def _generate_showrunner_candidate(client, *, model: str, evaluator_model: str, prompt_text: str) -> dict[str, Any]:
+    primary = _call_model_for_json(client, model, prompt_text)
+    alternate = _call_model_for_json_messages(
+        client,
+        model,
+        [
+            {
+                "role": "system",
+                "content": (
+                    "Return valid JSON only. No markdown wrappers. "
+                    "Produce an independent second candidate while preserving anchors and retry constraints."
+                ),
+            },
+            {"role": "user", "content": prompt_text},
+        ],
+    )
+    return _select_best_candidate_by_review(
+        client,
+        evaluator_model=evaluator_model,
+        role=RoleId.SHOWRUNNER,
+        prompt_text=prompt_text,
+        candidates=[primary, alternate],
+    )
+
+
+def _select_best_candidate_by_review(
+    client,
+    *,
+    evaluator_model: str,
+    role: RoleId,
+    prompt_text: str,
+    candidates: list[dict[str, Any]],
+) -> dict[str, Any]:
+    if not candidates:
+        raise ValueError("No candidates to select from.")
+
+    best_index = 0
+    best_score = (10_000, 10_000)
+    for idx, candidate in enumerate(candidates):
+        try:
+            review = _evaluate_payload(client, evaluator_model, role=role, prompt_text=prompt_text, payload=candidate)
+        except Exception:
+            if idx == 0:
+                return candidate
+            continue
+        score = _review_score(review)
+        if score < best_score:
+            best_score = score
+            best_index = idx
+    return candidates[best_index]
+
+
+def _review_score(review: dict[str, Any]) -> tuple[int, int]:
+    approved_penalty = 0 if bool(review.get("approved")) else 1
+    issue_count = sum(len(review.get(key, [])) for key in ("structure_issues", "content_issues", "style_issues", "fix_instructions"))
+    return (approved_penalty, issue_count)
 
 
 def _target_reached(current_state: str, until: str) -> bool:

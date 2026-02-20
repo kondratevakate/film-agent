@@ -56,3 +56,5 @@ def test_showrunner_packet_includes_previous_gate1_report_on_retry(tmp_path: Pat
     packet_text = packet_path.read_text(encoding="utf-8")
     assert "gate1_report" in packet_text
     assert "previous_showrunner_script" in packet_text
+    assert "story_anchor" in packet_text
+    assert "anchor_showrunner_script" in packet_text

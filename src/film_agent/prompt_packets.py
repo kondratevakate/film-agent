@@ -142,14 +142,19 @@ def _collect_inputs(
             continue
         payloads[name] = load_json(Path(item.path))
 
-    # On showrunner retries, include the previous accepted draft as revision anchor.
-    if role == RoleId.SHOWRUNNER and iteration > 1:
-        prev_key = iteration_key(iteration - 1)
-        prev_record = state.iterations.get(prev_key)
-        if prev_record:
-            prev_script = prev_record.artifacts.get("showrunner")
-            if prev_script:
-                payloads["previous_showrunner_script"] = load_json(Path(prev_script.path))
+    if role == RoleId.SHOWRUNNER:
+        anchor_script = _iteration_artifact_payload(state, iteration=1, artifact_key="showrunner")
+        if anchor_script is not None:
+            payloads["anchor_showrunner_script"] = anchor_script
+        story_anchor = _iteration_artifact_payload(state, iteration=1, artifact_key="story_anchor")
+        if story_anchor is not None:
+            payloads["story_anchor"] = story_anchor
+
+        # On showrunner retries, include the previous accepted draft as revision anchor.
+        if iteration > 1:
+            prev_script = _iteration_artifact_payload(state, iteration=iteration - 1, artifact_key="showrunner")
+            if prev_script is not None:
+                payloads["previous_showrunner_script"] = prev_script
 
     # Include latest available gate reports up to current iteration
     # so retry loops can consume fix instructions from previous failures.
@@ -166,6 +171,19 @@ def _latest_gate_report_path(run_path: Path, gate: str, iteration: int) -> Path 
         if candidate.exists():
             return candidate
     return None
+
+
+def _iteration_artifact_payload(state, *, iteration: int, artifact_key: str) -> Any | None:
+    record = state.iterations.get(iteration_key(iteration))
+    if not record:
+        return None
+    item = record.artifacts.get(artifact_key)
+    if not item:
+        return None
+    path = Path(item.path)
+    if not path.exists():
+        return None
+    return load_json(path)
 
 
 def _load_schema_text(base_dir: Path, relative_schema_path: str) -> str:
@@ -200,12 +218,23 @@ def _compose_prompt(
         "- If text/screen/photo/interface details are important, request close-up framing.\n"
         "- Maintain continuity constraints across adjacent shots.\n"
     )
+    retry_guidance = ""
+    if role == RoleId.SHOWRUNNER and (
+        "previous_showrunner_script" in source_payloads or "gate1_report" in source_payloads
+    ):
+        retry_guidance = (
+            "## Retry Guidance\n"
+            "- This is a retry/fix pass. Apply minimal edits only.\n"
+            "- Preserve title, core cast, and core story beats from `story_anchor`/`anchor_showrunner_script`.\n"
+            "- Prioritize fixing only the latest gate reasons.\n\n"
+        )
     return (
         f"## System\n{role_prompt.strip()}\n\n"
         "## Project Constraints\n"
         f"{constraints}\n\n"
         "## Technical Shot Rules\n"
         f"{shot_rules}\n"
+        f"{retry_guidance}"
         "## Iteration Context\n"
         f"Role: {role.value}\n"
         "You must return valid JSON only. No markdown wrappers.\n\n"

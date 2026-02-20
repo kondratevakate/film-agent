@@ -5,6 +5,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import cast
 
+from film_agent.continuity import (
+    character_consistency_pct,
+    load_story_anchor,
+    narrative_coherence_score,
+    script_faithfulness_pct,
+    style_anchor_quality_score,
+    title_matches_anchor,
+)
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
 from film_agent.io.json_io import load_json
@@ -14,6 +22,7 @@ from film_agent.schemas.artifacts import (
     FinalScorecard,
     GateReport,
     ImagePromptPackage,
+    ScriptArtifact,
     SelectedImagesArtifact,
 )
 from film_agent.state_machine.state_store import RunStateData
@@ -27,6 +36,7 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig) -> tu
     selected_images = load_artifact_for_agent(run_path, state, "cinematography")
     av_prompts = load_artifact_for_agent(run_path, state, "audio")
     final_metrics = load_artifact_for_agent(run_path, state, "final_metrics")
+    script = load_artifact_for_agent(run_path, state, "showrunner")
     if any(item is None for item in (image_prompts, selected_images, av_prompts, final_metrics)):
         reasons.append("Missing one or more required artifacts for Gate4 scoring.")
         fixes.append("Ensure image prompts, selected images, AV prompts and final metrics are submitted.")
@@ -54,6 +64,7 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig) -> tu
     selected_images = cast(SelectedImagesArtifact, selected_images)
     av_prompts = cast(AVPromptPackage, av_prompts)
     final_metrics = cast(FinalMetrics, final_metrics)
+    script = cast(ScriptArtifact, script) if script is not None else None
     lock_payload = _load_lock_payload(run_path, state)
     spec_hash = lock_payload.get("spec_hash", "")
     if not spec_hash:
@@ -118,6 +129,56 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig) -> tu
         reasons.append("Final identity drift above ceiling.")
         fixes.append("Strengthen identity anchors and rerun.")
 
+    style_anchor_quality = style_anchor_quality_score(image_prompts.style_anchor)
+    style_anchor_quality_ok = style_anchor_quality >= t.min_style_anchor_quality
+    if not style_anchor_quality_ok:
+        reasons.append("style_anchor quality is below configured floor.")
+        fixes.append("Improve style_anchor specificity before final render.")
+
+    story_anchor = load_story_anchor(run_path, state)
+    story_anchor_present = story_anchor is not None
+    anchor_title_match = True
+    character_consistency = 100.0
+    script_faithfulness = 100.0
+    narrative_coherence = 100.0
+
+    if script is None:
+        reasons.append("Showrunner script is missing for final continuity checks.")
+        fixes.append("Restore script artifact before Gate4 validation.")
+        script_faithfulness = 0.0
+        narrative_coherence = 0.0
+        character_consistency = 0.0
+        anchor_title_match = False
+        story_anchor_present = False
+    elif story_anchor is None:
+        reasons.append("Story anchor is missing for final continuity checks.")
+        fixes.append("Ensure story_anchor artifact exists from iteration 1.")
+        script_faithfulness = 0.0
+        character_consistency = 0.0
+        anchor_title_match = False
+        narrative_coherence = narrative_coherence_score(script)
+    else:
+        anchor_title_match = title_matches_anchor(story_anchor, script)
+        character_consistency = character_consistency_pct(story_anchor, script)
+        script_faithfulness = script_faithfulness_pct(story_anchor, script)
+        narrative_coherence = narrative_coherence_score(script)
+
+    if state.current_iteration > 1 and t.require_title_lock_on_retry and not anchor_title_match:
+        reasons.append("Final script title drifted from story anchor.")
+        fixes.append("Keep anchor title unchanged across retries and final render.")
+
+    if character_consistency < t.min_anchor_character_overlap_pct:
+        reasons.append("Final script character consistency is below configured floor.")
+        fixes.append("Restore anchor character set and avoid cast replacement.")
+
+    if script_faithfulness < t.min_script_faithfulness_score:
+        reasons.append("Final script faithfulness is below configured floor.")
+        fixes.append("Recover anchor beats in script and downstream prompts.")
+
+    if narrative_coherence < t.min_narrative_coherence_score:
+        reasons.append("Final narrative coherence is below configured floor.")
+        fixes.append("Resolve discontinuities in script progression before final render.")
+
     script_lock_score = selected_coverage
     prompt_alignment_score = av_coverage
     cinematic_quality = max(0.0, min(100.0, final_metrics.videoscore2 * 100.0))
@@ -159,6 +220,13 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig) -> tu
             "selected_coverage_pct": round(selected_coverage, 2),
             "av_coverage_pct": round(av_coverage, 2),
             "final_score_floor": t.final_score_floor,
+            "style_anchor_quality": round(style_anchor_quality, 2),
+            "style_anchor_quality_ok": style_anchor_quality_ok,
+            "story_anchor_present": story_anchor_present,
+            "anchor_title_match": anchor_title_match,
+            "character_consistency": round(character_consistency, 2),
+            "script_faithfulness": round(script_faithfulness, 2),
+            "narrative_coherence": round(narrative_coherence, 2),
             "science_clarity": round(scorecard.science_clarity, 2),
             "dance_mapping": round(scorecard.dance_mapping, 2),
             "cinematic_quality": round(scorecard.cinematic_quality, 2),

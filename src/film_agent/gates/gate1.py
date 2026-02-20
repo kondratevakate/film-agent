@@ -6,6 +6,12 @@ from pathlib import Path
 import re
 from typing import cast
 
+from film_agent.continuity import (
+    character_consistency_pct,
+    load_story_anchor,
+    script_faithfulness_pct,
+    title_matches_anchor,
+)
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
 from film_agent.schemas.artifacts import GateReport, ScriptArtifact
@@ -39,6 +45,11 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
                 "fine_grained_visual_elements": 999,
                 "concept_alignment_pct": 0.0,
                 "structure_complete": False,
+                "story_anchor_present": False,
+                "anchor_title_match": False,
+                "character_consistency": 0.0,
+                "script_faithfulness": 0.0,
+                "narrative_coherence": 0.0,
             },
             reasons=reasons,
             fix_instructions=fixes,
@@ -118,6 +129,54 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         reasons.append("Script structure is incomplete for downstream pipeline stages.")
         fixes.append("Ensure title/logline/theme/locations plus balanced action/dialogue are present.")
 
+    story_anchor = load_story_anchor(run_path, state)
+    story_anchor_present = story_anchor is not None
+    anchor_title_match = True
+    character_consistency = 100.0
+    script_faithfulness = 100.0
+
+    retry_mode = state.current_iteration > 1
+    title_lock_required = retry_mode and config.thresholds.require_title_lock_on_retry
+    character_consistency_ok = True
+    script_faithfulness_ok = True
+    anchor_ready = True
+
+    if retry_mode and not story_anchor_present:
+        anchor_ready = False
+        reasons.append("Story anchor is missing for retry continuity validation.")
+        fixes.append("Restore iter-01 story_anchor.json or recreate the run with anchor bootstrap.")
+
+    if story_anchor is not None:
+        anchor_title_match = title_matches_anchor(story_anchor, script)
+        character_consistency = character_consistency_pct(story_anchor, script)
+        script_faithfulness = script_faithfulness_pct(story_anchor, script)
+
+        character_consistency_ok = character_consistency >= config.thresholds.min_anchor_character_overlap_pct
+        script_faithfulness_ok = script_faithfulness >= config.thresholds.min_anchor_fact_coverage_pct
+
+        if title_lock_required and not anchor_title_match:
+            reasons.append("Retry script changed title from story anchor.")
+            fixes.append("Keep the anchor title unchanged; patch only gate-reported defects.")
+        if retry_mode and not character_consistency_ok:
+            reasons.append("Retry script drifted from anchor character set.")
+            fixes.append("Restore anchor character roster and avoid replacing principal cast.")
+        if retry_mode and not script_faithfulness_ok:
+            reasons.append("Retry script no longer preserves enough anchor story beats.")
+            fixes.append("Reinstate must-keep anchor beats while keeping fixes minimal.")
+
+    narrative_coherence = _narrative_coherence_score(
+        line_count=line_count,
+        placeholder_lines=placeholder_lines,
+        adjacent_character_violations=adjacent_character_violations,
+        multi_action_lines=multi_action_lines,
+        tight_spatial_transition_pairs=tight_spatial_transition_pairs,
+        structure_complete=structure_complete,
+    )
+    narrative_coherence_ok = narrative_coherence >= config.thresholds.min_narrative_coherence_score
+    if not narrative_coherence_ok:
+        reasons.append("Narrative coherence score is below configured floor.")
+        fixes.append("Simplify adjacent transitions and preserve a stable beat progression.")
+
     passed = (
         duration_ok
         and not undeclared_speakers
@@ -131,6 +190,11 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         and fine_grained_visual_elements <= 2
         and concept_alignment_ok
         and structure_complete
+        and narrative_coherence_ok
+        and anchor_ready
+        and (not title_lock_required or anchor_title_match)
+        and (not retry_mode or character_consistency_ok)
+        and (not retry_mode or script_faithfulness_ok)
     )
 
     return GateReport(
@@ -152,6 +216,11 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             "fine_grained_visual_elements": fine_grained_visual_elements,
             "concept_alignment_pct": round(concept_alignment_pct, 2),
             "structure_complete": structure_complete,
+            "story_anchor_present": story_anchor_present,
+            "anchor_title_match": anchor_title_match,
+            "character_consistency": round(character_consistency, 2),
+            "script_faithfulness": round(script_faithfulness, 2),
+            "narrative_coherence": round(narrative_coherence, 2),
             "duration_target_s": config.duration_target_s,
         },
         reasons=reasons,
@@ -318,3 +387,28 @@ def _is_structurally_complete(script: ScriptArtifact) -> bool:
     has_actions = any(line.kind == "action" for line in script.lines)
     has_dialogue = any(line.kind == "dialogue" for line in script.lines)
     return has_header_fields and has_locations and has_actions and has_dialogue
+
+
+def _narrative_coherence_score(
+    *,
+    line_count: int,
+    placeholder_lines: int,
+    adjacent_character_violations: int,
+    multi_action_lines: int,
+    tight_spatial_transition_pairs: int,
+    structure_complete: bool,
+) -> float:
+    score = 100.0
+    if line_count < 10:
+        score -= 15.0
+    if placeholder_lines:
+        score -= min(25.0, placeholder_lines * 10.0)
+    if adjacent_character_violations:
+        score -= min(25.0, adjacent_character_violations * 3.0)
+    if multi_action_lines:
+        score -= min(25.0, multi_action_lines * 4.0)
+    if tight_spatial_transition_pairs:
+        score -= min(20.0, tight_spatial_transition_pairs * 5.0)
+    if not structure_complete:
+        score -= 20.0
+    return max(0.0, min(100.0, score))

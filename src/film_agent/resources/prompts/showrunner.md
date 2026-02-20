@@ -18,6 +18,9 @@ Showrunner constraints:
 - Avoid placeholder markers (TODO/TBD/template syntax).
 - If `previous_showrunner_script` is present in upstream context, treat this as a revision task:
   keep the same core story, title, and character set; apply minimal edits needed to satisfy gate fixes.
+- If `story_anchor` or `anchor_showrunner_script` is present, treat them as immutable continuity anchors:
+  do not rename the title, replace the main cast, or change the central conflict unless explicitly requested by user input.
+- On retries, prioritize a fix-only pass using latest `gate1_report` reasons and fix instructions.
 
 Shot-by-shot quality rules for `lines`:
 - Use one primary action per action line.

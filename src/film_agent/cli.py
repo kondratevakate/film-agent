@@ -101,6 +101,11 @@ def show_prompt(
 def auto_run(
     run_id: str = typer.Option(..., "--run-id", help="Run ID"),
     model: str = typer.Option("gpt-4.1", "--model", help="OpenAI model for role generation"),
+    evaluator_model: str | None = typer.Option(
+        None,
+        "--evaluator-model",
+        help="Optional model for evaluator/judge passes (defaults to --model).",
+    ),
     max_cycles: int = typer.Option(20, "--max-cycles", help="Maximum automation cycles"),
     until: str = typer.Option("gate2", "--until", help="Target stage: gate1|gate2|complete"),
     self_eval_rounds: int = typer.Option(2, "--self-eval-rounds", help="Evaluator refine rounds per role output"),
@@ -110,6 +115,7 @@ def auto_run(
             _base_dir(),
             run_id,
             model=model,
+            evaluator_model=evaluator_model,
             max_cycles=max_cycles,
             until=until,
             self_eval_rounds=self_eval_rounds,

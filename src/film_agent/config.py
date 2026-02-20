@@ -40,6 +40,13 @@ class Thresholds(BaseModel):
     variety_score_threshold: float = 70.0
     final_score_floor: float = 70.0
 
+    require_title_lock_on_retry: bool = True
+    min_anchor_character_overlap_pct: float = 70.0
+    min_anchor_fact_coverage_pct: float = 55.0
+    min_script_faithfulness_score: float = 60.0
+    min_narrative_coherence_score: float = 60.0
+    min_style_anchor_quality: float = 55.0
+
 
 class RetryLimits(BaseModel):
     gate1: int = 3
