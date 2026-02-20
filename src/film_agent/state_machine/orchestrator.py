@@ -46,8 +46,9 @@ def create_run(base_dir: Path, config_path: Path) -> CommandResult:
 
     resolved_refs: list[str] = []
     ref_hashes: dict[str, str] = {}
-    for item in config.reference_images:
-        ref_path = Path(item).expanduser()
+    ref_catalog: list[dict[str, object]] = []
+    for index, item in enumerate(config.reference_image_entries(), start=1):
+        ref_path = Path(item.path).expanduser()
         if not ref_path.is_absolute():
             ref_path = resolved_config_path.parent / ref_path
         ref_path = ref_path.resolve()
@@ -55,9 +56,20 @@ def create_run(base_dir: Path, config_path: Path) -> CommandResult:
             raise ValueError(f"Reference image not found: {ref_path}")
         resolved = str(ref_path)
         resolved_refs.append(resolved)
-        ref_hashes[resolved] = sha256_file(ref_path)
+        checksum = sha256_file(ref_path)
+        ref_hashes[resolved] = checksum
+        ref_catalog.append(
+            {
+                "id": item.id or f"ref_{index:02d}",
+                "path": resolved,
+                "tags": list(item.tags),
+                "notes": item.notes,
+                "sha256": checksum,
+            }
+        )
     state.reference_images = resolved_refs
     state.reference_image_hashes = ref_hashes
+    state.reference_image_catalog = ref_catalog
 
     save_state(path, state)
     append_event(path, "run_created", {"run_id": state.run_id, "config_path": str(resolved_config_path)})

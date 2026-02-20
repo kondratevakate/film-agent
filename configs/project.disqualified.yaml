@@ -1,5 +1,11 @@
 project_name: disqualified
-reference_images: []
+reference_images:
+  - ../references/input/disqualified/620b5912a1220e09a67d187f.jpg
+  - ../references/input/disqualified/tutberidze1.jpg
+  - ../references/input/disqualified/KMO_178385_00064_1_t218_121144.jpg
+creative_direction_file: disqualified/creative-direction.md
+principles_file: disqualified/principles.md
+tokens_css_file: disqualified/tokens.css
 duration_min_s: 60
 duration_max_s: 180
 duration_target_s: 95

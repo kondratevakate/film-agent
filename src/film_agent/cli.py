@@ -21,6 +21,8 @@ from film_agent.state_machine.orchestrator import (
     submit_agent,
     validate_gate,
 )
+from film_agent.vimax_bridge import prepare_vimax_inputs
+from film_agent.vimax_pipeline import run_vimax_pipeline
 
 app = typer.Typer(help="Film-Agent manual pipeline CLI", add_completion=False)
 role_app = typer.Typer(help="Role pack commands", add_completion=False)
@@ -151,11 +153,17 @@ def render_api(
         "--out-dir",
         help="Optional output directory for generated shot videos and manifest.",
     ),
+    lines_path: Path | None = typer.Option(
+        None,
+        "--lines-path",
+        help="Optional path to vimax_lines.json (defaults to current iteration vimax_input).",
+    ),
     poll_interval_s: float = typer.Option(2.0, "--poll-interval", help="Task status polling interval in seconds."),
     timeout_s: float = typer.Option(900.0, "--timeout", help="Per-shot timeout in seconds."),
     dry_run: bool = typer.Option(False, "--dry-run", help="Build requests and manifest without API calls."),
+    shot_retry_limit: int = typer.Option(2, "--shot-retry-limit", help="Technical retry limit per shot."),
     fail_fast: bool = typer.Option(
-        True,
+        False,
         "--fail-fast/--best-effort",
         help="Stop on first failed shot (default) or continue collecting failures.",
     ),
@@ -171,10 +179,12 @@ def render_api(
             provider=provider,
             model=model,
             output_dir=out_dir.resolve() if out_dir else None,
+            lines_path=lines_path.resolve() if lines_path else None,
             poll_interval_s=poll_interval_s,
             timeout_s=timeout_s,
             dry_run=dry_run,
             fail_fast=fail_fast,
+            shot_retry_limit=shot_retry_limit,
         )
     except Exception as exc:
         _emit({"error": str(exc)})
@@ -188,6 +198,152 @@ def render_api(
             "output_dir": str(result.output_dir),
             "manifest": str(result.manifest_path),
             "generated_count": result.generated_count,
+            "failed_count": result.failed_count,
+        }
+    )
+
+
+@app.command("prepare-vimax")
+def prepare_vimax(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    api_key: str | None = typer.Option(
+        None,
+        "--api-key",
+        envvar="OPENAI_API_KEY",
+        help="OpenAI API key for reference image generation (or set OPENAI_API_KEY).",
+    ),
+    image_model: str = typer.Option("gpt-image-1", "--image-model", help="Image model for references."),
+    image_size: str | None = typer.Option(
+        None,
+        "--image-size",
+        help="Optional image size override (e.g. 1536x1024).",
+    ),
+    out_dir: Path | None = typer.Option(
+        None,
+        "--out-dir",
+        help="Optional output directory for ViMax package.",
+    ),
+    anchor_images: list[Path] = typer.Option(
+        [],
+        "--anchor-image",
+        help="Anchor image path. Provide 5 images for style/identity consistency.",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Build ViMax line package without generating images.",
+    ),
+    force_regenerate: bool = typer.Option(
+        False,
+        "--force-regenerate",
+        help="Regenerate references even if files already exist.",
+    ),
+) -> None:
+    if not dry_run and not (api_key or "").strip():
+        _emit({"error": "Missing api key. Set --api-key or OPENAI_API_KEY."})
+        raise typer.Exit(code=1)
+
+    try:
+        result = prepare_vimax_inputs(
+            _base_dir(),
+            run_id,
+            api_key=(api_key or "").strip(),
+            image_model=image_model,
+            image_size=image_size,
+            output_dir=out_dir.resolve() if out_dir else None,
+            dry_run=dry_run,
+            force_regenerate=force_regenerate,
+            anchor_images=[str(item.resolve()) for item in anchor_images] if anchor_images else None,
+            required_anchor_count=5,
+        )
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+
+    _emit(
+        {
+            "run_id": result.run_id,
+            "iteration": result.iteration,
+            "output_dir": str(result.output_dir),
+            "references_dir": str(result.references_dir),
+            "lines_path": str(result.lines_path),
+            "manifest": str(result.manifest_path),
+            "planned_lines": result.planned_lines,
+            "generated_references": result.generated_references,
+            "reused_references": result.reused_references,
+            "anchor_count": result.anchor_count,
+        }
+    )
+
+
+@app.command("vimax-run")
+def vimax_run(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    openai_api_key: str | None = typer.Option(
+        None,
+        "--openai-api-key",
+        envvar="OPENAI_API_KEY",
+        help="OpenAI API key for reference generation, QC and TTS.",
+    ),
+    yunwu_api_key: str | None = typer.Option(
+        None,
+        "--yunwu-api-key",
+        envvar="YUNWU_API_KEY",
+        help="Yunwu API key for video generation.",
+    ),
+    anchor_images: list[Path] = typer.Option(
+        [],
+        "--anchor-image",
+        help="Anchor image path. Provide exactly 5 images.",
+    ),
+    image_model: str = typer.Option("gpt-image-1", "--image-model", help="Image model for references."),
+    qc_model: str = typer.Option("gpt-4.1-mini", "--qc-model", help="VLM judge model."),
+    qc_threshold: float = typer.Option(0.75, "--qc-threshold", help="QC acceptance threshold in [0,1]."),
+    shot_retry_limit: int = typer.Option(2, "--shot-retry-limit", help="Retry limit per shot."),
+    poll_interval_s: float = typer.Option(2.0, "--poll-interval", help="Render poll interval (seconds)."),
+    timeout_s: float = typer.Option(900.0, "--timeout", help="Per-shot render timeout (seconds)."),
+    tts_model: str = typer.Option("gpt-4o-mini-tts", "--tts-model", help="TTS model for final mix."),
+    tts_voice: str = typer.Option("alloy", "--tts-voice", help="TTS voice for final mix."),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Run orchestration without external generation calls."),
+) -> None:
+    if not (openai_api_key or "").strip():
+        _emit({"error": "Missing OpenAI API key. Set --openai-api-key or OPENAI_API_KEY."})
+        raise typer.Exit(code=1)
+    if not (yunwu_api_key or "").strip():
+        _emit({"error": "Missing Yunwu API key. Set --yunwu-api-key or YUNWU_API_KEY."})
+        raise typer.Exit(code=1)
+
+    try:
+        result = run_vimax_pipeline(
+            _base_dir(),
+            run_id,
+            openai_api_key=(openai_api_key or "").strip(),
+            yunwu_api_key=(yunwu_api_key or "").strip(),
+            anchor_images=[str(item.resolve()) for item in anchor_images],
+            image_model=image_model,
+            qc_model=qc_model,
+            qc_threshold=qc_threshold,
+            shot_retry_limit=shot_retry_limit,
+            poll_interval_s=poll_interval_s,
+            timeout_s=timeout_s,
+            tts_model=tts_model,
+            tts_voice=tts_voice,
+            dry_run=dry_run,
+        )
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+
+    _emit(
+        {
+            "run_id": result.run_id,
+            "iteration": result.iteration,
+            "vimax_input_dir": str(result.vimax_input_dir),
+            "render_manifest": str(result.render_manifest_path),
+            "render_qc": str(result.render_qc_path),
+            "final_video": str(result.final_video_path),
+            "final_mix_manifest": str(result.final_mix_manifest_path),
+            "failed_shots": result.failed_shots,
         }
     )
 

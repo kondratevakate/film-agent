@@ -11,6 +11,14 @@ Anime noir in a baroque infinite maze: tatami corridors, shoji walls, lacquered 
 - Infinity Castle (Demon Slayer): spatial infinity, repeating doors, surreal geometry, tatami + shoji, ominous elegance
 - Kill Bill: high-contrast graphic language, silhouette frames, hard transitions, ritualized confrontation energy
 
+## Reference Pack (Do/Steal)
+- Biwa Demon (Demon Slayer): sound-as-control; diagonal instrument composition; calm menace.
+- Infinity Castle wide: establishing scale; amber lantern depth; stacked architecture.
+- Upside-down corridor: axis flip as main surreal trick; symmetric corridor; lantern rhythm.
+- Stage group shot: theatrical blocking; gold panel backdrop; silhouette readability.
+- Sumo: mass/inertia; one-hit sway; grounded motion vs surreal rhythm.
+- Kill Bill dojo/stairs: graphic contrast; hard cuts on beat; clean silhouettes.
+
 ## Visual pillars (must-haves)
 - Infinity architecture: repeating sliding doors, tatami corridors, layered platforms, impossible continuity
 - Material authenticity: warm wood, paper screens, ink shadows; avoid "plastic 3D"
@@ -58,6 +66,11 @@ pluck -> micro-pause -> environment tilt/shift -> bodies react -> settle
 - Blade Runner 2049 (color-as-meaning, spacious frames)
 - Ukiyo-e prints (pattern, silhouette, controlled palette)
 - Kabuki / Noh staging (ritual poses, "freeze" moments)
+
+## Missing references to add next
+- Materials close-ups (2-3): shoji paper grain, lacquered wood highlights, clean ink shadow density.
+- Enchanted crowd sync (1-2): ritualized synchronized steps without combat chaos.
+- Geisha lure with mismatch cue (1): serene pose + minimal gesture + shadow/reflection mismatch hint.
 
 ## Anti-references (3-5)
 - Pixar/Disney "soft plastic" look and overly rounded cuteness

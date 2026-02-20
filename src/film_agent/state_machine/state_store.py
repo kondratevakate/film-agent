@@ -43,6 +43,7 @@ class RunStateData(BaseModel):
     config_hash: str
     reference_images: list[str] = Field(default_factory=list)
     reference_image_hashes: dict[str, str] = Field(default_factory=dict)
+    reference_image_catalog: list[dict[str, Any]] = Field(default_factory=list)
     current_state: str = RunState.GATE0
     current_iteration: int = 1
     gate_status: dict[str, str] = Field(default_factory=dict)
@@ -84,6 +85,7 @@ def ensure_run_layout(path: Path) -> None:
 
 
 def new_state(base_dir: Path, config_path: Path, config: RunConfig) -> RunStateData:
+    reference_paths = [item.path for item in config.reference_image_entries()]
     return RunStateData(
         run_id=build_run_id(base_dir, config.project_name),
         project_name=config.project_name,
@@ -91,7 +93,7 @@ def new_state(base_dir: Path, config_path: Path, config: RunConfig) -> RunStateD
         updated_at=utc_now_iso(),
         config_path=str(config_path),
         config_hash=sha256_json(config_dict_for_hash(config)),
-        reference_images=list(config.reference_images),
+        reference_images=reference_paths,
         current_state=RunState.GATE0,
         gate_status=default_gate_status(),
         retry_counts=default_retry_counts(),

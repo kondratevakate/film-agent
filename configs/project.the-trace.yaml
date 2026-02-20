@@ -1,5 +1,29 @@
 project_name: the-trace
-reference_images: []
+reference_images:
+  - id: ref_cheer_gym_red_uniforms
+    path: ../references/input/the_trace/2026-02-20_22-53-47.png
+    tags: [america, high_school, gym, cheerleaders, 90s_00s_energy, saturated_red, performance, wide_group]
+    notes: "Gym performance energy; bold school spirit palette; readable formation staging."
+  - id: ref_stranger_things_hallway_group
+    path: ../references/input/the_trace/stranger-things-01_0.jpg
+    tags: [stranger_things, 80s, hallway, lockers, fluorescent, group_blocking, medium_wide, teen_wardrobe]
+    notes: "Iconic American school hallway density; practical fluorescent overheads; ensemble framing."
+  - id: ref_stranger_things_letterman_team
+    path: ../references/input/the_trace/the-hawkins-high-school-basketball-team-1657151522.jpg
+    tags: [stranger_things, 80s, letterman, hallway, moody_practical, hero_group, symmetry]
+    notes: "Moody practical lighting; varsity jackets; confident hero-group blocking."
+  - id: ref_closeup_teal_jacket_outside
+    path: ../references/input/the_trace/153191298.jpg
+    tags: [stranger_things_vibe, closeup, teen, teal_jacket, soft_natural, character_isolation]
+    notes: "Reference for close-up tone: grounded teen emotion; clean background separation."
+  - id: ref_cheer_field_stunt_blue
+    path: ../references/input/the_trace/cheer-pictures-1600-x-1062-umqy05e5ua99wy22.jpg
+    tags: [america, high_school, football_field, cheer_stunts, daylight, wide, team_geometry]
+    notes: "Outdoor school-sports scale; readable stunt silhouettes; useful for establishing shots."
+  - id: ref_football_walk_bleachers
+    path: ../references/input/the_trace/Herrington_High_School_Football_Field_3_f66cee9b-1897-4025-81f2-84181e28b5fa.jpg
+    tags: [america, high_school, football, bleachers, jerseys, dusty_daylight, parking_lot]
+    notes: "Authentic school-sports texture: jerseys, bleachers, cars, midday haze."
 creative_direction_file: the-trace/creative-direction.md
 principles_file: the-trace/principles.md
 tokens_css_file: the-trace/tokens.css

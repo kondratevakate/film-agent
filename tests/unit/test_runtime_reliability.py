@@ -73,8 +73,68 @@ def test_run_config_rejects_single_reference_image(tmp_path: Path) -> None:
     config_path = config_dir / "project.yaml"
     config_path.write_text(json.dumps(config), encoding="utf-8")
 
-    with pytest.raises(ValueError, match="reference_images must contain 2-3 paths"):
+    with pytest.raises(ValueError, match="reference_images must contain at least 2 paths"):
         create_run(tmp_path, config_path)
+
+
+def test_create_run_accepts_structured_reference_images_and_keeps_catalog(tmp_path: Path) -> None:
+    config_dir = tmp_path / "config_root"
+    references = config_dir / "references"
+    references.mkdir(parents=True)
+    ref1 = references / "ref1.jpg"
+    ref2 = references / "ref2.jpg"
+    ref3 = references / "ref3.jpg"
+    ref1.write_bytes(b"ref1")
+    ref2.write_bytes(b"ref2")
+    ref3.write_bytes(b"ref3")
+
+    config = {
+        "project_name": "structured-ref-test",
+        "reference_images": [
+            {
+                "id": "ref_pool",
+                "path": "references/ref1.jpg",
+                "tags": ["pool", "fluorescent"],
+                "notes": "pool geometry and chlorine palette",
+            },
+            {
+                "id": "ref_hall",
+                "path": "references/ref2.jpg",
+                "tags": ["hallway", "lockers"],
+                "notes": "school corridor baseline",
+            },
+            {
+                "id": "ref_gym",
+                "path": "references/ref3.jpg",
+                "tags": ["gym", "formation"],
+                "notes": "group blocking and symmetry",
+            },
+        ],
+        "duration_target_s": 95,
+        "model_candidates": [
+            {
+                "name": "test-model",
+                "weighted_score": 1.0,
+                "physics": 1.0,
+                "human_fidelity": 1.0,
+                "identity": 1.0,
+            }
+        ],
+    }
+    config_path = config_dir / "project.yaml"
+    config_path.write_text(json.dumps(config), encoding="utf-8")
+
+    run = create_run(tmp_path, config_path)
+    state = load_state(run_dir(tmp_path, run.run_id))
+    resolved_ref1 = str(ref1.resolve())
+    resolved_ref2 = str(ref2.resolve())
+    resolved_ref3 = str(ref3.resolve())
+
+    assert state.reference_images == [resolved_ref1, resolved_ref2, resolved_ref3]
+    assert len(state.reference_image_catalog) == 3
+    assert state.reference_image_catalog[0]["id"] == "ref_pool"
+    assert state.reference_image_catalog[0]["path"] == resolved_ref1
+    assert state.reference_image_catalog[1]["tags"] == ["hallway", "lockers"]
 
 
 def test_run_config_rejects_invalid_duration_window(tmp_path: Path) -> None:

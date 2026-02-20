@@ -1,5 +1,44 @@
 project_name: contrast-infinity-castle
-reference_images: []
+reference_images:
+  - id: ref_biwa_demon
+    path: ../references/input/contrast-infinity-castle/biwa_demon.png
+    tags: [demon_slayer, biwa, string_control, calm_menace, diagonal_composition]
+    notes: "Primary conductor reference: pluck gesture drives event rhythm."
+  - id: ref_biwa_closeup
+    path: ../references/input/contrast-infinity-castle/biwa_demon_closeup.png
+    tags: [demon_slayer, closeup, hand_gesture, string_detail, instrument_texture]
+    notes: "Close-up for micro-gesture language on pluck beats."
+  - id: ref_castle_wide
+    path: ../references/input/contrast-infinity-castle/infinity_castle_wide.png
+    tags: [infinity_castle, establishing, layered_architecture, amber_lanterns, scale]
+    notes: "Establishing scale and baroque stacked architecture."
+  - id: ref_corridor_axis_flip
+    path: ../references/input/contrast-infinity-castle/infinity_castle_corridor_upside_down.png
+    tags: [infinity_castle, corridor, axis_flip, symmetry, lantern_rhythm]
+    notes: "Axis inversion reference for pluck -> tilt grammar."
+  - id: ref_stage_blocking
+    path: ../references/input/contrast-infinity-castle/infinity_castle_stage.png
+    tags: [stage, theatrical_blocking, silhouette_readability, gold_panels]
+    notes: "Geisha dais staging reference with clean frontal composition."
+  - id: ref_sumo_mass
+    path: ../references/input/contrast-infinity-castle/sumo.png
+    tags: [sumo, mass, inertia, grounded_motion, impact]
+    notes: "Heavy-body motion reference for one-hit sway behavior."
+  - id: ref_killbill_duel
+    path: ../references/input/contrast-infinity-castle/killbill_duel.jpg
+    tags: [kill_bill, dojo, high_contrast, silhouettes, confrontation]
+    notes: "Graphic contrast and silhouette clarity in Japanese interior."
+  - id: ref_killbill_stairs
+    path: ../references/input/contrast-infinity-castle/killbill_stairs.jpg
+    tags: [kill_bill, stairs, hard_cut_energy, linear_composition]
+    notes: "Hard transition energy and angular staging."
+  - id: ref_killbill_hall
+    path: ../references/input/contrast-infinity-castle/killbill_hall.jpg
+    tags: [kill_bill, hall, rhythm_cutting, yellow_vs_wood_contrast]
+    notes: "Additional montage rhythm and contrast reference."
+creative_direction_file: contrast-infinity-castle/creative-direction.md
+principles_file: contrast-infinity-castle/principles.md
+tokens_css_file: contrast-infinity-castle/tokens.css
 duration_min_s: 90
 duration_max_s: 150
 duration_target_s: 100

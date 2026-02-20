@@ -64,13 +64,21 @@ def test_showrunner_packet_includes_previous_gate1_report_on_retry(tmp_path: Pat
 def test_showrunner_packet_includes_configured_look_and_feel_files(tmp_path: Path) -> None:
     config_dir = tmp_path / "config_root"
     style_dir = config_dir / "the-trace"
+    ref_dir = config_dir / "refs"
     style_dir.mkdir(parents=True)
+    ref_dir.mkdir(parents=True)
     (style_dir / "creative-direction.md").write_text("cinematic grammar check", encoding="utf-8")
     (style_dir / "principles.md").write_text("consistency principles check", encoding="utf-8")
     (style_dir / "tokens.css").write_text(":root { --accent: #D11F2E; }", encoding="utf-8")
+    (ref_dir / "a.jpg").write_bytes(b"a")
+    (ref_dir / "b.jpg").write_bytes(b"b")
 
     config = {
         "project_name": "look-and-feel-check",
+        "reference_images": [
+            {"id": "ref_a", "path": "refs/a.jpg", "tags": ["hallway"], "notes": "hallway baseline"},
+            {"id": "ref_b", "path": "refs/b.jpg", "tags": ["gym"], "notes": "gym baseline"},
+        ],
         "creative_direction_file": "the-trace/creative-direction.md",
         "principles_file": "the-trace/principles.md",
         "tokens_css_file": "the-trace/tokens.css",
@@ -96,3 +104,5 @@ def test_showrunner_packet_includes_configured_look_and_feel_files(tmp_path: Pat
     assert "cinematic grammar check" in packet_text
     assert "consistency principles check" in packet_text
     assert "--accent: #D11F2E" in packet_text
+    assert "reference_image_catalog" in packet_text
+    assert "ref_a" in packet_text

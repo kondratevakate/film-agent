@@ -54,9 +54,16 @@ class RetryLimits(BaseModel):
     gate3: int = 2
 
 
+class ReferenceImageConfig(BaseModel):
+    path: str
+    id: str | None = None
+    tags: list[str] = Field(default_factory=list)
+    notes: str = ""
+
+
 class RunConfig(BaseModel):
     project_name: str = "film-agent"
-    reference_images: list[str] = Field(default_factory=list)
+    reference_images: list[str | ReferenceImageConfig] = Field(default_factory=list)
     creative_direction_file: str | None = None
     principles_file: str | None = None
     tokens_css_file: str | None = None
@@ -74,8 +81,8 @@ class RunConfig(BaseModel):
 
     @model_validator(mode="after")
     def validate_reference_images(self) -> "RunConfig":
-        if self.reference_images and not 2 <= len(self.reference_images) <= 3:
-            raise ValueError("reference_images must contain 2-3 paths when provided.")
+        if self.reference_images and len(self.reference_images) < 2:
+            raise ValueError("reference_images must contain at least 2 paths when provided.")
         if self.creative_direction_file is not None and not self.creative_direction_file.strip():
             self.creative_direction_file = None
         if self.principles_file is not None and not self.principles_file.strip():
@@ -87,6 +94,15 @@ class RunConfig(BaseModel):
         if not self.duration_min_s <= self.duration_target_s <= self.duration_max_s:
             raise ValueError("duration_target_s must be within [duration_min_s, duration_max_s].")
         return self
+
+    def reference_image_entries(self) -> list[ReferenceImageConfig]:
+        entries: list[ReferenceImageConfig] = []
+        for item in self.reference_images:
+            if isinstance(item, str):
+                entries.append(ReferenceImageConfig(path=item))
+            else:
+                entries.append(item)
+        return entries
 
 
 def load_config(config_path: Path) -> RunConfig:

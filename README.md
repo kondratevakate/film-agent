@@ -21,7 +21,10 @@ Optional legacy provider runtime (deprecated scripts only):
 pip install -e .[providers]
 ```
 
-`.[providers]` is also required for `render-api` (HTTP calls to external generation APIs).
+`.[providers]` is also required for:
+
+- `render-api` (external video APIs)
+- `vimax-run` final mix stage (`moviepy`)
 
 ## Main Commands
 
@@ -47,6 +50,41 @@ Dry-run (no API calls, request/manifest only):
 
 ```bash
 film-agent render-api --run-id <RUN_ID> --provider veo_yunwu --dry-run
+```
+
+Technical retries per shot (default `2`):
+
+```bash
+film-agent render-api --run-id <RUN_ID> --provider veo_yunwu --shot-retry-limit 2
+```
+
+Prepare ViMax input package from your artifact lines:
+
+```bash
+# 1) generate/reference all shot images from dance_mapping prompts
+# 2) build full lines package for ViMax (image+video+audio lines)
+film-agent prepare-vimax --run-id <RUN_ID> --image-model gpt-image-1 \
+  --anchor-image path/to/anchor1.png \
+  --anchor-image path/to/anchor2.png \
+  --anchor-image path/to/anchor3.png \
+  --anchor-image path/to/anchor4.png \
+  --anchor-image path/to/anchor5.png
+
+# preview package only (without image generation API calls)
+film-agent prepare-vimax --run-id <RUN_ID> --dry-run
+```
+
+End-to-end run (prepare -> render -> auto QC -> final video+audio mix):
+
+```bash
+OPENAI_API_KEY=...
+YUNWU_API_KEY=...
+film-agent vimax-run --run-id <RUN_ID> \
+  --anchor-image path/to/anchor1.png \
+  --anchor-image path/to/anchor2.png \
+  --anchor-image path/to/anchor3.png \
+  --anchor-image path/to/anchor4.png \
+  --anchor-image path/to/anchor5.png
 ```
 
 Config note:
@@ -149,6 +187,18 @@ film-agent show-prompt --agent showrunner
 - `final_metrics` -> `FinalMetrics`
 
 Lock manifest now includes an immutable `spec_hash` and Gate4 requires `final_metrics.spec_hash` to match that locked hash.
+
+## ViMax Bridge Outputs
+
+Per iteration, the pipeline writes:
+
+- `vimax_input/reference_images/*.png`
+- `vimax_input/vimax_lines.json`
+- `vimax_input/manifest.json`
+- `render_outputs/veo_yunwu/render_manifest.json`
+- `render_outputs/veo_yunwu/render_qc.json`
+- `render_outputs/veo_yunwu/final_mix/final_video_with_audio.mp4`
+- `render_outputs/veo_yunwu/final_mix/final_mix_manifest.json`
 
 ## Prompt Stack
 

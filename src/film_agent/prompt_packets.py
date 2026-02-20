@@ -57,6 +57,7 @@ def build_prompt_packet(base_dir: Path, run_id: str, role: RoleId, iteration: in
             "core_concepts": config.core_concepts,
             "reference_images": state.reference_images,
             "reference_image_hashes": state.reference_image_hashes,
+            "reference_image_catalog": state.reference_image_catalog,
             "creative_direction": _load_optional_config_text(config_dir, config.creative_direction_file),
             "principles": _load_optional_config_text(config_dir, config.principles_file),
             "tokens_css": _load_optional_config_text(config_dir, config.tokens_css_file),

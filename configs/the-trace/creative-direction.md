@@ -100,3 +100,109 @@ Analog nostalgia, fluorescent dread, suburban night, locker-hum, chlorine echo, 
 A) "Hallway Overhead Flow" (top-down + locker geometry + bell moment).
 B) "Red Light Classroom" (stain visibility + panic + alarm wash).
 C) "Radiology Calm" (neutral clinical palette + final line).
+
+## References: provided stills (functional mapping)
+- `ref_stranger_things_hallway_group` -> baseline hallway language: density, practical fluorescent light, costume behavior.
+- `ref_stranger_things_letterman_team` -> hero-group framing: confident composition and control.
+- `ref_cheer_gym_red_uniforms` -> gym as hard tissue: ritual stability and school spectacle.
+- `ref_closeup_teal_jacket_outside` -> close-up grammar: emotional readability without exposition.
+- `ref_cheer_field_stunt_blue` + `ref_football_walk_bleachers` -> America authenticity pack: field scale, jerseys, bleachers, cars, daylight haze.
+
+## Tag map: mandatory by location
+### A) High School Pool (sync team)
+Must-have tags:
+- `pool`, `tiles`, `lane_ropes`, `chlorine_echo`
+- `team_unison`, `ritual_precision`, `wide_geometry`
+- `practical_lighting`, `cool_cyan`, `wet_reflections`
+Nice-to-have:
+- `overhead`, `macro_water_ripple`, `slow_push`
+
+### B) Main Hallway
+Must-have tags:
+- `hallway`, `lockers`, `trophy_case`, `fluorescent`
+- `topdown_flow`, `crowd_current`, `bell_transition`
+- `symmetry_control` OR `floating_drift`
+Nice-to-have:
+- `rack_focus`, `match_cut`, `audio_bridge`
+
+### C) Gym (cheer)
+Must-have tags:
+- `gym`, `banners`, `hardwood`, `cheerleaders`
+- `formation_stability`, `wide_group`, `clean_silhouettes`
+- `warm_pockets_vs_fluoro`, `pep_energy`
+Nice-to-have:
+- `low_angle_hero`, `locked_off_frame`
+
+### D) Ballet studio
+Must-have tags:
+- `studio`, `glass_wall`, `mirrors`, `ballet_barre`
+- `precision_lines`, `self_recovery`, `quiet_control`
+- `reflections`, `separation_glass`
+Nice-to-have:
+- `telephoto_isolation`, `subtle_dolly_in`
+
+### E) Old classroom (Injury Club)
+Must-have tags:
+- `old_classroom`, `scuffed_floor`, `stacked_chairs`, `dusty_blinds`
+- `crutches_braces_bandages`, `unstable_recovery`
+- `macro_stain`, `metallic_trace`, `hands`, `fabric_fibers`
+- `panic_escalation`, `red_alert`, `emergency_wash`
+Nice-to-have:
+- `handheld_drift`, `micro_jerk_pulse`
+
+### F) Radiology room
+Must-have tags:
+- `clinical_neutral`, `soft_white`, `low_saturation`, `calm_static`
+- `real_world_cut`, `quiet_roomtone`
+Nice-to-have:
+- `simple_two_shot`, `no_stylization`
+
+## Shot Grammar Checklist (enforced)
+### Coverage pattern per location (minimum)
+- Pool: 1 wide geometry + 1 medium group + 1 macro (water/tile/hand).
+- Hallway: 1 top-down flow + 1 medium drift with Leyla + 1 insert (lockers/clipboard/bell).
+- Gym: 1 wide formation + 1 low-angle stability beat + 1 reaction close-up (optional).
+- Ballet: 1 glass-wide + 1 tele close-up through reflections + 1 recovery beat on pulse.
+- Old classroom: 1 wide chaos + 2 macros (stain + contact) + 1 red-alert wash beat.
+- Radiology: 1 calm wide + 1 close-up + 1 doctor line (no stylized inserts).
+
+### Lens language rules
+- Wide (18-24): geometry + system moments only.
+- Normal (35): default human movement.
+- Tele (50-85): isolation and "seen" moments.
+- Macro: stain + measurement fetish (hands, fibers, pen scratch, sweat on tile).
+
+### Movement rules
+- Drift (hallway): slow float, minimal shake.
+- Locked-off (gym): control and stability.
+- Controlled push for rule moments: pulse, first eye contact, red alert switch.
+- Pulse micro-jerk only (0.2-0.4s), then snap back to stable.
+
+### Transition rules
+- Match cuts: ripple -> fluorescent shimmer; locker slam -> studio door; red wash -> clinical white.
+- Audio bridges: bell/PA -> next location; pen scratch -> stain rub; thump -> room tone shift.
+- Rack focus as invisible cut: foreground trace -> background panic.
+
+### "America reads instantly" checks
+- Lockers + trophies + banners appear at least once each.
+- One exterior school-sports beat implied through sound or light.
+- Wardrobe includes letterman/cheer/denim palette cues.
+
+## Reference selector rules (for agents/pipeline)
+### Selection policy per scene
+- Select 1 location ref (`hallway`/`gym`/`pool`/`studio`/`old_classroom`/`radiology`).
+- Select 1 shot-type ref (`topdown_flow`/`macro_stain`/`hero_group`/`telephoto_isolation`).
+- Optional: add 1 light/color ref (`fluorescent`/`emergency_red`/`clinical_neutral`).
+
+### Functional mapping
+- `ref_stranger_things_hallway_group` -> hallway baseline (`hallway`, `lockers`, `fluorescent`, `ensemble`).
+- `ref_stranger_things_letterman_team` -> hero-group practical mood (`symmetry_control`, `letterman`).
+- `ref_cheer_gym_red_uniforms` -> gym performance (`cheerleaders`, `formation_stability`, `wide_group`).
+- `ref_closeup_teal_jacket_outside` -> close-up tone (`telephoto_isolation`, `grounded_teen`).
+- `ref_cheer_field_stunt_blue` -> outdoor America scale (`football_field`, `wide_scale`, `daylight`).
+- `ref_football_walk_bleachers` -> bleachers/cars authenticity (`bleachers`, `jerseys`, `parking_lot`).
+
+### Hard bans
+- Radiology scenes ban: `neon_red`, `heavy_grain`, `stylized_halation`.
+- Gym/Ballet scenes ban: `handheld_shaky` (allowed only in old classroom escalation).
+- Pulse look ban: `digital_glitch`, `vhs_damage`.

@@ -12,3 +12,5 @@
 - No hyper-real 3D rendering without anime stylization.
 - No chibi/comedic deformation during dramatic beats.
 - No UI-heavy frames or tiny readable text (avoid infographics).
+- No modern elements (no modern clothing, devices, signage, or props).
+- Axis flips over VFX: surrealism comes from geometry and tilt, not particle-heavy magic.
