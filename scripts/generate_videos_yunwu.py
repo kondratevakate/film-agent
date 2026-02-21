@@ -22,6 +22,7 @@ import os
 import sys
 import time
 from datetime import datetime, timezone
+from io import BytesIO
 from pathlib import Path
 
 # Add src to path
@@ -41,13 +42,46 @@ def load_env():
                 os.environ.setdefault(key.strip(), value.strip())
 
 
-def image_to_base64_url(path: Path) -> str:
-    """Convert image to base64 data URL."""
-    raw = path.read_bytes()
-    b64 = base64.b64encode(raw).decode("utf-8")
-    mime_type, _ = mimetypes.guess_type(path.name)
-    mime = mime_type or "image/png"
-    return f"data:{mime};base64,{b64}"
+def image_to_base64_url(path: Path, max_size_kb: int = 1500) -> str:
+    """Convert image to base64 data URL, compressing if needed."""
+    try:
+        from PIL import Image
+    except ImportError:
+        # Fallback without compression
+        raw = path.read_bytes()
+        b64 = base64.b64encode(raw).decode("utf-8")
+        mime_type, _ = mimetypes.guess_type(path.name)
+        mime = mime_type or "image/png"
+        return f"data:{mime};base64,{b64}"
+
+    # Load and potentially compress
+    img = Image.open(path)
+
+    # Convert to RGB if needed
+    if img.mode in ("RGBA", "P"):
+        img = img.convert("RGB")
+
+    # Try JPEG compression at various qualities
+    for quality in [85, 70, 55, 40]:
+        buffer = BytesIO()
+        img.save(buffer, format="JPEG", quality=quality, optimize=True)
+        data = buffer.getvalue()
+        if len(data) <= max_size_kb * 1024:
+            b64 = base64.b64encode(data).decode("utf-8")
+            return f"data:image/jpeg;base64,{b64}"
+
+    # If still too large, resize
+    max_dim = 1024
+    ratio = min(max_dim / img.width, max_dim / img.height)
+    if ratio < 1:
+        new_size = (int(img.width * ratio), int(img.height * ratio))
+        img = img.resize(new_size, Image.LANCZOS)
+
+    buffer = BytesIO()
+    img.save(buffer, format="JPEG", quality=60, optimize=True)
+    data = buffer.getvalue()
+    b64 = base64.b64encode(data).decode("utf-8")
+    return f"data:image/jpeg;base64,{b64}"
 
 
 def run_qc_via_yunwu(
@@ -163,6 +197,30 @@ def extract_frame(video_path: Path, frame_path: Path) -> bool:
         return False
 
 
+def build_compressed_payload(
+    prompt: str,
+    reference_image_path: Path | None,
+    model: str,
+    aspect_ratio: str,
+) -> dict:
+    """Build payload with compressed reference image."""
+    payload = {
+        "prompt": prompt,
+        "model": model,
+        "images": [],
+        "enhance_prompt": True,
+    }
+
+    if reference_image_path and reference_image_path.exists():
+        compressed_uri = image_to_base64_url(reference_image_path, max_size_kb=1500)
+        payload["images"] = [compressed_uri]
+
+    if model.startswith("veo3"):
+        payload["aspect_ratio"] = aspect_ratio
+
+    return payload
+
+
 def main():
     parser = argparse.ArgumentParser(description="Generate videos via Yunwu API")
     parser.add_argument("--run-id", required=True, help="Run ID (e.g., the-trace-010)")
@@ -175,7 +233,9 @@ def main():
     parser.add_argument("--timeout", type=float, default=600.0, help="Timeout per shot in seconds")
     parser.add_argument("--dry-run", action="store_true", help="Don't actually call API")
     parser.add_argument("--skip-qc", action="store_true", help="Skip QC step")
+    parser.add_argument("--no-reference", action="store_true", help="Don't use reference images")
     parser.add_argument("--shots", help="Comma-separated shot IDs to generate (default: all)")
+    parser.add_argument("--skip-existing", action="store_true", help="Skip shots that already have video")
     args = parser.parse_args()
 
     load_env()
@@ -212,21 +272,29 @@ def main():
 
     client = YunwuVeoClient(api_key=yunwu_key) if not args.dry_run else None
 
-    manifest = {
-        "run_id": args.run_id,
-        "iteration": args.iteration,
-        "model": args.model,
-        "qc_model": args.qc_model,
-        "qc_threshold": args.qc_threshold,
-        "aspect_ratio": args.aspect_ratio,
-        "generated_at": datetime.now(timezone.utc).isoformat(),
-        "dry_run": args.dry_run,
-        "shots": [],
-    }
+    # Load existing manifest if exists
+    manifest_path = output_dir / "render_manifest.json"
+    if manifest_path.exists():
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        existing_shots = {s["shot_id"]: s for s in manifest.get("shots", [])}
+    else:
+        manifest = {
+            "run_id": args.run_id,
+            "iteration": args.iteration,
+            "model": args.model,
+            "qc_model": args.qc_model,
+            "qc_threshold": args.qc_threshold,
+            "aspect_ratio": args.aspect_ratio,
+            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "dry_run": args.dry_run,
+            "shots": [],
+        }
+        existing_shots = {}
 
     total = len(lines)
     completed = 0
     failed = 0
+    skipped = 0
     qc_passed = 0
     qc_failed = 0
 
@@ -238,6 +306,16 @@ def main():
         if selected_shots and shot_id not in selected_shots:
             print(f"[{idx}/{total}] Skipping {shot_id} (not in selection)")
             continue
+
+        output_path = output_dir / f"{idx:02d}_{shot_id}.mp4"
+
+        # Check if already completed
+        if args.skip_existing:
+            existing = existing_shots.get(shot_id)
+            if existing and existing.get("status") == "completed" and output_path.exists():
+                print(f"[{idx}/{total}] Skipping {shot_id} (already completed)")
+                skipped += 1
+                continue
 
         video_prompt = str(line.get("video_prompt") or line.get("image_prompt") or "").strip()
         if not video_prompt:
@@ -251,24 +329,24 @@ def main():
             full_prompt = f"{video_prompt}\nAvoid: {negative}"
 
         # Reference image
-        ref_path_raw = line.get("reference_image_path", "")
         ref_path = None
-        if ref_path_raw:
-            candidate = base_dir / ref_path_raw
-            if candidate.exists():
-                ref_path = candidate
-            else:
-                # Try absolute
-                abs_path = Path(ref_path_raw)
-                if abs_path.exists():
-                    ref_path = abs_path
+        if not args.no_reference:
+            ref_path_raw = line.get("reference_image_path", "")
+            if ref_path_raw:
+                candidate = base_dir / ref_path_raw
+                if candidate.exists():
+                    ref_path = candidate
+                else:
+                    # Try absolute
+                    abs_path = Path(ref_path_raw)
+                    if abs_path.exists():
+                        ref_path = abs_path
 
-        output_path = output_dir / f"{idx:02d}_{shot_id}.mp4"
         frame_path = qc_frames_dir / f"{idx:02d}_{shot_id}.png"
 
         print(f"\n[{idx}/{total}] Generating {shot_id}...")
         print(f"  Prompt: {video_prompt[:80]}...")
-        print(f"  Reference: {ref_path or 'none'}")
+        print(f"  Reference: {ref_path or 'none (prompt only)'}")
         print(f"  Output: {output_path}")
 
         shot_entry = {
@@ -285,15 +363,15 @@ def main():
         if args.dry_run:
             shot_entry["status"] = "dry_run"
             print(f"  [DRY RUN] Would generate video")
-            manifest["shots"].append(shot_entry)
+            # Update or add shot entry
+            existing_shots[shot_id] = shot_entry
             continue
 
         try:
-            # Build payload
-            ref_images = [ref_path] if ref_path else []
-            payload = build_veo_yunwu_video_payload(
+            # Build payload with compression
+            payload = build_compressed_payload(
                 prompt=full_prompt,
-                reference_image_paths=ref_images,
+                reference_image_path=ref_path,
                 model=args.model,
                 aspect_ratio=args.aspect_ratio,
             )
@@ -352,19 +430,23 @@ def main():
             failed += 1
             print(f"  FAILED: {e}")
 
-        manifest["shots"].append(shot_entry)
+        # Update shot entry
+        existing_shots[shot_id] = shot_entry
+
+        # Rebuild manifest shots list in order
+        manifest["shots"] = [existing_shots.get(str(l.get("shot_id"))) for l in lines if str(l.get("shot_id")) in existing_shots]
+        manifest["shots"] = [s for s in manifest["shots"] if s is not None]
 
         # Save manifest after each shot
-        manifest_path = output_dir / "render_manifest.json"
         manifest_path.write_text(json.dumps(manifest, indent=2, ensure_ascii=False), encoding="utf-8")
 
     # Final summary
     print(f"\n{'='*60}")
-    print(f"VIDEO: {completed} completed, {failed} failed")
-    if not args.skip_qc:
+    print(f"VIDEO: {completed} completed, {failed} failed, {skipped} skipped")
+    if not args.skip_qc and completed > 0:
         print(f"QC: {qc_passed} passed, {qc_failed} failed (threshold={args.qc_threshold})")
     print(f"Output directory: {output_dir}")
-    print(f"Manifest: {output_dir / 'render_manifest.json'}")
+    print(f"Manifest: {manifest_path}")
 
     if failed > 0:
         sys.exit(1)

@@ -47,6 +47,19 @@ class Thresholds(BaseModel):
     min_narrative_coherence_score: float = 60.0
     min_style_anchor_quality: float = 55.0
 
+    # Character identity consistency thresholds
+    min_character_profile_score: float = 80.0  # Gate2: character profile completeness
+    require_identity_tokens: bool = True  # Gate3: enforce identity_token in prompts
+    min_character_identity_score: float = 70.0  # Gate3: per-shot identity check
+
+    # MAViS-style strict mode thresholds
+    strict_mavis_mode: bool = False  # If True, MAViS warnings become blocking
+    max_multi_action_lines: int = 0  # 0 = any is blocking in strict mode
+    max_adjacent_same_background: int = 0
+    max_fine_grained_visual_elements: int = 2
+    max_tight_spatial_transitions: int = 1
+    min_scene_coherence_score: float = 70.0  # Gate1: scene-to-scene coherence
+
 
 class RetryLimits(BaseModel):
     gate1: int = 3
@@ -59,11 +72,25 @@ class ReferenceImageConfig(BaseModel):
     id: str | None = None
     tags: list[str] = Field(default_factory=list)
     notes: str = ""
+    # Character identity fields for visual consistency
+    character: str | None = None  # Which character this reference represents
+    identity_token: str | None = None  # Token to inject in prompts (e.g., "LEYLA_REF")
+
+
+class ReferenceLibraryConfig(BaseModel):
+    """Configuration for cinematographic reference library."""
+
+    enabled: bool = False
+    refs_file: str | None = None  # Override default refs.json
+    beat_cards_file: str | None = None  # Override default beat_cards.json
+    auto_select_refs: bool = True  # Let agents pick refs or use manual pack
+    reference_pack_file: str | None = None  # Pre-defined pack for this run
 
 
 class RunConfig(BaseModel):
     project_name: str = "film-agent"
     reference_images: list[str | ReferenceImageConfig] = Field(default_factory=list)
+    reference_library: ReferenceLibraryConfig = Field(default_factory=ReferenceLibraryConfig)
     creative_direction_file: str | None = None
     principles_file: str | None = None
     tokens_css_file: str | None = None

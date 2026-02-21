@@ -1,0 +1,164 @@
+[
+  {
+    "beat_id": "B01",
+    "name": "Cold Open: Wrongness in Plain Sight",
+    "narrative_function": "Start with a subtle anomaly that forces attention without exposition.",
+    "setup_pattern": "Ordinary space + tactile texture baseline (linoleum, paint, dust) + one detail violates expectation.",
+    "payoff_pattern": "That detail returns later as a rule or threat.",
+    "common_failure_modes": ["Anomaly too loud (reads as VFX)", "No clear 'ordinary' baseline texture"],
+    "example_refs": ["R004", "R005"]
+  },
+  {
+    "beat_id": "B02",
+    "name": "Social Erasure Hook",
+    "narrative_function": "Establish isolation as the primary danger (system ignores the protagonist).",
+    "setup_pattern": "Crowd flows naturally; protagonist remains still; fluorescent institutional textures stay flat and real.",
+    "payoff_pattern": "Invisibility becomes weaponized or revealed as systemic control.",
+    "common_failure_modes": ["Crowd looks staged", "Protagonist is lit like a hero"],
+    "example_refs": ["R001", "R002"]
+  },
+  {
+    "beat_id": "B03",
+    "name": "Mystery Object Foreshadow",
+    "narrative_function": "Plant a prop that implies the premise and future evidence.",
+    "setup_pattern": "Still-life close-up of device; minimal industrial design; single indicator light; no exposition.",
+    "payoff_pattern": "Device later extracts/reveals memory or proves betrayal.",
+    "common_failure_modes": ["Device looks too shiny sci-fi", "LED/text becomes illegible"],
+    "example_refs": ["R008", "R021"]
+  },
+  {
+    "beat_id": "B04",
+    "name": "Rule Hint: Too-Perfect World",
+    "narrative_function": "Signal algorithmic control through repeated geometry and clean surfaces.",
+    "setup_pattern": "Environment is curated; patterns repeat (hex, grid); cleanliness feels unnatural.",
+    "payoff_pattern": "Character discovers the rule-set behind the world.",
+    "common_failure_modes": ["Patterns melt or moiré", "Looks like fantasy set, not real"],
+    "example_refs": ["R010", "R022"]
+  },
+  {
+    "beat_id": "B05",
+    "name": "Countdown Trigger",
+    "narrative_function": "Introduce a hard clock that compresses decision space.",
+    "setup_pattern": "Abstract countdown insert on glass; finger hovers; silence amplifies pressure.",
+    "payoff_pattern": "Deadline forces irreversible action.",
+    "common_failure_modes": ["UI too brand-identifiable", "Timer not tied to stakes"],
+    "example_refs": ["R003", "R027"]
+  },
+  {
+    "beat_id": "B06",
+    "name": "Private World Anchor",
+    "narrative_function": "Ground the character with tactile personal objects before escalation.",
+    "setup_pattern": "Quiet room; practical light; personal items (bag, bedding, notes) imply instability.",
+    "payoff_pattern": "Those objects become evidence or loss later.",
+    "common_failure_modes": ["Too much clutter", "Tone becomes cozy/nice"],
+    "example_refs": ["R006", "R019"]
+  },
+  {
+    "beat_id": "B07",
+    "name": "Clue Contradiction",
+    "narrative_function": "Build suspense by letting audience spot inconsistency first.",
+    "setup_pattern": "Information artifact contains an impossible repeat/mismatch (labels, pins, loop).",
+    "payoff_pattern": "Mismatch reveals loop, simulation, or cover-up.",
+    "common_failure_modes": ["Text illegible", "Clue feels meaningless"],
+    "example_refs": ["R011", "R021"]
+  },
+  {
+    "beat_id": "B08",
+    "name": "Threshold Threat",
+    "narrative_function": "Use doors/hatches as decision points that escalate danger.",
+    "setup_pattern": "Light leaks through barrier; metal/paint textures are sharp; threat stays offscreen.",
+    "payoff_pattern": "Crossing the threshold triggers next act.",
+    "common_failure_modes": ["Threat shown too early", "Hands/locks deform"],
+    "example_refs": ["R013", "R017"]
+  },
+  {
+    "beat_id": "B09",
+    "name": "Surveillance Format Shift",
+    "narrative_function": "Change POV to imply monitoring and loss of control.",
+    "setup_pattern": "Cut to CCTV-like frame; mild compression; minimal overlay bars.",
+    "payoff_pattern": "Recording becomes evidence used against them.",
+    "common_failure_modes": ["Overlay unreadable", "Drifts into found-footage genre"],
+    "example_refs": ["R014", "R002"]
+  },
+  {
+    "beat_id": "B10",
+    "name": "Tone Mismatch in Group Scene",
+    "narrative_function": "Turn social discomfort into suspense.",
+    "setup_pattern": "Someone behaves 'off'; others react subtly; fluorescent realism keeps it grounded.",
+    "payoff_pattern": "Offness reveals manipulation or hidden rules.",
+    "common_failure_modes": ["Plays as comedy only", "Faces inconsistent across cuts"],
+    "example_refs": ["R015", "R019"]
+  },
+  {
+    "beat_id": "B11",
+    "name": "Impossible Space Escalation",
+    "narrative_function": "Raise stakes by breaking spatial rules while staying minimal.",
+    "setup_pattern": "Repetition and vanishing point imply infinity; textures remain plain and institutional.",
+    "payoff_pattern": "Character realizes escape is impossible.",
+    "common_failure_modes": ["Too ornate or fantasy", "Too many props break repetition"],
+    "example_refs": ["R007", "R010"]
+  },
+  {
+    "beat_id": "B12",
+    "name": "Mirror / Identity Slip",
+    "narrative_function": "Make perception unreliable using minimal visual mismatch.",
+    "setup_pattern": "Reflection is slightly wrong; steam/water spots keep it physical, not digital.",
+    "payoff_pattern": "Identity twist or memory tampering is confirmed.",
+    "common_failure_modes": ["Turns into jump-scare horror", "Mirror artifacts look like bugs"],
+    "example_refs": ["R012", "R008"]
+  },
+  {
+    "beat_id": "B13",
+    "name": "Moral Compromise Insert",
+    "narrative_function": "Show the cost: a small irreversible act in close-up.",
+    "setup_pattern": "Sterile surface + stain; attempt to erase evidence.",
+    "payoff_pattern": "Cover-up expands into a spiral.",
+    "common_failure_modes": ["Becomes gore", "Act feels unmotivated"],
+    "example_refs": ["R020", "R014"]
+  },
+  {
+    "beat_id": "B14",
+    "name": "Wide Isolation Peak",
+    "narrative_function": "Hit peak with scale: character alone against an indifferent world.",
+    "setup_pattern": "Wide empty space; muted sky; subject small; delay the impact.",
+    "payoff_pattern": "Impact arrives as reveal, not action.",
+    "common_failure_modes": ["Too epic/heroic", "Looks like travel photography"],
+    "example_refs": ["R009", "R018"]
+  },
+  {
+    "beat_id": "B15",
+    "name": "Release That Feels Wrong",
+    "narrative_function": "Offer relief, then poison it with a cut or look.",
+    "setup_pattern": "Energy spike (dance/laugh), then abrupt stillness.",
+    "payoff_pattern": "Relief reinterprets as symptom or trap.",
+    "common_failure_modes": ["Becomes music video", "Motion too complex for AI"],
+    "example_refs": ["R016", "R015"]
+  },
+  {
+    "beat_id": "B16",
+    "name": "Button Ending: Quiet Aftermath",
+    "narrative_function": "End on a controlled minimal image that reframes the story.",
+    "setup_pattern": "Somatic close-up or single-word title sting; let silence do the work.",
+    "payoff_pattern": "Reframe lands; viewer carries it out.",
+    "common_failure_modes": ["Overexplains with text", "Ending image feels generic"],
+    "example_refs": ["R028", "R027"]
+  },
+  {
+    "beat_id": "B17",
+    "name": "Anti-Drift Guardrail",
+    "narrative_function": "Maintain one aesthetic envelope by explicitly blocking incompatible looks.",
+    "setup_pattern": "Define forbidden looks as negative blocks before prompt writing.",
+    "payoff_pattern": "Stable continuity across shots and runs.",
+    "common_failure_modes": ["Negatives too weak", "Accidentally importing anti-ref motifs"],
+    "example_refs": ["R023", "R024"]
+  },
+  {
+    "beat_id": "B18",
+    "name": "Anti-Drift: Stylization Block",
+    "narrative_function": "Prevent drift into cartoon/social-media aesthetics.",
+    "setup_pattern": "Exclude anime/vlog/captions; enforce 'no on-screen text' unless abstract.",
+    "payoff_pattern": "Cinematic realism and pacing remain intact.",
+    "common_failure_modes": ["Overusing 'cinematic' without negatives", "Allowing caption overlays"],
+    "example_refs": ["R025", "R026"]
+  }
+]

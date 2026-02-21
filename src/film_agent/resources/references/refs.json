@@ -1,0 +1,665 @@
+[
+  {
+    "ref_id": "R001",
+    "type": "video",
+    "short_description": "Hallway tracking: students pass; protagonist still; no eye contact.",
+    "hook_type": "social_erasure_cold_open",
+    "reveal_type": "behavioral_reveal",
+    "tension_tool": "social_invisibility",
+    "visual_function": "crowd_flow_contrast",
+    "mood_tags": ["institutional", "muted", "alienated", "observational"],
+    "anti_tags": ["hero_lighting", "music_video_gloss"],
+    "why_it_works": "Still subject + moving crowd reads instantly; discomfort arrives without exposition.",
+    "constraints": {
+      "hard_parts": ["consistent crowd anatomy", "natural motion blur", "no hero lighting"],
+      "ai_feasibility": "medium"
+    },
+    "do_not_copy_notes": "No exact uniforms/lockers; generic corridor only.",
+    "texture_cues": ["scuffed waxed linoleum", "cool fluorescent with slight green cast", "matte painted cinderblock", "cheap metal lockers"],
+    "camera_cues": ["eye-level tracking", "35mm feel", "moderate depth of field", "flat exposure, low saturation"],
+    "prompt_texture_snippets": ["scuffed linoleum, fluorescent hum vibe, muted palette", "students motion blur, protagonist not spotlighted"],
+    "real_world_anchor": {
+      "title": "Stranger Things (school corridor grammar)",
+      "note": "Use wide-to-normal, close eyelines; avoid stylized grade.",
+      "source_url": "https://filmmakermagazine.com/115019-interview-cinematographer-caleb-heymann-stranger-thingss-season-4/"
+    }
+  },
+  {
+    "ref_id": "R002",
+    "type": "still",
+    "short_description": "Overhead cafeteria: tiny figure isolated inside noisy symmetry.",
+    "hook_type": "gods_eye_observation",
+    "reveal_type": "scale_reveal",
+    "tension_tool": "surveillance_pressure",
+    "visual_function": "overhead_isolation",
+    "mood_tags": ["structured", "clinical", "lonely", "quiet_threat"],
+    "anti_tags": ["comedic_blocking"],
+    "why_it_works": "God's-eye view implies monitoring; isolation is readable in one frame.",
+    "constraints": {
+      "hard_parts": ["clean geometry", "readable extras without clutter"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No school logos/mascots; generic tables and trays.",
+    "texture_cues": ["varnished composite tabletops", "stainless cafeteria rails", "paper tray liners", "buzzing fluorescent fixtures"],
+    "camera_cues": ["top-down 90°", "wide establishing", "minimal vignette", "no dramatic bokeh"],
+    "prompt_texture_snippets": ["overhead cafeteria geometry, desaturated colors", "one isolated figure, others as soft background clusters"],
+    "real_world_anchor": {
+      "title": "Institutional overhead coverage (cinematic convention)",
+      "note": "Use symmetry + small subject to imply surveillance; no specific set copy."
+    }
+  },
+  {
+    "ref_id": "R003",
+    "type": "still",
+    "short_description": "Countdown insert: 00:10; thumb hovers; message unsent.",
+    "hook_type": "countdown_interrupt",
+    "reveal_type": "interface_reveal",
+    "tension_tool": "time_pressure",
+    "visual_function": "countdown_insert",
+    "mood_tags": ["urgent", "minimal", "controlled", "anxious"],
+    "anti_tags": ["floating_holograms"],
+    "why_it_works": "A visible clock compresses choices; hesitation shows stakes without dialogue.",
+    "constraints": {
+      "hard_parts": ["legible digits", "avoid real app UI"],
+      "ai_feasibility": "medium"
+    },
+    "do_not_copy_notes": "Use abstract UI; no iOS/Android replication.",
+    "texture_cues": ["fingerprint smudge on glass", "micro-scratches", "cool screen bloom", "dark room spill light"],
+    "camera_cues": ["macro/close insert", "shallow-ish focus on digits", "hand partially cropped"],
+    "prompt_texture_snippets": ["generic countdown digits on glass screen, minimal UI", "thumb hovering, tension in stillness"],
+    "real_world_anchor": {
+      "title": "Minimal UI inserts (Black Mirror-style restraint)",
+      "note": "UI should be abstract and sparse; avoid brand-identifiable elements.",
+      "source_url": "https://www.creativereview.co.uk/designing-black-mirror-interview-production-designer-joel-collins/"
+    }
+  },
+  {
+    "ref_id": "R004",
+    "type": "still",
+    "short_description": "Analog clock: second hand 'double-exposed' as if it skipped.",
+    "hook_type": "micro_anomaly",
+    "reveal_type": "pattern_reveal",
+    "tension_tool": "reality_glitch",
+    "visual_function": "wrong_detail_insert",
+    "mood_tags": ["subtle", "uneasy", "plain", "everyday"],
+    "anti_tags": ["overt_vfx_glitch"],
+    "why_it_works": "Tiny wrongness signals unstable rules while staying grounded.",
+    "constraints": {
+      "hard_parts": ["make anomaly subtle, not VFX-y"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No iconic clock designs; generic face and numerals.",
+    "texture_cues": ["dust in bezel", "slightly yellowed plastic", "hairline scratches on glass", "flat indoor lighting"],
+    "camera_cues": ["static close-up", "mild grain", "no dramatic contrast"],
+    "prompt_texture_snippets": ["slightly worn analog clock face, subtle double-exposure second hand", "domestic indoor light, muted tone"],
+    "real_world_anchor": {
+      "title": "Micro-anomaly openings (cinematic convention)",
+      "note": "Sell 'wrong' via small physical cues, not digital glitch aesthetics."
+    }
+  },
+  {
+    "ref_id": "R005",
+    "type": "still",
+    "short_description": "Suburban dusk street; streetlights on; empty sidewalks; one curtain shifts.",
+    "hook_type": "false_normal",
+    "reveal_type": "environment_reveal",
+    "tension_tool": "ambient_dread",
+    "visual_function": "quiet_establishing",
+    "mood_tags": ["suburban", "dusk", "stillness", "ominous"],
+    "anti_tags": ["halloween_horror_gore"],
+    "why_it_works": "Normal setting + one living micro-cue creates suspense and questions.",
+    "constraints": {
+      "hard_parts": ["avoid postcard beauty", "keep one subtle cue"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "Generic houses; no recognizable neighborhood features.",
+    "texture_cues": ["sodium-vapor streetlight haze", "cold asphalt sheen", "quiet leaf litter", "thin curtains backlit"],
+    "camera_cues": ["locked-off wide", "deep focus", "no dramatic color grade"],
+    "prompt_texture_snippets": ["empty suburb at blue hour, streetlights, muted palette", "single window curtain slightly disturbed"],
+    "real_world_anchor": {
+      "title": "Stranger Things suburb tone (general)",
+      "note": "Blue-hour suburb + quiet threat; keep it grounded, no monster reveal.",
+      "source_url": "https://www.cined.com/stranger-things-season-4-cinematography-explained-by-dp-caleb-heymann/"
+    }
+  },
+  {
+    "ref_id": "R006",
+    "type": "still",
+    "short_description": "Bedroom: CRT glow, half-packed bag, quiet personal clutter.",
+    "hook_type": "intimate_stake_seed",
+    "reveal_type": "prop_reveal",
+    "tension_tool": "anticipatory_silence",
+    "visual_function": "private_world_anchor",
+    "mood_tags": ["nostalgic", "low_light", "personal", "tense"],
+    "anti_tags": ["neon_palette"],
+    "why_it_works": "Objects imply backstory and stakes; low light keeps tone controlled.",
+    "constraints": {
+      "hard_parts": ["avoid branded posters/text", "prevent clutter overload"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No real bands/brands; abstract posters only.",
+    "texture_cues": ["CRT bloom and scanline feel", "worn cotton bedding", "duct-tape edges on posters", "soft dust in air"],
+    "camera_cues": ["static medium-wide", "practical light only", "gentle falloff"],
+    "prompt_texture_snippets": ["CRT blue glow, soft grain, muted colors", "half-packed duffel bag, personal objects imply leaving"],
+    "real_world_anchor": {
+      "title": "1980s teen room mood (convention)",
+      "note": "Use practical light + tactile clutter; avoid recognizable IP props."
+    }
+  },
+  {
+    "ref_id": "R007",
+    "type": "still",
+    "short_description": "Endless corridor: repeating doors, fluorescent strip lights, vanishing point.",
+    "hook_type": "impossible_space",
+    "reveal_type": "spatial_reveal",
+    "tension_tool": "claustrophobic_infinity",
+    "visual_function": "architecture_threat",
+    "mood_tags": ["liminal", "sterile", "endless", "oppressive"],
+    "anti_tags": ["fantasy_castle", "baroque"],
+    "why_it_works": "Simple repetition creates uncanny scale; strong, controllable establishing image.",
+    "constraints": {
+      "hard_parts": ["clean repetition without melting", "minimal props"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No recognizable production design; generic doors and lights.",
+    "texture_cues": ["matte painted drywall", "rubber baseboards", "faint floor reflections", "slight fluorescent flicker feel"],
+    "camera_cues": ["wide, centered symmetry", "deep focus", "flat contrast"],
+    "prompt_texture_snippets": ["repeating identical doors, sterile corridor, centered vanishing point", "cool fluorescent, muted palette, minimal props"],
+    "real_world_anchor": {
+      "title": "Liminal architecture (Black Mirror-grade restraint)",
+      "note": "Uncanny via repetition + symmetry, not fantasy detail.",
+      "source_url": "https://www.indiewire.com/features/general/black-mirror-production-designer-joel-collins-interview-season-4-1201911887/"
+    }
+  },
+  {
+    "ref_id": "R008",
+    "type": "still",
+    "short_description": "Memory-review device: headset on table; tidy cables; single red REC dot.",
+    "hook_type": "mystery_object",
+    "reveal_type": "tech_reveal",
+    "tension_tool": "memory_extraction",
+    "visual_function": "device_foreshadow",
+    "mood_tags": ["clinical", "controlled", "ominous", "technical"],
+    "anti_tags": ["sci_fi_bling"],
+    "why_it_works": "One prop implies premise; REC dot suggests future betrayal as 'evidence'.",
+    "constraints": {
+      "hard_parts": ["avoid recognizable product design", "small LEDs/text"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "Design a generic device; no 1:1 recreation.",
+    "texture_cues": ["brushed plastic shell", "rubber padding wear", "neatly coiled cable", "cool tabletop reflections"],
+    "camera_cues": ["still-life close-up", "soft top light", "negative space"],
+    "prompt_texture_snippets": ["generic memory headset, minimal industrial design, single red record light", "clinical tabletop, tidy cables, muted colors"],
+    "real_world_anchor": {
+      "title": "Black Mirror 'Crocodile' (memory recall tech)",
+      "note": "Fictional tech that visually reveals recalled memories; keep design minimal.",
+      "source_url": "https://ew.com/tv/2017/12/29/black-mirror-crocodile-interview/"
+    }
+  },
+  {
+    "ref_id": "R009",
+    "type": "still",
+    "short_description": "Cold wide landscape; tiny car on dark road under low cloud.",
+    "hook_type": "scale_mismatch",
+    "reveal_type": "location_reveal",
+    "tension_tool": "isolation_scale",
+    "visual_function": "outsider_wide",
+    "mood_tags": ["cold", "vast", "solitary", "clean"],
+    "anti_tags": ["epic_fantasy_matte_painting"],
+    "why_it_works": "Dwarfs character; world feels indifferent, amplifying moral pressure.",
+    "constraints": {
+      "hard_parts": ["avoid scenic postcard look", "keep palette muted"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No identifiable landmarks; anonymous terrain.",
+    "texture_cues": ["wet tarmac sheen", "wind-blown grit", "flat grey cloud ceiling", "desaturated greens"],
+    "camera_cues": ["very wide, small subject", "level horizon", "no epic contrast"],
+    "prompt_texture_snippets": ["tiny vehicle on black road, vast cold landscape, low clouds", "muted colors, restrained grading"],
+    "real_world_anchor": {
+      "title": "Black Mirror 'Crocodile' Icelandic-set thriller vibe",
+      "note": "Cold, sparse environments support ethical dread.",
+      "source_url": "https://ew.com/tv/2017/12/29/black-mirror-crocodile-interview/"
+    }
+  },
+  {
+    "ref_id": "R010",
+    "type": "still",
+    "short_description": "Holiday village: perfect cabins; hex motifs; paths too clean to be real.",
+    "hook_type": "too_orderly_world",
+    "reveal_type": "pattern_reveal",
+    "tension_tool": "algorithmic_control",
+    "visual_function": "constructed_world_establishing",
+    "mood_tags": ["clean", "geometric", "uncanny", "controlled"],
+    "anti_tags": ["rustic_cozy_warmth"],
+    "why_it_works": "Perfection reads artificial; repeated motifs cue simulation without exposition.",
+    "constraints": {
+      "hard_parts": ["pattern stability", "avoid 'theme park' look"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No 1:1 resort; abstract cabins and motifs only.",
+    "texture_cues": ["matte painted wood panels", "uniform gravel paths", "hex tiles/railings", "green+brass 'circuit' motif hint"],
+    "camera_cues": ["wide establishing", "centered composition", "even overcast light"],
+    "prompt_texture_snippets": ["geometric holiday cabins, repeated hex patterns, minimal signage", "clean paths, controlled world, muted palette"],
+    "real_world_anchor": {
+      "title": "Black Mirror 'Hang the DJ' (geometric simulated world)",
+      "note": "Holiday-village vibe + hex motifs + minimal interface to suggest algorithmic control.",
+      "source_url": "https://en.wikipedia.org/wiki/Hang_the_DJ"
+    }
+  },
+  {
+    "ref_id": "R011",
+    "type": "still",
+    "short_description": "Pinboard map: same street label repeats; pins form an impossible loop.",
+    "hook_type": "clue_contradiction",
+    "reveal_type": "information_reveal",
+    "tension_tool": "cognitive_dissonance",
+    "visual_function": "clue_board",
+    "mood_tags": ["investigative", "uneasy", "methodical", "strange"],
+    "anti_tags": ["detective_noir_smoke"],
+    "why_it_works": "Audience notices contradiction first; suspense grows before characters catch up.",
+    "constraints": {
+      "hard_parts": ["text legibility risk", "avoid real city names"],
+      "ai_feasibility": "medium"
+    },
+    "do_not_copy_notes": "Use symbols/short generic words; no real maps.",
+    "texture_cues": ["corkboard pitting", "bent pins", "masking tape labels", "faded paper edges"],
+    "camera_cues": ["static close/medium", "neutral light", "sharp detail on pins"],
+    "prompt_texture_snippets": ["corkboard map, repeated label symbols, pins form loop", "paper texture, masking tape labels, muted colors"],
+    "real_world_anchor": {
+      "title": "Investigation boards (convention)",
+      "note": "Use repetition as the 'tell'; keep text minimal to stay renderable."
+    }
+  },
+  {
+    "ref_id": "R012",
+    "type": "still",
+    "short_description": "Bathroom mirror: reflection slightly misaligned; turn doesn't match.",
+    "hook_type": "unreliable_reflection",
+    "reveal_type": "perception_reveal",
+    "tension_tool": "identity_instability",
+    "visual_function": "mirror_wrongness",
+    "mood_tags": ["intimate", "uncanny", "cold", "quiet"],
+    "anti_tags": ["jump_scare_horror"],
+    "why_it_works": "Single mismatch implies deep instability; high impact with minimal elements.",
+    "constraints": {
+      "hard_parts": ["mirror artifacts", "face consistency"],
+      "ai_feasibility": "medium"
+    },
+    "do_not_copy_notes": "Avoid iconic mirror shots; generic tiles and fixtures.",
+    "texture_cues": ["water spots on mirror", "cheap chrome faucet", "cold tile grout", "soft steam haze"],
+    "camera_cues": ["tight framing", "centered mirror plane", "low contrast"],
+    "prompt_texture_snippets": ["bathroom mirror with subtle reflection mismatch, cold tiles", "quiet, minimal composition, no horror lighting"],
+    "real_world_anchor": {
+      "title": "Identity-slip imagery (convention)",
+      "note": "Sell it as 'almost normal'; avoid horror clichés."
+    }
+  },
+  {
+    "ref_id": "R013",
+    "type": "still",
+    "short_description": "Door chain taut; thin hallway light slices into a dark room.",
+    "hook_type": "threshold_threat",
+    "reveal_type": "light_reveal",
+    "tension_tool": "boundary_violation",
+    "visual_function": "threshold_closeup",
+    "mood_tags": ["dark", "tight", "nervous", "contained"],
+    "anti_tags": ["gore", "weapons_focus"],
+    "why_it_works": "Threat stays offscreen; barrier detail carries the dread.",
+    "constraints": {
+      "hard_parts": ["small metal detail melting", "hand anatomy if included"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "Neutral door hardware only; no famous horror framing.",
+    "texture_cues": ["brushed metal chain", "peeling paint on jamb", "dust in light slit", "worn brass latch"],
+    "camera_cues": ["macro-ish close-up", "high key-to-dark contrast but not stylized", "static"],
+    "prompt_texture_snippets": ["door chain close-up, sliver of corridor light, dust motes", "minimal thriller lighting, no gore"],
+    "real_world_anchor": {
+      "title": "Threshold suspense (convention)",
+      "note": "Use light + hardware texture; keep threat unseen."
+    }
+  },
+  {
+    "ref_id": "R014",
+    "type": "still",
+    "short_description": "CCTV POV: wide lens, subject under exit sign, simple timestamp bars.",
+    "hook_type": "surveillance_frame",
+    "reveal_type": "format_reveal",
+    "tension_tool": "watched_world",
+    "visual_function": "surveillance_overlay",
+    "mood_tags": ["cold", "compressed", "procedural", "threat"],
+    "anti_tags": ["glitchy_found_footage"],
+    "why_it_works": "POV shift signals monitoring; recording implies irreversible consequences.",
+    "constraints": {
+      "hard_parts": ["overlay readability", "avoid real CCTV UI"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "Use abstract overlay; no brand UI or exact fonts.",
+    "texture_cues": ["digital compression blocks", "flat ceiling LEDs", "plastic exit sign glow", "slightly dirty lens look"],
+    "camera_cues": ["high corner angle", "wide field", "reduced contrast"],
+    "prompt_texture_snippets": ["surveillance camera angle, mild compression, minimal overlay bars", "cold institutional lighting, subject paused mid-action"],
+    "real_world_anchor": {
+      "title": "Surveillance grammar (Black Mirror convention)",
+      "note": "Minimal interface; let 'recorded' look do the work.",
+      "source_url": "https://www.creativereview.co.uk/designing-black-mirror-interview-production-designer-joel-collins/"
+    }
+  },
+  {
+    "ref_id": "R015",
+    "type": "video",
+    "short_description": "Classroom handheld: laughter runs long; students trade uneasy glances.",
+    "hook_type": "tone_mismatch",
+    "reveal_type": "social_reveal",
+    "tension_tool": "awkwardness_escalation",
+    "visual_function": "group_reaction",
+    "mood_tags": ["naturalistic", "messy", "darkly_funny", "tense"],
+    "anti_tags": ["sitcom_lighting"],
+    "why_it_works": "Comedy-to-dread pivot; social cues carry tension without plot mechanics.",
+    "constraints": {
+      "hard_parts": ["extra faces consistency", "natural handheld motion"],
+      "ai_feasibility": "medium"
+    },
+    "do_not_copy_notes": "No specific dialogue; generic classroom props only.",
+    "texture_cues": ["chalk dust haze", "cheap laminate desks", "blue ballpoint scribbles", "fluorescent light flicker feel"],
+    "camera_cues": ["handheld micro-sway", "28–35mm feel", "close eyelines", "no glamour grade"],
+    "prompt_texture_snippets": ["handheld classroom realism, cool fluorescents, muted palette", "students exchange subtle worried looks, not comedic"],
+    "real_world_anchor": {
+      "title": "Another Round (teacher scenes)",
+      "note": "Grounded classroom naturalism; tension via behavior, not score.",
+      "source_url": "https://www.newyorker.com/magazine/2020/12/21/planned-alcoholism-in-another-round-and-weaponized-camp-in-the-prom"
+    }
+  },
+  {
+    "ref_id": "R016",
+    "type": "video",
+    "short_description": "Public dance burst; hard cut to stillness and blank stare.",
+    "hook_type": "energy_spike",
+    "reveal_type": "contrast_reveal",
+    "tension_tool": "emotional_whiplash",
+    "visual_function": "peak_release_fakeout",
+    "mood_tags": ["raw", "surreal", "public", "volatile"],
+    "anti_tags": ["music_video_choreo"],
+    "why_it_works": "Release becomes suspicious; the cut forces reinterpretation and primes twist.",
+    "constraints": {
+      "hard_parts": ["dance anatomy/timing", "face continuity"],
+      "ai_feasibility": "low"
+    },
+    "do_not_copy_notes": "Do not copy iconic choreography; imply motion via blur or partial frames.",
+    "texture_cues": ["sweat sheen (not glam)", "street pavement grit", "windy ambient feel", "soft grain"],
+    "camera_cues": ["wide-to-medium", "natural light", "no stylized edits"],
+    "prompt_texture_snippets": ["implied dance motion blur, grounded street realism, muted colors", "hard contrast: energetic posture then frozen stillness"],
+    "real_world_anchor": {
+      "title": "Another Round (dance finale tone)",
+      "note": "Dance as emotional release; keep it grounded, not music-video glossy.",
+      "source_url": "https://variety.com/2021/film/awards/mads-mikkelsen-another-round-1234919541/"
+    }
+  },
+  {
+    "ref_id": "R017",
+    "type": "still",
+    "short_description": "Basement hatch: warm light below; dust motes; hand hesitates on wheel.",
+    "hook_type": "forbidden_entry",
+    "reveal_type": "light_reveal",
+    "tension_tool": "curiosity_vs_fear",
+    "visual_function": "downward_threshold",
+    "mood_tags": ["warm_cold_mix", "secret", "industrial", "quiet"],
+    "anti_tags": ["postapoc_ruins"],
+    "why_it_works": "Threshold implies consequence; warm light promises answers that may hurt.",
+    "constraints": {
+      "hard_parts": ["hands can deform", "dust motes subtle"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No numbered vault doors; keep it generic hatch.",
+    "texture_cues": ["paint-chipped metal hatch", "grease on wheel", "dust in beam", "concrete wall pores"],
+    "camera_cues": ["top-down three-quarter", "shallow depth on hatch edge", "practical light from below"],
+    "prompt_texture_snippets": ["industrial hatch with chipped paint, warm light leaking up, dust motes", "hesitation implied; minimal environment"],
+    "real_world_anchor": {
+      "title": "Fallout (vault/threshold mood)",
+      "note": "Controlled industrial interiors; practical light and tactile metal textures.",
+      "source_url": "https://theasc.com/videos/clubhouse-conversations-fallout"
+    }
+  },
+  {
+    "ref_id": "R018",
+    "type": "still",
+    "short_description": "Wide street: lone figure centered; wind lifts paper; no bystanders.",
+    "hook_type": "empty_public_space",
+    "reveal_type": "absence_reveal",
+    "tension_tool": "anticipation_gap",
+    "visual_function": "wide_standoff",
+    "mood_tags": ["wide", "dry", "still", "threatening"],
+    "anti_tags": ["spaghetti_western_pastiche"],
+    "why_it_works": "Empty space becomes pressure; viewer expects impact, not explanation.",
+    "constraints": {
+      "hard_parts": ["avoid costume clichés", "keep contemporary"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No cowboy silhouettes; modern wardrobe.",
+    "texture_cues": ["sun-bleached paint", "dusty asphalt", "paper litter tumble", "hard noon shadows"],
+    "camera_cues": ["very wide, centered", "longer lens compression optional", "steady frame"],
+    "prompt_texture_snippets": ["empty modern street, wind-blown paper, lone figure centered", "restrained western tension without cowboy tropes"],
+    "real_world_anchor": {
+      "title": "Fallout (wide frames + tactile environments)",
+      "note": "Wide compositions with grounded texture; avoid parody.",
+      "source_url": "https://www.kodak.com/en/motion/blog-post/fallout/"
+    }
+  },
+  {
+    "ref_id": "R019",
+    "type": "still",
+    "short_description": "Teacher lounge: greenish fluorescents; stale coffee; papers piled like debt.",
+    "hook_type": "mundane_oppression",
+    "reveal_type": "environment_reveal",
+    "tension_tool": "pressure_cooker",
+    "visual_function": "stress_interior",
+    "mood_tags": ["fluorescent", "tired", "realistic", "strained"],
+    "anti_tags": ["warm_cozy_grade"],
+    "why_it_works": "Institutional fatigue sets moral stakes; supports slow-burn escalation.",
+    "constraints": {
+      "hard_parts": ["clutter control", "avoid brand logos"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No recognizable school signage; generic notices.",
+    "texture_cues": ["ring stains on laminate desk", "cracked faux-leather chair", "stacked xerox paper edges", "buzzing tube light"],
+    "camera_cues": ["static medium-wide", "flat exposure", "no glamour"],
+    "prompt_texture_snippets": ["teacher lounge, green-tinted fluorescents, tired clutter, muted colors", "coffee stains, paper stacks, cracked vinyl chair"],
+    "real_world_anchor": {
+      "title": "Another Round (institutional realism)",
+      "note": "Everyday textures and fatigue underpin the darker turn.",
+      "source_url": "https://www.newyorker.com/magazine/2020/12/21/planned-alcoholism-in-another-round-and-weaponized-camp-in-the-prom"
+    }
+  },
+  {
+    "ref_id": "R020",
+    "type": "still",
+    "short_description": "White tile floor: small smear; paper towel wipes it, almost clean.",
+    "hook_type": "evidence_hint",
+    "reveal_type": "moral_reveal",
+    "tension_tool": "guilt_spiral",
+    "visual_function": "consequence_insert",
+    "mood_tags": ["sterile", "shocking", "quiet", "controlled"],
+    "anti_tags": ["splatter_gore"],
+    "why_it_works": "Shows cost without spectacle; implies cover-up and escalation.",
+    "constraints": {
+      "hard_parts": ["hands + fluid realism", "avoid gore"],
+      "ai_feasibility": "medium"
+    },
+    "do_not_copy_notes": "Keep abstract; no crime-scene iconography.",
+    "texture_cues": ["porcelain tile glaze", "grout lines", "paper towel fibers", "faint water streaks"],
+    "camera_cues": ["top-down close insert", "sharp detail on smear", "neutral white balance"],
+    "prompt_texture_snippets": ["minimal red-brown smear on white tile, paper towel fibers", "sterile bathroom light, controlled frame, not gory"],
+    "real_world_anchor": {
+      "title": "Cover-up insert (thriller convention)",
+      "note": "Small act implies big consequence; keep it minimal and quiet."
+    }
+  },
+  {
+    "ref_id": "R021",
+    "type": "still",
+    "short_description": "Macro motif: copper traces on green plate, like a city grid.",
+    "hook_type": "pattern_hook",
+    "reveal_type": "metaphor_reveal",
+    "tension_tool": "systemic_fate",
+    "visual_function": "theme_insert",
+    "mood_tags": ["graphic", "ordered", "cold", "abstract"],
+    "anti_tags": ["neon_circuit_glow"],
+    "why_it_works": "Abstract motif reinforces 'system control'; reusable between acts as visual glue.",
+    "constraints": {
+      "hard_parts": ["fine detail blur", "avoid neon stylization"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No real PCB layout; generic lines only.",
+    "texture_cues": ["brass/copper lines", "matte green substrate", "soft specular highlights", "shallow depth"],
+    "camera_cues": ["macro close-up", "static", "gentle grain"],
+    "prompt_texture_snippets": ["copper/brass traces on matte green plate, geometric grid", "minimal abstract insert, cold and clean"],
+    "real_world_anchor": {
+      "title": "Hang the DJ (phone interior motif)",
+      "note": "Geometric/copper-on-green metaphor suggests algorithmic world.",
+      "source_url": "https://en.wikipedia.org/wiki/Hang_the_DJ"
+    }
+  },
+  {
+    "ref_id": "R022",
+    "type": "still",
+    "short_description": "Autonomous cart glides between identical cabins; no driver visible.",
+    "hook_type": "autonomous_world",
+    "reveal_type": "behavioral_reveal",
+    "tension_tool": "loss_of_agency",
+    "visual_function": "rule_hint_motionless",
+    "mood_tags": ["clean", "quiet", "controlled", "odd"],
+    "anti_tags": ["cute_sci_fi"],
+    "why_it_works": "Everyday automation implies unseen control; dread without an antagonist on screen.",
+    "constraints": {
+      "hard_parts": ["vehicle warping", "keep shape simple"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "Generic cart only; no exact show prop recreation.",
+    "texture_cues": ["painted metal body", "rubber bumper edges", "quiet gravel path", "overcast soft light"],
+    "camera_cues": ["wide or medium-wide", "slow implied motion", "level horizon"],
+    "prompt_texture_snippets": ["small autonomous cart, simple boxy form, moving through clean holiday village", "muted palette, no futuristic glow"],
+    "real_world_anchor": {
+      "title": "Hang the DJ (electric milk float transport)",
+      "note": "Production notes describe an electric cart moving people between cabins.",
+      "source_url": "https://en.wikipedia.org/wiki/Hang_the_DJ"
+    }
+  },
+  {
+    "ref_id": "R023",
+    "type": "still",
+    "short_description": "Anti-ref: teal-orange hero grade, rim light, glossy skin, heavy bokeh.",
+    "hook_type": "anti_style_guard",
+    "reveal_type": "anti_reveal",
+    "tension_tool": "drift_blocker",
+    "visual_function": "style_antireference",
+    "mood_tags": ["blocked", "glossy", "heroic"],
+    "anti_tags": ["teal_orange", "hero_shot", "lens_flare"],
+    "why_it_works": "Blocks ad-like glamour that kills suspense and realism.",
+    "constraints": { "hard_parts": ["use only as negative tags"], "ai_feasibility": "high" },
+    "do_not_copy_notes": "Convert into negative prompt block; never emulate.",
+    "texture_cues": ["slick highlights", "polished look", "high contrast skin speculars"],
+    "camera_cues": ["shallow bokeh glam", "aggressive vignette"],
+    "prompt_texture_snippets": ["NEGATIVE: teal-orange blockbuster grade, hero rim light, glossy skin, lens flare, heavy vignette"],
+    "real_world_anchor": { "title": "Blockbuster grading (anti)", "note": "Explicitly excluded to keep restrained realism." }
+  },
+  {
+    "ref_id": "R024",
+    "type": "still",
+    "short_description": "Anti-ref: neon cyberpunk rain, holograms, purple-blue glow, clutter.",
+    "hook_type": "anti_style_guard",
+    "reveal_type": "anti_reveal",
+    "tension_tool": "drift_blocker",
+    "visual_function": "style_antireference",
+    "mood_tags": ["blocked", "neon", "busy"],
+    "anti_tags": ["cyberpunk", "holograms", "neon_rain"],
+    "why_it_works": "Prevents neon palette and VFX clutter from overwhelming story clarity.",
+    "constraints": { "hard_parts": ["use only as negative tags"], "ai_feasibility": "high" },
+    "do_not_copy_notes": "Convert into negative prompt block; never emulate.",
+    "texture_cues": ["wet neon reflections", "dense signage", "glowing fog"],
+    "camera_cues": ["high contrast, stylized"],
+    "prompt_texture_snippets": ["NEGATIVE: neon cyberpunk, holograms, glowing rain streets, dense signage, purple-blue lighting"],
+    "real_world_anchor": { "title": "Neon cyberpunk (anti)", "note": "Excluded to avoid stylistic drift." }
+  },
+  {
+    "ref_id": "R025",
+    "type": "still",
+    "short_description": "Anti-ref: chibi/anime faces, big eyes, flat shading, exaggerated emotions.",
+    "hook_type": "anti_style_guard",
+    "reveal_type": "anti_reveal",
+    "tension_tool": "drift_blocker",
+    "visual_function": "style_antireference",
+    "mood_tags": ["blocked", "cartoonish", "cute"],
+    "anti_tags": ["anime", "chibi", "cel_shading"],
+    "why_it_works": "Blocks stylization that breaks continuity with cinematic realism.",
+    "constraints": { "hard_parts": ["use only as negative tags"], "ai_feasibility": "high" },
+    "do_not_copy_notes": "Convert into negative prompt block; never emulate.",
+    "texture_cues": ["flat shading", "outlined features"],
+    "camera_cues": ["cartoon framing"],
+    "prompt_texture_snippets": ["NEGATIVE: anime, chibi, cel-shading, oversized eyes, cartoon proportions"],
+    "real_world_anchor": { "title": "Anime stylization (anti)", "note": "Excluded to keep live-action realism." }
+  },
+  {
+    "ref_id": "R026",
+    "type": "still",
+    "short_description": "Anti-ref: vlog selfie wide-angle, overexposed, jump-cut energy, captions.",
+    "hook_type": "anti_style_guard",
+    "reveal_type": "anti_reveal",
+    "tension_tool": "drift_blocker",
+    "visual_function": "style_antireference",
+    "mood_tags": ["blocked", "social_media", "noisy"],
+    "anti_tags": ["selfie_cam", "caption_overlay", "hyper_saturation"],
+    "why_it_works": "Prevents social-media grammar from killing cinematic pacing and suspense.",
+    "constraints": { "hard_parts": ["use only as negative tags"], "ai_feasibility": "high" },
+    "do_not_copy_notes": "Convert into negative prompt block; never emulate.",
+    "texture_cues": ["phone HDR overexposure", "sharpened edges"],
+    "camera_cues": ["front camera distortion", "fast cuts"],
+    "prompt_texture_snippets": ["NEGATIVE: selfie cam, overexposed phone HDR, jump cuts, caption overlays, hyper-saturation"],
+    "real_world_anchor": { "title": "Vlog/TikTok grammar (anti)", "note": "Excluded for cinematic continuity." }
+  },
+  {
+    "ref_id": "R027",
+    "type": "still",
+    "short_description": "Title sting: black screen, one centered word, subtle grain, long hold.",
+    "hook_type": "title_sting",
+    "reveal_type": "tone_reveal",
+    "tension_tool": "anticipatory_pause",
+    "visual_function": "breath_before_story",
+    "mood_tags": ["minimal", "serious", "controlled"],
+    "anti_tags": ["logo_animation"],
+    "why_it_works": "Creates deliberate pace; primes audience for restraint and dread.",
+    "constraints": {
+      "hard_parts": ["typography drift", "avoid branded fonts"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "Use generic sans; no brand logo.",
+    "texture_cues": ["fine film grain", "slight gate weave feel", "deep blacks"],
+    "camera_cues": ["static card", "no animation"],
+    "prompt_texture_snippets": ["black title card, single word centered, subtle film grain, long hold"],
+    "real_world_anchor": {
+      "title": "Minimal title stings (convention)",
+      "note": "Use sparingly to control rhythm; avoid motion graphics."
+    }
+  },
+  {
+    "ref_id": "R028",
+    "type": "still",
+    "short_description": "Close: breath fogs in cold air; eyes off-frame; silence implied.",
+    "hook_type": "physiology_hook",
+    "reveal_type": "body_reveal",
+    "tension_tool": "somatic_tension",
+    "visual_function": "micro_intimacy",
+    "mood_tags": ["cold", "intimate", "tense", "quiet"],
+    "anti_tags": ["romantic_soft_focus"],
+    "why_it_works": "Embodied tension reads instantly; works as hook or ending punctuation.",
+    "constraints": {
+      "hard_parts": ["condensation realism", "avoid beauty softening"],
+      "ai_feasibility": "high"
+    },
+    "do_not_copy_notes": "No identifiable face; anonymous framing.",
+    "texture_cues": ["condensation plume", "dry skin texture (subtle)", "cold air haze", "soft knit fabric edge"],
+    "camera_cues": ["tight crop", "shallow focus on vapor", "neutral color"],
+    "prompt_texture_snippets": ["cold breath vapor close-up, anonymous framing, muted palette", "quiet tension, no romantic softness"],
+    "real_world_anchor": {
+      "title": "Somatic close-ups (convention)",
+      "note": "Use breath/skin texture to externalize fear without showing threat."
+    }
+  }
+]

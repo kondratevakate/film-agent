@@ -3,9 +3,13 @@
 from __future__ import annotations
 
 from pathlib import Path
+from typing import TYPE_CHECKING
 
 from film_agent.roles import RoleId, role_pack_dir
 from film_agent.resource_locator import find_resource_dir
+
+if TYPE_CHECKING:
+    from film_agent.config import RunConfig
 
 
 MAIN_AGENT_OVERLAY = "main_agent_overlay.md"
@@ -72,3 +76,30 @@ def get_role_pack(role: str) -> dict[str, str]:
             raise ValueError(f"Role pack file missing: {path}")
         payload[name] = path.read_text(encoding="utf-8")
     return payload
+
+
+def get_reference_context(config: "RunConfig", role: str) -> str:
+    """Build reference library context for a specific role.
+
+    Returns empty string if reference library is disabled.
+    """
+    if not config.reference_library.enabled:
+        return ""
+
+    from film_agent.reference_library import (
+        build_reference_context_for_role,
+        load_reference_library,
+        load_reference_pack,
+    )
+    from film_agent.schemas.references import ReferencePack
+
+    library = load_reference_library(config.reference_library)
+
+    pack: ReferencePack | None = None
+    if config.reference_library.reference_pack_file:
+        try:
+            pack = load_reference_pack(config.reference_library.reference_pack_file)
+        except FileNotFoundError:
+            pass
+
+    return build_reference_context_for_role(role, library, pack)

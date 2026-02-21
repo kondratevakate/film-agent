@@ -8,8 +8,11 @@ from typing import cast
 from film_agent.continuity import style_anchor_quality_score
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
-from film_agent.schemas.artifacts import GateReport, ImagePromptPackage
+from film_agent.schemas.artifacts import GateReport, ImagePromptPackage, ScriptArtifact
 from film_agent.state_machine.state_store import RunStateData
+from film_agent.gates.cinematography_qa import _analyze_cinematography
+from film_agent.io.hashing import sha256_json
+from typing import cast as typecast
 
 
 def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> GateReport:
@@ -78,6 +81,46 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         reasons.append("Image prompt package is not linked to current approved script review.")
         fixes.append("Rebuild prompt package with the latest script review id.")
 
+    # =========================================================================
+    # Cinematography QA: 8 Visual Production Gates (integrated)
+    # =========================================================================
+    script = load_artifact_for_agent(run_path, state, "showrunner")
+    cinema_qa_passed = False
+    cinema_qa_score = 0.0
+    cinema_qa_gates_passed = 0
+    cinema_qa_blocking = []
+    # Character identity metrics
+    char_identity_score = 100.0
+    char_identity_issues: list[str] = []
+    ref_identity_score = 100.0
+    ref_identity_issues: list[str] = []
+
+    if script is not None:
+        script = typecast(ScriptArtifact, script)
+        script_hash = sha256_json(script.model_dump(mode="json"))
+        cinema_qa_result = _analyze_cinematography(
+            script, image_prompts, script_hash, state.current_iteration, config
+        )
+        cinema_qa_passed = cinema_qa_result.passed
+        cinema_qa_score = cinema_qa_result.overall_score
+        cinema_qa_gates_passed = cinema_qa_result.gates_passed
+        cinema_qa_blocking = cinema_qa_result.blocking_issues
+        # Character identity metrics
+        char_identity_score = cinema_qa_result.character_identity_score
+        char_identity_issues = cinema_qa_result.character_identity_issues
+        ref_identity_score = cinema_qa_result.reference_identity_score
+        ref_identity_issues = cinema_qa_result.reference_identity_issues
+
+        if not cinema_qa_passed:
+            reasons.append(f"Cinematography QA failed: {cinema_qa_gates_passed}/8 gates passed, score {cinema_qa_score:.1f}/100.")
+            for issue in cinema_qa_blocking[:3]:
+                reasons.append(f"  - {issue}")
+            for patch in cinema_qa_result.shot_patches[:3]:
+                fixes.append(f"Shot {patch['shot_id']}: {patch['suggested_fix']}")
+    else:
+        reasons.append("Cannot evaluate Cinematography QA: missing script artifact.")
+        fixes.append("Ensure script is submitted before image prompts.")
+
     passed = (
         shot_count_ok
         and duplicate_shot_ids == 0
@@ -86,6 +129,7 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         and style_anchor_quality_ok
         and missing_negative_constraints == 0
         and review_link_ok
+        and cinema_qa_passed  # NEW: 8 cinematography gates must pass
     )
 
     return GateReport(
@@ -103,6 +147,16 @@ def evaluate_gate3(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             "missing_negative_constraints": missing_negative_constraints,
             "review_link_ok": review_link_ok,
             "duration_target_s": config.duration_target_s,
+            # Cinematography QA: 8 visual production gates
+            "cinema_qa_passed": cinema_qa_passed,
+            "cinema_qa_score": round(cinema_qa_score, 2),
+            "cinema_qa_gates_passed": cinema_qa_gates_passed,
+            "cinema_qa_blocking_issues": cinema_qa_blocking,
+            # Character identity consistency
+            "character_identity_score": round(char_identity_score, 2),
+            "character_identity_issues": char_identity_issues[:3],
+            "reference_identity_score": round(ref_identity_score, 2),
+            "reference_identity_issues": ref_identity_issues[:3],
         },
         reasons=reasons,
         fix_instructions=fixes,

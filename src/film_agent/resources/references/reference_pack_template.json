@@ -1,0 +1,68 @@
+{
+  "run_id": "<run>",
+  "aesthetic_envelope": "Restrained cinematic realism: muted palette, practical light, wide-to-normal lenses, minimal VFX, tactile materials.",
+  "selected_refs": [
+    {
+      "ref_id": "R001",
+      "role_in_story": "hook",
+      "mapped_shot_ids": ["s01"],
+      "guidance": "Track past moving crowd; keep fluorescents flat and scuffed linoleum. No hero grade."
+    },
+    {
+      "ref_id": "R008",
+      "role_in_story": "hook",
+      "mapped_shot_ids": ["s02"],
+      "guidance": "Still-life device close-up: brushed plastic, tidy cable, single red dot. No readable branding."
+    },
+    {
+      "ref_id": "R003",
+      "role_in_story": "escalation",
+      "mapped_shot_ids": ["s03"],
+      "guidance": "Abstract countdown on smudged glass; thumb hovering. Avoid real phone UI and text-heavy overlays."
+    },
+    {
+      "ref_id": "R014",
+      "role_in_story": "escalation",
+      "mapped_shot_ids": ["s04"],
+      "guidance": "POV shift to CCTV: mild compression blocks, simple overlay bars only. Cold LEDs, no found-footage chaos."
+    },
+    {
+      "ref_id": "R013",
+      "role_in_story": "escalation",
+      "mapped_shot_ids": ["s05"],
+      "guidance": "Threshold close-up: chain texture, peeling paint, dust in light slit. Threat stays offscreen."
+    },
+    {
+      "ref_id": "R020",
+      "role_in_story": "escalation",
+      "mapped_shot_ids": ["s06"],
+      "guidance": "Consequence insert: porcelain tile + minimal smear + paper towel fibers. Sterile, not gory."
+    },
+    {
+      "ref_id": "R007",
+      "role_in_story": "peak",
+      "mapped_shot_ids": ["s07"],
+      "guidance": "Endless corridor symmetry: matte walls, rubber baseboards, repeating doors. Keep props near-zero."
+    },
+    {
+      "ref_id": "R009",
+      "role_in_story": "peak",
+      "mapped_shot_ids": ["s08"],
+      "guidance": "Cold wide: wet tarmac sheen, low cloud ceiling, tiny car. Muted, not scenic."
+    },
+    {
+      "ref_id": "R028",
+      "role_in_story": "ending",
+      "mapped_shot_ids": ["s09"],
+      "guidance": "Somatic close: breath vapor, knit fabric edge, anonymous framing. No romantic soft focus."
+    },
+    {
+      "ref_id": "R027",
+      "role_in_story": "ending",
+      "mapped_shot_ids": ["s10"],
+      "guidance": "Optional title sting: one centered word, subtle grain, long hold. No logo animation."
+    }
+  ],
+  "anti_ref_ids": ["R023", "R024", "R025", "R026"],
+  "anti_guidance": "Use anti refs as NEGATIVE blocks to prevent: teal-orange hero grade, neon cyberpunk glow, anime stylization, vlog/captions."
+}

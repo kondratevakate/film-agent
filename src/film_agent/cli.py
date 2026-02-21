@@ -16,9 +16,11 @@ from film_agent.render_api import render_run_via_api
 from film_agent.reporting import build_final_report
 from film_agent.roles import RoleId, list_roles
 from film_agent.state_machine.orchestrator import (
+    apply_patch,
     command_result_payload,
     create_run,
     run_gate0,
+    run_story_qa,
     submit_agent,
     validate_gate,
 )
@@ -69,6 +71,35 @@ def validate(
 ) -> None:
     result = validate_gate(_base_dir(), run_id, gate)
     _emit(command_result_payload(result))
+
+
+@app.command("story-qa")
+def story_qa_cmd(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    save_result: bool = typer.Option(True, "--save/--no-save", help="Save StoryQAResult artifact"),
+) -> None:
+    """Evaluate script against 14 professional storytelling criteria."""
+    try:
+        result = run_story_qa(_base_dir(), run_id, save_result=save_result)
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+    _emit(command_result_payload(result))
+
+
+@app.command("apply-patch")
+def apply_patch_cmd(
+    run_id: str = typer.Option(..., "--run-id", help="Run ID"),
+    patch_file: Path = typer.Option(..., "--patch-file", help="Path to patch JSON file"),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Validate patch without applying"),
+) -> None:
+    """Apply a manual patch to an artifact deterministically."""
+    try:
+        result = apply_patch(_base_dir(), run_id, patch_file.resolve(), dry_run=dry_run)
+    except Exception as exc:
+        _emit({"error": str(exc)})
+        raise typer.Exit(code=1)
+    _emit(result)
 
 
 @app.command("package-iteration")

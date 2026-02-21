@@ -204,6 +204,9 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig) -> tu
         reasons.append("Final score below acceptance floor.")
         fixes.append(f"Raise final score to at least {t.final_score_floor:.2f}.")
 
+    # Generate identity checklist for manual verification
+    identity_checklist = _generate_identity_checklist(script, image_prompts, config)
+
     passed = not reasons
     report = GateReport(
         gate="gate4",
@@ -233,6 +236,8 @@ def evaluate_gate4(run_path: Path, state: RunStateData, config: RunConfig) -> tu
             "consistency": round(scorecard.consistency, 2),
             "audio_sync": round(scorecard.audio_sync, 2),
             "final_score": round(scorecard.final_score, 2),
+            # Pre-render identity verification checklist
+            "identity_checklist": identity_checklist,
         },
         reasons=reasons,
         fix_instructions=fixes,
@@ -250,3 +255,54 @@ def _load_lock_payload(run_path: Path, state: RunStateData) -> dict[str, object]
     if isinstance(payload, dict):
         return payload
     return {}
+
+
+def _generate_identity_checklist(
+    script: ScriptArtifact | None,
+    image_prompts: ImagePromptPackage,
+    config: RunConfig,
+) -> list[str]:
+    """Generate checklist for manual identity verification before final render.
+
+    Creates a list of items to verify:
+    1. Cross-shot character appearance consistency
+    2. Reference image matching (if configured)
+
+    Returns:
+        List of checklist items (max 8)
+    """
+    checklist: list[str] = []
+
+    if script is None:
+        checklist.append("WARNING: Script missing - cannot verify character list")
+        return checklist
+
+    # 1. Cross-shot consistency per character
+    for char in script.characters:
+        char_clean = char.strip()
+        if not char_clean:
+            continue
+
+        shots_with_char = [
+            item.shot_id
+            for item in image_prompts.image_prompts
+            if char_clean.lower() in item.image_prompt.lower()
+        ]
+
+        if len(shots_with_char) > 1:
+            shot_list = ", ".join(shots_with_char[:4])
+            if len(shots_with_char) > 4:
+                shot_list += f" (+{len(shots_with_char) - 4} more)"
+            checklist.append(f"Verify '{char_clean}' identity consistent across: {shot_list}")
+
+    # 2. Reference image consistency (if configured)
+    ref_entries = config.reference_image_entries()
+    for ref in ref_entries:
+        if ref.character:
+            checklist.append(f"Verify '{ref.character}' matches reference image: {ref.path}")
+
+    # 3. Generic identity checks
+    if not checklist:
+        checklist.append("Verify all characters maintain consistent appearance")
+
+    return checklist[:8]  # Max 8 items

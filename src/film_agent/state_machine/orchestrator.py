@@ -13,6 +13,7 @@ from film_agent.gates.gate1 import evaluate_gate1
 from film_agent.gates.gate2 import evaluate_gate2
 from film_agent.gates.gate3 import evaluate_gate3
 from film_agent.gates.gate4 import evaluate_gate4
+from film_agent.gates.story_qa import evaluate_story_qa
 from film_agent.io.artifact_store import ArtifactError, submit_artifact
 from film_agent.io.hashing import sha256_file
 from film_agent.io.json_io import load_json
@@ -255,3 +256,212 @@ def _check_agent_allowed_for_state(state: RunStateData, agent: str) -> None:
 
 def command_result_payload(result: CommandResult) -> dict:
     return {"run_id": result.run_id, "state": result.state, "detail": result.detail}
+
+
+def run_story_qa(base_dir: Path, run_id: str, save_result: bool = True) -> CommandResult:
+    """Evaluate script against 14 storytelling criteria (Story QA gate)."""
+    path, state, config = _load_run(base_dir, run_id)
+
+    report, story_qa_result = evaluate_story_qa(path, state, config)
+    out = write_report(path, report)
+
+    if save_result and story_qa_result is not None:
+        # Save StoryQAResult artifact
+        from film_agent.io.json_io import dump_canonical_json
+
+        result_path = (
+            path / "iterations" / f"iter-{state.current_iteration:02d}" / "artifacts" / "story_qa.json"
+        )
+        dump_canonical_json(result_path, story_qa_result.model_dump(mode="json"))
+
+    append_event(
+        path,
+        "story_qa_evaluated",
+        {
+            "passed": report.passed,
+            "overall_score": story_qa_result.overall_score if story_qa_result else 0,
+            "blocking_issues": story_qa_result.blocking_issues if story_qa_result else [],
+            "report": str(out),
+        },
+    )
+
+    detail = {
+        "report": str(out),
+        "passed": report.passed,
+        "metrics": report.metrics,
+    }
+    if story_qa_result:
+        detail["overall_score"] = story_qa_result.overall_score
+        detail["blocking_issues"] = story_qa_result.blocking_issues
+        detail["recommendations"] = story_qa_result.recommendations
+
+    return CommandResult(run_id=run_id, state=state.current_state, detail=detail)
+
+
+def apply_patch(base_dir: Path, run_id: str, patch_file: Path, dry_run: bool = False) -> dict:
+    """Apply a manual patch to an artifact deterministically.
+
+    Args:
+        base_dir: Base directory for runs
+        run_id: Run identifier
+        patch_file: Path to patch JSON file
+        dry_run: If True, validate without applying
+
+    Returns:
+        Dict with patch result details
+    """
+    import json
+    import copy
+
+    from film_agent.schemas.artifacts import PatchArtifact
+    from film_agent.io.json_io import dump_canonical_json
+    from film_agent.io.hashing import sha256_json
+
+    path, state, _config = _load_run(base_dir, run_id)
+
+    # Load and validate patch
+    patch_data = json.loads(patch_file.read_text(encoding="utf-8"))
+    patch = PatchArtifact.model_validate(patch_data)
+
+    # Map artifact type to agent name and file
+    artifact_map = {
+        "script": ("showrunner", "script.json"),
+        "script_review": ("direction", "script_review.json"),
+        "image_prompt_package": ("dance_mapping", "image_prompt_package.json"),
+        "av_prompt_package": ("audio", "av_prompt_package.json"),
+    }
+
+    if patch.target_artifact not in artifact_map:
+        raise ValueError(f"Unknown artifact type: {patch.target_artifact}")
+
+    _agent, filename = artifact_map[patch.target_artifact]
+
+    # Load target artifact
+    artifact_path = (
+        path / "iterations" / f"iter-{patch.target_iteration:02d}" / "artifacts" / filename
+    )
+    if not artifact_path.exists():
+        raise ValueError(f"Target artifact not found: {artifact_path}")
+
+    artifact_data = json.loads(artifact_path.read_text(encoding="utf-8"))
+    current_hash = sha256_json(artifact_data)
+
+    # Verify hash matches
+    if current_hash != patch.target_artifact_hash:
+        raise ValueError(
+            f"Artifact hash mismatch. Expected: {patch.target_artifact_hash}, "
+            f"Got: {current_hash}. Artifact may have been modified."
+        )
+
+    # Apply operations
+    patched_data = copy.deepcopy(artifact_data)
+    applied_ops = []
+
+    for op in patch.operations:
+        try:
+            _apply_operation(patched_data, op.path, op.operation, op.old_value, op.new_value)
+            applied_ops.append({"path": op.path, "operation": op.operation, "status": "applied"})
+        except Exception as e:
+            applied_ops.append({"path": op.path, "operation": op.operation, "status": "failed", "error": str(e)})
+            if not dry_run:
+                raise ValueError(f"Patch operation failed: {op.path} - {e}") from e
+
+    new_hash = sha256_json(patched_data)
+
+    result = {
+        "run_id": run_id,
+        "target_artifact": patch.target_artifact,
+        "target_iteration": patch.target_iteration,
+        "original_hash": current_hash,
+        "new_hash": new_hash,
+        "operations_count": len(patch.operations),
+        "applied_operations": applied_ops,
+        "dry_run": dry_run,
+    }
+
+    if dry_run:
+        result["message"] = "Dry run completed. No changes written."
+        return result
+
+    # Write patched artifact
+    dump_canonical_json(artifact_path, patched_data)
+
+    # Log the patch event
+    append_event(
+        path,
+        "patch_applied",
+        {
+            "artifact": patch.target_artifact,
+            "iteration": patch.target_iteration,
+            "original_hash": current_hash,
+            "new_hash": new_hash,
+            "operations": len(patch.operations),
+            "rationale": patch.rationale,
+            "author": patch.author,
+        },
+    )
+
+    result["message"] = "Patch applied successfully."
+    return result
+
+
+def _apply_operation(data: dict, path: str, operation: str, old_value, new_value) -> None:
+    """Apply a single patch operation to data.
+
+    Supports JSON-path-like notation: "lines[5].text", "logline", etc.
+    """
+    import re
+
+    # Parse path into components
+    # e.g., "lines[5].text" -> ["lines", 5, "text"]
+    components = []
+    for part in re.split(r"\.|\[|\]", path):
+        if not part:
+            continue
+        if part.isdigit():
+            components.append(int(part))
+        else:
+            components.append(part)
+
+    if not components:
+        raise ValueError(f"Invalid path: {path}")
+
+    # Navigate to parent
+    current = data
+    for comp in components[:-1]:
+        if isinstance(comp, int):
+            if not isinstance(current, list) or comp >= len(current):
+                raise ValueError(f"Index {comp} out of range for path {path}")
+            current = current[comp]
+        else:
+            if comp not in current:
+                raise ValueError(f"Key '{comp}' not found for path {path}")
+            current = current[comp]
+
+    # Apply operation on final component
+    final = components[-1]
+
+    if operation == "replace":
+        if isinstance(final, int):
+            if old_value is not None and current[final] != old_value:
+                raise ValueError(f"Old value mismatch at {path}")
+            current[final] = new_value
+        else:
+            if old_value is not None and current.get(final) != old_value:
+                raise ValueError(f"Old value mismatch at {path}")
+            current[final] = new_value
+
+    elif operation == "delete":
+        if isinstance(final, int):
+            del current[final]
+        else:
+            del current[final]
+
+    elif operation == "insert":
+        if isinstance(final, int):
+            current.insert(final, new_value)
+        else:
+            current[final] = new_value
+
+    else:
+        raise ValueError(f"Unknown operation: {operation}")

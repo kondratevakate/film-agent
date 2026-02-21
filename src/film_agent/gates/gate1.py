@@ -14,7 +14,9 @@ from film_agent.continuity import (
 )
 from film_agent.config import RunConfig
 from film_agent.io.artifact_store import load_artifact_for_agent
-from film_agent.schemas.artifacts import GateReport, ScriptArtifact
+from film_agent.schemas.artifacts import GateReport, ScriptArtifact, StoryQAResult
+from film_agent.gates.story_qa import _analyze_script
+from film_agent.io.hashing import sha256_json
 from film_agent.state_machine.state_store import RunStateData
 
 
@@ -159,24 +161,85 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         reasons.append("Narrative coherence score is below configured floor.")
         fixes.append("Simplify adjacent transitions and preserve a stable beat progression.")
 
+    # =========================================================================
+    # Story QA: 14 Storytelling Criteria (integrated from story_qa.py)
+    # =========================================================================
+    script_hash = sha256_json(script.model_dump(mode="json"))
+    story_qa_result: StoryQAResult = _analyze_script(
+        script, script_hash, state.current_iteration, config
+    )
+
+    # Check if story quality passes
+    story_qa_score = story_qa_result.overall_score
+    story_qa_passed = story_qa_result.passed  # overall >= 70 and no criterion below 40
+    story_qa_threshold = getattr(config.thresholds, "min_story_qa_score", 60.0)
+
+    if not story_qa_passed:
+        reasons.append(f"Story QA failed: overall score {story_qa_score:.1f}/100.")
+        for issue in story_qa_result.blocking_issues[:3]:
+            reasons.append(f"  - {issue}")
+        for rec in story_qa_result.recommendations[:3]:
+            fixes.append(rec)
+
     # Separate blocking issues from warnings
     # Blocking: critical issues that prevent downstream processing
     # Warnings: quality issues that should be addressed but don't block progress
     warnings: list[str] = []
 
-    # Move non-critical issues to warnings instead of hard failures
+    # =========================================================================
+    # MAViS-style checks: warnings or blocking depending on strict_mavis_mode
+    # =========================================================================
+    t = config.thresholds
+    mavis_ok = True  # Becomes False if any MAViS check fails in strict mode
+
     if adjacent_character_violations > 0:
         warnings.append(f"Adjacent character violations: {adjacent_character_violations} (consider adding separator shots)")
+
     if multi_action_lines > 0:
-        warnings.append(f"Multi-action lines: {multi_action_lines} (consider splitting into separate lines)")
+        msg = f"Multi-action lines: {multi_action_lines} (consider splitting into separate lines)"
+        warnings.append(msg)
+        if t.strict_mavis_mode and multi_action_lines > t.max_multi_action_lines:
+            reasons.append(f"MAViS: multi_action_lines ({multi_action_lines}) exceeds limit ({t.max_multi_action_lines}).")
+            fixes.append("Split compound actions into separate script lines (one simple action per shot).")
+            mavis_ok = False
+
     if complex_visual_without_closeup > 0:
         warnings.append(f"Complex visuals without close-up: {complex_visual_without_closeup} (consider adding close-up framing)")
+
     if adjacent_same_background_pairs > 0:
-        warnings.append(f"Adjacent same background pairs: {adjacent_same_background_pairs} (consider alternating backgrounds)")
+        msg = f"Adjacent same background pairs: {adjacent_same_background_pairs} (consider alternating backgrounds)"
+        warnings.append(msg)
+        if t.strict_mavis_mode and adjacent_same_background_pairs > t.max_adjacent_same_background:
+            reasons.append(f"MAViS: adjacent_same_background ({adjacent_same_background_pairs}) exceeds limit.")
+            fixes.append("Avoid consecutive scenes with identical backgrounds; add transition shots.")
+            mavis_ok = False
+
     if tight_spatial_transition_pairs > 0:
-        warnings.append(f"Tight spatial transitions: {tight_spatial_transition_pairs} (consider looser transition shots)")
-    if fine_grained_visual_elements > 2:
-        warnings.append(f"Fine-grained visual elements: {fine_grained_visual_elements} (consider simplifying details)")
+        msg = f"Tight spatial transitions: {tight_spatial_transition_pairs} (consider looser transition shots)"
+        warnings.append(msg)
+        if t.strict_mavis_mode and tight_spatial_transition_pairs > t.max_tight_spatial_transitions:
+            reasons.append(f"MAViS: tight_spatial_transitions ({tight_spatial_transition_pairs}) exceeds limit.")
+            fixes.append("Add establishing or transition shots between tight spatial jumps.")
+            mavis_ok = False
+
+    if fine_grained_visual_elements > t.max_fine_grained_visual_elements:
+        msg = f"Fine-grained visual elements: {fine_grained_visual_elements} (consider simplifying details)"
+        warnings.append(msg)
+        if t.strict_mavis_mode:
+            reasons.append(f"MAViS: fine_grained_visual_elements ({fine_grained_visual_elements}) exceeds limit.")
+            fixes.append("Replace fine-grained details (text, interfaces, small objects) with simpler descriptions.")
+            mavis_ok = False
+
+    # =========================================================================
+    # Scene-to-scene coherence check
+    # =========================================================================
+    scene_coherence_score, scene_coherence_issues = _check_scene_coherence(script)
+    scene_coherence_ok = scene_coherence_score >= t.min_scene_coherence_score
+
+    if not scene_coherence_ok:
+        reasons.append(f"Scene coherence score ({scene_coherence_score:.1f}) below threshold ({t.min_scene_coherence_score:.1f}).")
+        for issue in scene_coherence_issues[:3]:
+            fixes.append(f"Add transition: {issue}")
 
     # Blocking conditions only (critical for pipeline)
     passed = (
@@ -191,6 +254,9 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         and (not title_lock_required or anchor_title_match)
         and (not retry_mode or character_consistency_ok)
         and (not retry_mode or script_faithfulness_ok)
+        and story_qa_passed  # 14 storytelling criteria must pass
+        and mavis_ok  # MAViS checks in strict mode
+        and scene_coherence_ok  # Scene-to-scene coherence
     )
 
     return GateReport(
@@ -222,6 +288,26 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
             "duration_target_s": config.duration_target_s,
             "warnings": warnings,  # Non-blocking quality issues
             "warning_count": len(warnings),
+            # Story QA: 14 storytelling criteria
+            "story_qa_passed": story_qa_passed,
+            "story_qa_score": round(story_qa_score, 2),
+            "story_qa_dramatic_question": round(story_qa_result.dramatic_question.clarity_score, 2),
+            "story_qa_cause_effect": round(story_qa_result.cause_effect.score, 2),
+            "story_qa_conflict": round(story_qa_result.conflict.score, 2),
+            "story_qa_stakes": round(story_qa_result.stakes_escalation.score, 2),
+            "story_qa_agency": round(story_qa_result.agency.score, 2),
+            "story_qa_thematic": round(story_qa_result.thematic_consistency.score, 2),
+            "story_qa_motifs": round(story_qa_result.motif_callback.score, 2),
+            "story_qa_pacing": round(story_qa_result.pacing_texture.score, 2),
+            "story_qa_finale": round(story_qa_result.causal_finale.score, 2),
+            "story_qa_blocking_issues": story_qa_result.blocking_issues,
+            # MAViS strict mode
+            "strict_mavis_mode": t.strict_mavis_mode,
+            "mavis_ok": mavis_ok,
+            # Scene-to-scene coherence
+            "scene_coherence_score": round(scene_coherence_score, 2),
+            "scene_coherence_ok": scene_coherence_ok,
+            "scene_coherence_issues": scene_coherence_issues[:3],
         },
         reasons=reasons,
         fix_instructions=fixes,
@@ -412,3 +498,62 @@ def _narrative_coherence_score(
     if not structure_complete:
         score -= 20.0
     return max(0.0, min(100.0, score))
+
+
+def _check_scene_coherence(script: ScriptArtifact) -> tuple[float, list[str]]:
+    """Check for where/when/why contradictions between adjacent scenes.
+
+    Detects location jumps without transition markers (e.g., "cafe" -> "home"
+    without "cut to", "later", movement verbs, etc.).
+
+    Returns:
+        (score, list of coherence issues)
+    """
+    issues: list[str] = []
+    locations = script.locations
+
+    # Markers that indicate intentional transitions
+    transition_markers = [
+        "cut to", "later", "meanwhile", "next day", "hours later",
+        "the next morning", "that evening", "fade to", "dissolve to",
+        "moments later", "time passes", "flashback", "flash forward",
+    ]
+
+    # Markers that indicate character movement between locations
+    movement_markers = [
+        "walks to", "arrives at", "enters", "leaves", "exits",
+        "goes to", "heads to", "steps into", "comes out of",
+        "moves to", "travels to", "returns to", "drives to",
+    ]
+
+    # Track current location
+    current_loc: str | None = None
+    prev_loc: str | None = None
+
+    for i, line in enumerate(script.lines):
+        text_lower = line.text.casefold()
+
+        # Detect location from line
+        detected_loc = _infer_background_key(line.text, locations)
+
+        if detected_loc and detected_loc != current_loc:
+            prev_loc = current_loc
+            current_loc = detected_loc
+
+            # Check if location change has transition or movement
+            has_transition = any(marker in text_lower for marker in transition_markers)
+            has_movement = any(marker in text_lower for marker in movement_markers)
+
+            # Also check previous line for transition markers
+            if i > 0:
+                prev_text = script.lines[i - 1].text.casefold()
+                has_transition |= any(marker in prev_text for marker in transition_markers)
+                has_movement |= any(marker in prev_text for marker in movement_markers)
+
+            if prev_loc and not (has_transition or has_movement):
+                # Location changed without explanation
+                issues.append(f"L{i+1}: location jump '{prev_loc}' -> '{current_loc}' without transition")
+
+    # Score: 100 - 15 per unexplained location jump
+    score = max(0.0, 100.0 - len(issues) * 15.0)
+    return score, issues

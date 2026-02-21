@@ -246,3 +246,322 @@ class FinalScorecard(BaseModel):
     consistency: float = Field(ge=0, le=100)
     audio_sync: float = Field(ge=0, le=100)
     final_score: float = Field(ge=0, le=100)
+
+
+# =============================================================================
+# Story QA: 14 Storytelling Criteria
+# =============================================================================
+
+
+class DramaticQuestionCheck(BaseModel):
+    """1. Dramatic Question - what question does the viewer wait to answer?"""
+
+    present: bool
+    question_text: str = ""
+    clarity_score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class CauseEffectCheck(BaseModel):
+    """2. Cause-Effect Chain - scenes force the next, not just follow."""
+
+    chain_intact: bool
+    breaks: list[str] = Field(default_factory=list)  # line_ids where chain breaks
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class ConflictCheck(BaseModel):
+    """3. Conflict as scene driver - goal, obstacle, tactic, outcome per scene."""
+
+    scenes_with_conflict: int = 0
+    scenes_missing_conflict: list[str] = Field(default_factory=list)  # locations
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class StakesEscalationCheck(BaseModel):
+    """4. Stakes progression - stakes grow: complexity, cost, irreversibility."""
+
+    escalation_detected: bool
+    progression: list[str] = Field(default_factory=list)  # ordered stake levels
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class InformationControlCheck(BaseModel):
+    """5. Reveals & Withholding - dramatic irony, mystery, recontextualization."""
+
+    technique_used: Literal["dramatic_irony", "mystery", "reframe", "none"] = "none"
+    reveal_moments: list[str] = Field(default_factory=list)  # line_ids
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class AgencyCheck(BaseModel):
+    """6. Hero decisions - key moments result from hero choice, not chance."""
+
+    hero_decisions: list[str] = Field(default_factory=list)  # line_ids
+    deus_ex_machina_risks: list[str] = Field(default_factory=list)
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class ThematicConsistencyCheck(BaseModel):
+    """7. Thematic consistency - 1-2 theses proven through hero actions."""
+
+    themes_identified: list[str] = Field(default_factory=list)
+    theme_manifestations: list[str] = Field(default_factory=list)  # line_ids
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class MotifCallbackCheck(BaseModel):
+    """8. Motifs & Callbacks - repeated image/phrase that changes meaning."""
+
+    motifs_found: list[str] = Field(default_factory=list)
+    callback_pairs: list[tuple[str, str]] = Field(default_factory=list)  # (setup, payoff)
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class SurpriseBalanceCheck(BaseModel):
+    """9. Predictability/Surprise balance - logical yet unexpected."""
+
+    predictable_moments: list[str] = Field(default_factory=list)
+    surprising_moments: list[str] = Field(default_factory=list)
+    balance_score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class PromisePayoffCheck(BaseModel):
+    """10. Promise & Payoff - opening promises genre/tone, ending delivers."""
+
+    promise_elements: list[str] = Field(default_factory=list)
+    payoff_elements: list[str] = Field(default_factory=list)
+    contract_honored: bool = True
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class PacingTextureCheck(BaseModel):
+    """11. Pacing & Texture - contrast: tension/release, fast/slow, internal/external."""
+
+    rhythm_pattern: str = ""  # e.g. "slow-burn -> punchy" or "waves"
+    contrast_moments: list[str] = Field(default_factory=list)
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class DialogQualityCheck(BaseModel):
+    """12. Dialog Quality - subtext, action in speech, distinct voices."""
+
+    has_subtext: bool = False
+    distinct_voices: bool = False
+    dialogue_line_count: int = 0
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class EconomyFocusCheck(BaseModel):
+    """13. Economy & Focus - every element serves question/arc/theme/stakes/twist."""
+
+    filler_lines: list[str] = Field(default_factory=list)  # line_ids
+    essential_line_ratio: float = Field(ge=0, le=1)
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class CausalFinaleCheck(BaseModel):
+    """14. Causal Finale - ending feels inevitable yet surprising."""
+
+    finale_inevitable: bool = False
+    finale_surprising: bool = False
+    score: float = Field(ge=0, le=100)
+    notes: str = ""
+
+
+class StoryQAResult(BaseModel):
+    """Complete Story QA evaluation with all 14 criteria."""
+
+    script_hash: str
+    iteration: int
+
+    # 14 criteria checks
+    dramatic_question: DramaticQuestionCheck
+    cause_effect: CauseEffectCheck
+    conflict: ConflictCheck
+    stakes_escalation: StakesEscalationCheck
+    information_control: InformationControlCheck
+    agency: AgencyCheck
+    thematic_consistency: ThematicConsistencyCheck
+    motif_callback: MotifCallbackCheck
+    surprise_balance: SurpriseBalanceCheck
+    promise_payoff: PromisePayoffCheck
+    pacing_texture: PacingTextureCheck
+    dialog_quality: DialogQualityCheck
+    economy_focus: EconomyFocusCheck
+    causal_finale: CausalFinaleCheck
+
+    # Aggregate
+    overall_score: float = Field(ge=0, le=100)
+    blocking_issues: list[str] = Field(default_factory=list)
+    recommendations: list[str] = Field(default_factory=list)
+    passed: bool = False
+
+
+# =============================================================================
+# Patch Mechanism
+# =============================================================================
+
+
+# =============================================================================
+# Cinematography QA: 8 Visual Production Gates
+# =============================================================================
+
+
+class StorySupport(BaseModel):
+    """G1. Story Support - each shot has intention tied to goal/obstacle/outcome."""
+
+    shots_with_intention: int = 0
+    decorative_shots: list[str] = Field(default_factory=list)  # shot_ids
+    score: float = Field(ge=0, le=100)
+    passed: bool = False
+    notes: str = ""
+
+
+class GeographicClarity(BaseModel):
+    """G2. Geographic Clarity - viewer can track spatial relations."""
+
+    establishing_shots_present: bool = False
+    unclear_transitions: list[str] = Field(default_factory=list)  # shot_ids
+    score: float = Field(ge=0, le=100)
+    passed: bool = False
+    notes: str = ""
+
+
+class SuspenseEscalation(BaseModel):
+    """G3. Suspense Escalation Pattern - visual language tightens across film."""
+
+    escalation_moves: list[str] = Field(default_factory=list)  # descriptions
+    escalation_count: int = 0
+    score: float = Field(ge=0, le=100)
+    passed: bool = False  # needs at least 3 escalating moves
+    notes: str = ""
+
+
+class InformationControlVisual(BaseModel):
+    """G4. Information Control - lighting/framing control reveal vs withhold."""
+
+    controlled_shots: list[str] = Field(default_factory=list)  # shot_ids
+    evenly_lit_shots: list[str] = Field(default_factory=list)  # shot_ids with no ambiguity
+    score: float = Field(ge=0, le=100)
+    passed: bool = False
+    notes: str = ""
+
+
+class StyleConsistency(BaseModel):
+    """G5. Consistency / No Style Drift - follows Look Bible rules."""
+
+    style_violations: list[str] = Field(default_factory=list)  # shot_ids with drift
+    score: float = Field(ge=0, le=100)
+    passed: bool = False
+    notes: str = ""
+
+
+class TechnicalFeasibility(BaseModel):
+    """G6. Technical Feasibility - prompts are renderable."""
+
+    infeasible_shots: list[str] = Field(default_factory=list)  # shot_ids
+    contradictions: list[str] = Field(default_factory=list)  # descriptions
+    score: float = Field(ge=0, le=100)
+    passed: bool = False
+    notes: str = ""
+
+
+class ContinuityProgression(BaseModel):
+    """G7. Continuity & Progression - wardrobe/props consistent with time."""
+
+    continuity_gaps: list[str] = Field(default_factory=list)  # shot_ids
+    progression_issues: list[str] = Field(default_factory=list)
+    score: float = Field(ge=0, le=100)
+    passed: bool = False
+    notes: str = ""
+
+
+class ReviewFriendliness(BaseModel):
+    """G8. Manual Review Friendliness - shots clear enough to approve/reject."""
+
+    vague_shots: list[str] = Field(default_factory=list)  # shot_ids
+    score: float = Field(ge=0, le=100)
+    passed: bool = False
+    notes: str = ""
+
+
+class LookBible(BaseModel):
+    """Look Bible - visual rules for the production."""
+
+    palette: str = ""
+    lighting_philosophy: str = ""
+    lens_language: str = ""
+    camera_movement_rules: str = ""
+    composition_rules: str = ""
+    texture_rules: str = ""
+    escalation_plan: str = ""
+
+
+class CinematographyQAResult(BaseModel):
+    """Complete Cinematography QA evaluation with 8 gates."""
+
+    script_hash: str
+    iteration: int
+
+    # Look Bible (extracted from creative direction)
+    look_bible: LookBible
+
+    # 8 gates
+    g1_story_support: StorySupport
+    g2_geographic_clarity: GeographicClarity
+    g3_suspense_escalation: SuspenseEscalation
+    g4_information_control: InformationControlVisual
+    g5_style_consistency: StyleConsistency
+    g6_technical_feasibility: TechnicalFeasibility
+    g7_continuity_progression: ContinuityProgression
+    g8_review_friendliness: ReviewFriendliness
+
+    # Character identity consistency (additional checks beyond 8 gates)
+    character_identity_score: float = Field(default=100.0, ge=0, le=100)
+    character_identity_issues: list[str] = Field(default_factory=list)
+    reference_identity_score: float = Field(default=100.0, ge=0, le=100)
+    reference_identity_issues: list[str] = Field(default_factory=list)
+
+    # Aggregate
+    gates_passed: int = Field(ge=0, le=8)
+    overall_score: float = Field(ge=0, le=100)
+    blocking_issues: list[str] = Field(default_factory=list)
+    shot_patches: list[dict] = Field(default_factory=list)  # suggested fixes
+    previs_checklist: list[str] = Field(default_factory=list)
+    passed: bool = False
+
+
+class PatchOperation(BaseModel):
+    """Single patch operation on an artifact."""
+
+    path: str  # JSON path e.g. "lines[5].text" or "logline"
+    operation: Literal["replace", "delete", "insert"]
+    old_value: Any | None = None  # for verification
+    new_value: Any | None = None
+    rationale: str = ""
+
+
+class PatchArtifact(BaseModel):
+    """Manual patch request for deterministic artifact correction."""
+
+    target_artifact: Literal[
+        "script", "script_review", "image_prompt_package", "av_prompt_package"
+    ]
+    target_iteration: int = Field(ge=1)
+    target_artifact_hash: str  # SHA256 to verify we're patching the right version
+    operations: list[PatchOperation] = Field(min_length=1)
+    rationale: str
+    author: str = "human"

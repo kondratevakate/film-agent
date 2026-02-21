@@ -9,15 +9,19 @@ from pydantic import BaseModel
 
 from .artifacts import (
     AVPromptPackage,
+    CinematographyQAResult,
     DryRunMetrics,
     EditorialTimeline,
     FinalMetrics,
     ImagePromptPackage,
+    PatchArtifact,
     RenderPackage,
     ScriptArtifact,
     ScriptReviewArtifact,
     SelectedImagesArtifact,
+    StoryQAResult,
 )
+from .references import ReferenceQAResult
 
 
 @dataclass(frozen=True)
@@ -36,4 +40,8 @@ AGENT_ARTIFACTS: dict[str, AgentArtifact] = {
     "final_metrics": AgentArtifact(FinalMetrics, "final_metrics.json"),
     "timeline": AgentArtifact(EditorialTimeline, "editorial_timeline.json"),
     "render_package": AgentArtifact(RenderPackage, "render_package.json"),
+    "story_qa": AgentArtifact(StoryQAResult, "story_qa.json"),
+    "cinematography_qa": AgentArtifact(CinematographyQAResult, "cinematography_qa.json"),
+    "reference_qa": AgentArtifact(ReferenceQAResult, "reference_qa.json"),
+    "patch": AgentArtifact(PatchArtifact, "patch.json"),
 }
