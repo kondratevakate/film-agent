@@ -7,6 +7,8 @@
 - We use composition as storytelling: symmetry = control; drift = confusion.
 - We repeat a few visual motifs (overhead flows, macro trace, red alert) instead of adding new gimmicks.
 - We keep transitions cinematic (match cuts, audio bridges, rack focus) and invisible.
+- We keep the performance tone deadpan and slightly awkward, not gothic noir.
+- We preserve an American school pep texture even inside tension beats.
 
 ## What we don't do
 - No "explainer" voice-over that names the science.
@@ -14,6 +16,7 @@
 - No glossy, sterile, app-commercial look.
 - No fast-cut montage aesthetics; pacing is controlled and readable.
 - No over-designed on-screen text; subtitles must be short and legible.
+- No full-bleak noir mood that removes the weird playful school energy.
 
 ## Subtitles & dialogue rules
 - Subtitles are minimal, human, and situational (commands, reactions).

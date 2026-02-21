@@ -113,6 +113,16 @@ def auto_run(
     max_cycles: int = typer.Option(20, "--max-cycles", help="Maximum automation cycles"),
     until: str = typer.Option("gate2", "--until", help="Target stage: gate1|gate2|complete"),
     self_eval_rounds: int = typer.Option(2, "--self-eval-rounds", help="Evaluator refine rounds per role output"),
+    max_stuck_cycles: int = typer.Option(
+        3,
+        "--max-stuck-cycles",
+        help="Stop early if state does not change for this many cycles.",
+    ),
+    rate_limit_retries: int = typer.Option(
+        5,
+        "--rate-limit-retries",
+        help="Retries for OpenAI 429 responses with exponential backoff.",
+    ),
 ) -> None:
     try:
         result = auto_run_sdk_loop(
@@ -123,6 +133,8 @@ def auto_run(
             max_cycles=max_cycles,
             until=until,
             self_eval_rounds=self_eval_rounds,
+            max_stuck_cycles=max_stuck_cycles,
+            rate_limit_retries=rate_limit_retries,
         )
     except Exception as exc:
         _emit({"error": str(exc)})

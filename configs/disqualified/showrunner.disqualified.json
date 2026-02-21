@@ -1,233 +1,297 @@
 {
-  "title": "Disqualified",
-  "logline": "A ruthless coach drives exhausted athletes toward perfection while two silent officials record every move-until a triumphant \"pass\" becomes a sudden doping disqualification, and reality snaps to an MRI room where contrast has revealed a tumor in time.",
-  "theme": "What looks like punishment can be protection; harsh systems can expose hidden danger and save a life.",
+  "title": "Disqualified: Contrast Day",
+  "logline": "A severe Norwegian coach drives packed groups of athletes through ruthless synchronization drills, teaching that T1 is speed of return and T2 is the fading of trauma, until a red verdict reveals she is gadolinium itself-sacrificing to expose a tumor early on MRI.",
+  "theme": "What looks like cruelty is diagnostic care in disguise: athletes rotate because MRI sees truth across planes, T1 and T2 become a choreography of recovery, and gadolinium gives itself up so hidden disease can be seen.",
   "characters": [
     "Coach Gadolinium",
     "Synchronized Swimmer",
+    "Team Chorus",
     "Tech 1",
     "Tech 2",
-    "Gymnast",
-    "Doctor"
+    "Cheer Captain",
+    "Ballet Lead",
+    "Young Gymnast",
+    "MRI Nurse",
+    "Patient"
   ],
   "locations": [
-    "Pool",
+    "Outdoor Training Field",
+    "Indoor Pool",
+    "Pool Deck",
     "Sports Complex Corridor",
+    "Fire Stair Landing",
     "Cheer Gym",
-    "Dance Studio",
-    "Small Training Room",
+    "Ballet Studio",
+    "Youth Gym Hall",
+    "Control Gallery",
     "MRI Room"
   ],
   "lines": [
     {
       "line_id": "l1",
       "kind": "action",
-      "text": "At the pool, the Synchronized Swimmer holds a flawless smile and pose, but her shoulders tremble from fatigue.",
+      "text": "Wide shot on an outdoor field: twelve young footballers stand in one line with hands on chest while Coach Gadolinium sets a strict tempo.",
       "speaker": null,
-      "est_duration_s": 5.0
+      "est_duration_s": 4.0
     },
     {
       "line_id": "l2",
-      "kind": "dialogue",
-      "text": "Again. From the top.",
-      "speaker": "Coach Gadolinium",
+      "kind": "action",
+      "text": "Close portrait of the coach, Nordic severity in her face, dark tracksuit and scarf, no softness in posture.",
+      "speaker": null,
       "est_duration_s": 3.0
     },
     {
       "line_id": "l3",
-      "kind": "action",
-      "text": "The swimmer dives and resurfaces gasping, forcing her face back into a bright, competition-ready smile.",
-      "speaker": null,
-      "est_duration_s": 5.0
+      "kind": "dialogue",
+      "text": "Breath together. Beat together.",
+      "speaker": "Coach Gadolinium",
+      "est_duration_s": 3.0
     },
     {
       "line_id": "l4",
-      "kind": "action",
-      "text": "Two suited officials stand near the lane, writing in tablets without reacting to anyone's pain.",
-      "speaker": null,
+      "kind": "dialogue",
+      "text": "T1 is return time: whoever recovers signal faster shines brighter.",
+      "speaker": "Coach Gadolinium",
       "est_duration_s": 4.0
     },
     {
       "line_id": "l5",
-      "kind": "dialogue",
-      "text": "Does not pass.",
-      "speaker": "Tech 1",
-      "est_duration_s": 2.0
-    },
-    {
-      "line_id": "l6",
-      "kind": "dialogue",
-      "text": "You don't fall apart. You hold.",
-      "speaker": "Coach Gadolinium",
-      "est_duration_s": 3.0
-    },
-    {
-      "line_id": "l7",
       "kind": "action",
-      "text": "In the corridor, multiple athlete groups sit on the floor catching breath while the coach strides past like a storm.",
+      "text": "Water-level POV in the indoor pool: the Synchronized Swimmer looks at the coach shouting from deck while two full rows of swimmers wait behind her.",
       "speaker": null,
       "est_duration_s": 5.0
     },
     {
-      "line_id": "l8",
-      "kind": "dialogue",
-      "text": "On your feet. The championship doesn't wait.",
-      "speaker": "Coach Gadolinium",
-      "est_duration_s": 3.0
-    },
-    {
-      "line_id": "l9",
+      "line_id": "l6",
       "kind": "action",
-      "text": "Above them on a stair landing, the two officials watch in silence and continue logging numbers and notes.",
+      "text": "A tiny droplet blurs the goggle lens; she wipes it and misses one command gesture.",
       "speaker": null,
       "est_duration_s": 4.0
     },
     {
-      "line_id": "l10",
+      "line_id": "l7",
       "kind": "action",
-      "text": "In the cheer gym, a line of athletes locks a stunt; one athlete's leg shakes and the formation wobbles.",
+      "text": "Two suited techs by the lane rope mark split times and turn-return values on tablets.",
       "speaker": null,
-      "est_duration_s": 5.0
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l8",
+      "kind": "dialogue",
+      "text": "Turn return: not counted.",
+      "speaker": "Tech 1",
+      "est_duration_s": 2.0
+    },
+    {
+      "line_id": "l9",
+      "kind": "dialogue",
+      "text": "You rotate because truth is checked in every plane: axial, coronal, sagittal.",
+      "speaker": "Coach Gadolinium",
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l10",
+      "kind": "dialogue",
+      "text": "Ready!",
+      "speaker": "Team Chorus",
+      "est_duration_s": 2.0
     },
     {
       "line_id": "l11",
-      "kind": "dialogue",
-      "text": "Stop. I can see weakness.",
-      "speaker": "Coach Gadolinium",
-      "est_duration_s": 3.0
+      "kind": "action",
+      "text": "The swimmer throws on a warm-up jacket and merges into a crowded corridor packed with multiple teams.",
+      "speaker": null,
+      "est_duration_s": 4.0
     },
     {
       "line_id": "l12",
       "kind": "action",
-      "text": "They attempt it again; the same shake returns, and the moment collapses in front of the coach's stare.",
+      "text": "A small tremor rattles ceiling lights; she keeps strict tempo while the crowd around her speeds up.",
       "speaker": null,
       "est_duration_s": 5.0
     },
     {
       "line_id": "l13",
-      "kind": "dialogue",
-      "text": "Does not pass.",
-      "speaker": "Tech 2",
-      "est_duration_s": 2.0
+      "kind": "action",
+      "text": "From a fire stair landing, the two techs record cadence drift as bodies stream below.",
+      "speaker": null,
+      "est_duration_s": 4.0
     },
     {
       "line_id": "l14",
       "kind": "action",
-      "text": "In the dance studio, a polished line executes turns; one dancer slips a fraction, then forces a recovery.",
+      "text": "Top view: dense athlete traffic flows through the hall like blood through an artery.",
       "speaker": null,
       "est_duration_s": 5.0
     },
     {
       "line_id": "l15",
       "kind": "dialogue",
-      "text": "No mistakes. From the top.",
+      "text": "T2 is echo decay: don't let the shake ring inside tissue.",
       "speaker": "Coach Gadolinium",
       "est_duration_s": 3.0
     },
     {
       "line_id": "l16",
       "kind": "action",
-      "text": "They repeat; the tiny slip flashes again, and the officials' pens move like a verdict being written.",
+      "text": "In a packed cheer gym, twenty athletes hold a pyramid; a new floor jolt makes one ankle tremble.",
       "speaker": null,
-      "est_duration_s": 5.0
+      "est_duration_s": 4.0
     },
     {
       "line_id": "l17",
       "kind": "dialogue",
-      "text": "Does not pass.",
-      "speaker": "Tech 1",
+      "text": "Not synchronized.",
+      "speaker": "Tech 2",
       "est_duration_s": 2.0
     },
     {
       "line_id": "l18",
       "kind": "action",
-      "text": "In a small training room, a young Gymnast practices; a barely noticeable wrap peeks from under her sleeve.",
+      "text": "Ballet studio: full lines of dancers spin in disciplined loops as the coach pushes through the doorway.",
       "speaker": null,
       "est_duration_s": 5.0
     },
     {
       "line_id": "l19",
       "kind": "dialogue",
-      "text": "You. Now. Show me.",
+      "text": "Keep rotating. We test you slice by slice.",
       "speaker": "Coach Gadolinium",
       "est_duration_s": 3.0
     },
     {
       "line_id": "l20",
       "kind": "action",
-      "text": "The Gymnast performs cleanly-perfect landing, perfect stillness-and the room erupts in relieved cheers.",
+      "text": "For one second, x-ray vision flashes: skeleton outlines and micro-vibration in two dancers, then normal view returns.",
       "speaker": null,
-      "est_duration_s": 6.0
+      "est_duration_s": 3.0
     },
     {
       "line_id": "l21",
-      "kind": "dialogue",
-      "text": "Recorded. Passed.",
-      "speaker": "Tech 2",
-      "est_duration_s": 2.0
+      "kind": "action",
+      "text": "The techs exchange a flat look and add a red minus to the protocol log.",
+      "speaker": null,
+      "est_duration_s": 3.0
     },
     {
       "line_id": "l22",
       "kind": "action",
-      "text": "The coach allows herself a brief smile-then freezes as the officials step forward with ceremonial calm.",
+      "text": "In a youth gym hall, teenage gymnasts run ribbons and bars; light wraps on wrists and ankles are barely visible.",
       "speaker": null,
-      "est_duration_s": 4.0
+      "est_duration_s": 5.0
     },
     {
       "line_id": "l23",
       "kind": "dialogue",
-      "text": "Disqualified. Doping control: positive.",
-      "speaker": "Tech 1",
-      "est_duration_s": 3.0
-    },
-    {
-      "line_id": "l24",
-      "kind": "dialogue",
-      "text": "That's absurd. They only worked.",
+      "text": "I am gadolinium: I run with blood and brighten what tries to hide.",
       "speaker": "Coach Gadolinium",
       "est_duration_s": 3.0
     },
     {
-      "line_id": "l25",
+      "line_id": "l24",
       "kind": "action",
-      "text": "Tech 2 taps the tablet; a red indicator light snaps on, and the room falls into stunned silence.",
+      "text": "After another micro-shock, the whole group lands in exact sync; sideline men jump up with raised arms in rough celebration.",
       "speaker": null,
       "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l25",
+      "kind": "dialogue",
+      "text": "Recorded. Ideal T1 recovery.",
+      "speaker": "Tech 2",
+      "est_duration_s": 2.0
     },
     {
       "line_id": "l26",
       "kind": "action",
-      "text": "Smash cut: the Patient opens their eyes inside an MRI room, breathing hard as if waking from a vivid dream.",
+      "text": "A faint red trace blooms along the coach flank as if contrast is pooling in tissue.",
       "speaker": null,
-      "est_duration_s": 6.0
+      "est_duration_s": 4.0
     },
     {
       "line_id": "l27",
-      "kind": "dialogue",
-      "text": "Take your time. You can sit up slowly.",
-      "speaker": "Doctor",
-      "est_duration_s": 3.0
+      "kind": "action",
+      "text": "The two techs step to center with ceremonial calm; all teams go silent.",
+      "speaker": null,
+      "est_duration_s": 4.0
     },
     {
       "line_id": "l28",
-      "kind": "action",
-      "text": "The Doctor points to the scan image where one area is clearly highlighted compared to surrounding tissue.",
-      "speaker": null,
-      "est_duration_s": 5.0
+      "kind": "dialogue",
+      "text": "For your strength and impossible talent... we eliminate you.",
+      "speaker": "Tech 1",
+      "est_duration_s": 4.0
     },
     {
       "line_id": "l29",
       "kind": "dialogue",
-      "text": "Good thing you did the MRI with contrast early. It helped us spot a tumor.",
-      "speaker": "Doctor",
-      "est_duration_s": 4.0
+      "text": "They are not doping. They are surviving.",
+      "speaker": "Coach Gadolinium",
+      "est_duration_s": 3.0
     },
     {
       "line_id": "l30",
       "kind": "action",
-      "text": "The Patient swallows, then nods-fear softening into relief at the words \"early\" and \"spot.\"",
+      "text": "Red overhead lights ignite; from top view the crowd becomes a body map, and one tumor-shaped zone burns bright.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l31",
+      "kind": "action",
+      "text": "The coach turns translucent and dissolves into drifting particles, like contrast being cleared from the system.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l32",
+      "kind": "action",
+      "text": "Hard cut to MRI room: cold table rails, head coil locked in place, white tunnel overhead.",
       "speaker": null,
       "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l33",
+      "kind": "action",
+      "text": "Gradient knocks start in mechanical rhythm-thunk, thunk, thunk-like a brutal metronome from the dream.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l34",
+      "kind": "action",
+      "text": "On the monitor: axial, coronal, and sagittal slices scroll with one region turning distinctly brighter post-contrast.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l35",
+      "kind": "dialogue",
+      "text": "You can sit up slowly. Contrast shortened T1 in that tissue, so the lesion stood out early.",
+      "speaker": "MRI Nurse",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l36",
+      "kind": "dialogue",
+      "text": "The loud knocking you heard was gradient switching. It builds the image layer by layer.",
+      "speaker": "MRI Nurse",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l37",
+      "kind": "action",
+      "text": "The Patient blinks, remembers the coach whistle fading, and exhales in quiet relief.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l38",
+      "kind": "action",
+      "text": "Final close frame on the scan: clean grayscale anatomy, one marked focus, no drama-only early detection.",
+      "speaker": null,
+      "est_duration_s": 4.0
     }
   ]
 }

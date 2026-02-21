@@ -1,47 +1,47 @@
 {
   "script_review_id": "8490a0895e057a45dad358a0975bf58a90aae20b7073898140e1d9a2d2f64b2a",
-  "style_anchor": "anime noir infinity castle tatami shoji lacquered wood ink shadows ritual pluck contrast reveal",
+  "style_anchor": "demon-slayer-inspired warm fantasy infinity castle tatami shoji rhythm contrast reveal with credits end-card",
   "image_prompts": [
     {
       "shot_id": "s01",
       "intent": "establish rhythmic threat in impossible architecture",
-      "image_prompt": "Wide establishing frame of an infinite tatami hall with repeating shoji doors, ink-black depth, lantern paper glow, and a taut single string crossing the frame like a command line.",
+      "image_prompt": "Wide establishing frame of an infinite tatami hall with repeating shoji doors, warm lantern paper glow, and a taut single string crossing the frame like a command line.",
       "negative_prompt": "plastic 3d look, chibi faces, neon cyberpunk glow, cluttered ui text, extra limbs",
       "duration_s": 9.0
     },
     {
       "shot_id": "s02",
-      "intent": "show crowd instability under diegetic pluck rhythm",
-      "image_prompt": "Medium shot of the Hydrogen Crowd collapsing and recovering in synchronized waves on tatami as a pluck beat tilts the room axis, with crisp silhouettes and controlled motion blur.",
+      "intent": "water metaphor beat under the same rhythm control",
+      "image_prompt": "Glass chamber shot: divers behind glass drift and jolt in sync with pluck beats, then recover slowly between beats to suggest longer-T1 water behavior, lit by warm lantern spill and deep indigo depth.",
       "negative_prompt": "cartoon slapstick, fisheye distortion, unreadable anatomy, overbusy background, infographic overlay",
       "duration_s": 10.0
     },
     {
       "shot_id": "s03",
-      "intent": "introduce lure behavior of the Geisha",
-      "image_prompt": "Frontal theatrical composition of a Geisha on a raised dais making a precise fan gesture while the crowd takes one obedient step, framed by layered paper screens and lacquered wood rails.",
+      "intent": "fat metaphor beat using sumo inertia",
+      "image_prompt": "Low-angle tatami ring shot: sumo wrestlers brace and collide, then rebound first after each pluck to suggest shorter-T1 fat recovery while preserving heavy inertia.",
       "negative_prompt": "cute rounded proportions, modern city setting, rgb signage, glossy cgi plastic skin, comedic expressions",
       "duration_s": 10.0
     },
     {
       "shot_id": "s04",
-      "intent": "foreshadow threat through subtle mismatch",
-      "image_prompt": "Close-up of a shoji silhouette where the shadow pose misaligns with the performer's still body for one uncanny beat, with dense ink shadows and warm paper texture.",
+      "intent": "bone metaphor beat with anchored discipline",
+      "image_prompt": "Bone Pillar Gallery shot: tai chi monks and buddhist practitioners rotate around a fixed support post in controlled circles, visualizing precession around one field axis while the pluck rhythm tries to pull them off axis.",
       "negative_prompt": "gore, jump-scare monster, noisy particles, tiny readable text, low contrast haze",
       "duration_s": 8.0
     },
     {
       "shot_id": "s05",
-      "intent": "marking moment that stabilizes the crowd",
-      "image_prompt": "Central ring composition as the crowd freezes in a clean stance around the Geisha and a cyan contrast mark appears on a turning wrist, keeping shapes graphic and readable.",
+      "intent": "lure confrontation and stabilization mark",
+      "image_prompt": "Frontal theatrical composition of Geisha (Lure) on a raised dais as Intruder enters the ring; cyan contrast mark appears on Intruder wrist, local paths brighten as if T1 shortens, and the hydrogen crowd stabilizes into synchronized footing.",
       "negative_prompt": "random lens flares, excessive vfx sparks, deformed hands, extra fingers, washed-out palette",
       "duration_s": 8.0
     },
     {
       "shot_id": "s06",
-      "intent": "final reversal with elegant menace",
-      "image_prompt": "Final wide shot of the Infinity Castle pausing after a soft pluck, Gadolinium standing still while the Geisha is trapped inside the circle she once controlled, red and cyan accents used sparingly.",
-      "negative_prompt": "happy ending smile montage, bright daylight realism, flat lighting, toy-like materials, subtitles or captions",
+      "intent": "black-screen katana cut and end-credit medical reveal",
+      "image_prompt": "Pure black frame split by a clean katana slash, followed by a large centered readable end-card title text in Russian: \"Глиобластома выявлена и удалена.\"",
+      "negative_prompt": "happy ending smile montage, bright daylight realism, flat lighting, toy-like materials, tiny unreadable text",
       "duration_s": 10.0
     }
   ]

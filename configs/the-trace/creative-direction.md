@@ -8,6 +8,33 @@ Contrast = the new girl who leaves a trace.
 ## Mood keywords (10)
 Analog nostalgia, fluorescent dread, suburban night, locker-hum, chlorine echo, emergency red, clinical calm, ritual repetition, hidden lesion, premium cinematic polish.
 
+## Tone slider (critical)
+- Less noir mystery, more premium deadpan genre energy.
+- Fallout-like confidence with a slightly awkward school pep undertone.
+- Keep tension real, but allow odd cheerful beats in commands and group behavior.
+- Emotions read as: confused -> curious -> useful -> rejected -> relieved.
+- CRITICAL: Characters should appear LIVELY and CHEERFUL, not gloomy or depressed.
+- Even in tense moments, faces should have energy and life, not dread.
+- Avoid dark, brooding expressions - this is a vibrant 80s school, not a horror film.
+
+## Story structure (CRITICAL)
+- The entire school sequence = dream/vision of a Patient lying in MRI scanner.
+- Leyla is NOT the patient - she is a metaphor for contrast agent circulating through the body.
+- The REAL patient ("Patient") appears ONLY in the final radiology reveal.
+- Final beat: hard cut to radiology room, Patient opens eyes on MRI table, realizes the school was their scan.
+- This mirrors Disqualified structure: Coach Gadolinium dissolves → Patient wakes in MRI.
+
+## MRI metaphor map (narrative physics)
+- Leyla = contrast agent in circulation (she is NOT the patient).
+- Pool synchronized team = fluid compartments with fast rhythmic recovery.
+- Hallway flow = bloodstream transport and distribution.
+- Cheer formation in gym = rigid tissue / bone-like stability under RF pulses.
+- Ballet behind glass = low-uptake tissue with clean self-correction.
+- Injury classroom = lesion zone shown as DANCE CLUB with minor sports injuries (small bandages, tape on fingers) - energetic teens dancing despite small scrapes, NOT disabled or serious injuries.
+- Tech 1 / Tech 2 = measurement logic (T1 and T2 readout voices).
+- Red extraction moment = peak signal threshold and removal decision.
+- Radiology room = literal reality - Patient wakes from metaphor simulation.
+
 ## World & Setting (must read "America" instantly)
 - Hallways: long locker corridors, trophy case, letterman jackets, flyers on cork boards, vending machines, payphone corner, janitor cart.
 - Pool: tiled walls, lane ropes, muffled PA announcements, wet footprints, chlorine haze.
@@ -141,14 +168,16 @@ Must-have tags:
 Nice-to-have:
 - `telephoto_isolation`, `subtle_dolly_in`
 
-### E) Old classroom (Injury Club)
+### E) Old classroom (Dance Club with minor injuries)
 Must-have tags:
-- `old_classroom`, `scuffed_floor`, `stacked_chairs`, `dusty_blinds`
-- `crutches_braces_bandages`, `unstable_recovery`
+- `old_classroom`, `scuffed_floor`, `open_space`, `casual_energy`
+- `minor_bandages`, `small_tape`, `dancing_teens`, `cheerful_movement`
 - `macro_stain`, `metallic_trace`, `hands`, `fabric_fibers`
-- `panic_escalation`, `red_alert`, `emergency_wash`
+- `red_alert`, `emergency_wash`
+- CRITICAL: Show HAPPY DANCING TEENS with minor sports injuries (small bandaids, athletic tape on fingers/wrists)
+- AVOID: crutches, wheelchairs, braces, serious injuries, disabled appearance
 Nice-to-have:
-- `handheld_drift`, `micro_jerk_pulse`
+- `handheld_drift`, `energetic_vibe`
 
 ### F) Radiology room
 Must-have tags:

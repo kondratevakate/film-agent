@@ -1,110 +1,126 @@
 ## One-line style definition
-Anime noir in a baroque infinite maze: tatami corridors, shoji walls, lacquered wood, paper light - inside an impossible, shifting architecture. The world is driven by a single rhythmic force (the plucked string), and meaning is created through contrast (reveal/mark), not exposition.
+Demon Slayer inspired fantasy drama inside Infinity Castle: repeating tatami corridors, warm shoji light, and impossible shifting architecture driven by a plucked string. The tone stays tense but vivid and emotional, not hard noir.
 
 ## Mood / emotional tone
-- Hypnotic beauty that feels predatory
-- Ritual repetition (sound -> tilt -> recovery) as a form of control
-- Psychological unease with a clean, elegant surface
-- "Reveal through marking": the moment of truth is quiet but decisive
+- Dreamlike disorientation with readable emotional stakes
+- Rhythmic danger followed by collective recovery
+- Elegant Japanese fantasy first, menace second
+- Reveal through contrast mark, with the medical truth held for the end card
 
 ## Core influences
-- Infinity Castle (Demon Slayer): spatial infinity, repeating doors, surreal geometry, tatami + shoji, ominous elegance
-- Kill Bill: high-contrast graphic language, silhouette frames, hard transitions, ritualized confrontation energy
+- Infinity Castle (Demon Slayer): surreal scale, shifting doors, layered depth
+- Demon Slayer dramatic staging: clear heroic silhouettes, emotionally legible close-ups
+- Japanese festival imagery: pillar structures, group movement, ritual energy
 
 ## Reference Pack (Do/Steal)
-- Biwa Demon (Demon Slayer): sound-as-control; diagonal instrument composition; calm menace.
-- Infinity Castle wide: establishing scale; amber lantern depth; stacked architecture.
-- Upside-down corridor: axis flip as main surreal trick; symmetric corridor; lantern rhythm.
-- Stage group shot: theatrical blocking; gold panel backdrop; silhouette readability.
-- Sumo: mass/inertia; one-hit sway; grounded motion vs surreal rhythm.
-- Kill Bill dojo/stairs: graphic contrast; hard cuts on beat; clean silhouettes.
+- Biwa Demon references: string-as-control, clean hand gestures, measured menace
+- Infinity Castle wide references: stacked architecture and lantern depth
+- Corridor axis-shift references: tilt as main surreal device
+- Group choreography references: large crowd sway becoming synchronized stability
+- Sumo references: heavy-body inertia as fat metaphor
+- Festival tower references: vertical support motif as bone metaphor
 
 ## Visual pillars (must-haves)
-- Infinity architecture: repeating sliding doors, tatami corridors, layered platforms, impossible continuity
-- Material authenticity: warm wood, paper screens, ink shadows; avoid "plastic 3D"
-- Controlled surrealism: the world shifts via tilt/axis changes rather than complex VFX chaos
-- Single motif: the string / shamisen / koto is the world's "demon conductor"
+- Infinity architecture: repeating doors, tatami halls, layered platforms, impossible continuity
+- Dense human presence: frequent crowd clusters so "hydrogen as people" is always visible
+- Material authenticity: warm wood, paper grain, kimono texture; avoid plastic CGI feel
+- Controlled surrealism: geometry shifts on pluck beats, not VFX overload
+- Single motif: shamisen string as global causal trigger
+- MRI factual texture: visual metaphors must map to real scan logic, not random symbolism
 
 ## Color language (meaning-driven)
-Base: Ink black / charcoal, warm paper, lacquered wood
+Base: warm paper, lacquered wood, deep indigo voids, controlled ink shadows
 
 Accents:
-- Blood red = danger / tumor / lure
-- Contrast cyan = gadolinium / reveal / "marked"
-- Deep indigo = night depth / castle void
+- Vermilion red = lure, danger, hidden resource sink
+- Contrast cyan = gadolinium-contrast mark, reveal, stabilization
+- Festival gold = life energy in the crowd
 
-Rule: accents appear only when the story needs emphasis (never as decoration)
+Rule: accents appear only when story beats require them
 
 ## Lighting & texture
-- Lantern-like warmth with dense ink shadows
-- Shoji paper should read as texture (subtle fiber/grain)
-- Wood feels aged and lacquered (soft specular, not glossy plastic)
+- Lantern warmth with softer black levels than noir
+- Shoji fiber and aged wood must stay tactile in close-ups
+- Character faces remain readable even in tense scenes
 
 ## Motion language (animation grammar)
-The "pluck" is a diegetic beat:
+The pluck beat is diegetic:
 
-pluck -> micro-pause -> environment tilt/shift -> bodies react -> settle
+pluck -> micro-pause -> spatial tilt -> crowd sway -> settle
 
-- Prioritize pose clarity over micro-detail
-- "Dance" is minimal: 1-2 simple synchronized steps max
-- Magic is shown through geometry + synchronization, not particle overload
+Reveal beat:
+
+intruder enters -> mark appears -> sway becomes synchronized dance -> hidden source exposed
+
+- Prioritize clear posing and directional movement
+- Keep magic grounded in geometry and timing
+- Do not use explicit medical labels before final credits
+
+## MRI Texture Map (factual)
+- `T1 time`: longitudinal recovery time after excitation; shorter T1 returns signal faster.
+- Water beat: divers behind glass recover slower between beats (longer-T1 behavior).
+- Fat beat: sumo mass rebounds earlier between beats (shorter-T1 behavior).
+- Bone beat: tai chi and buddhist athletes rotate around a fixed pillar to show precession around one field axis.
+- Why athletes rotate: circular rotation visualizes spin precession and phase behavior before re-alignment.
+- Gadolinium beat: the contrast mark shortens local T1 and makes hidden inflow paths brighten.
 
 ## Cinematography / composition rules
-- Strong silhouettes; readable shapes
-- Repetition (doors, corridors) creates dread and infinity
-- Use negative space; avoid clutter
-- Hard cuts on plucks; occasional theatrical frontal framing (Kill Bill flavor)
+- Strong but expressive silhouettes, with readable eyes and faces in key close-ups
+- Repetition of doors and crowd lanes conveys infinity and resource flow
+- Use medium and wide frames to show crowd density, then cut to emotional close-ups
+- Hard cuts on plucks; hold briefly on black-screen katana, then readable end-card reveal text
 
 ## References (5-10)
-- Demon Slayer - Infinity Castle (architecture, menace-beauty, impossible space)
-- Kill Bill Vol. 1 (graphic contrast, silhouettes, rhythmic cuts)
-- Paprika (Satoshi Kon) (dream logic transitions, surreal coherence)
-- Perfect Blue (psychological pressure, clean dread)
-- Mononoke (TV series) (stylization, patterns, flat planes with depth)
-- Samurai Champloo (music-driven pacing and cutting)
-- Ghost in the Shell (1995) (serious tone, dense atmospheres)
-- Blade Runner 2049 (color-as-meaning, spacious frames)
-- Ukiyo-e prints (pattern, silhouette, controlled palette)
-- Kabuki / Noh staging (ritual poses, "freeze" moments)
+- Demon Slayer - Infinity Castle (space language and rhythm danger)
+- Demon Slayer climactic reveal scenes (emotional clarity in action)
+- Paprika (dream logic transitions)
+- Mononoke (patterned stylization and flat-depth tension)
+- Samurai Champloo (music-led timing and cuts)
+- Kabuki stage compositions (frontal ritual geometry)
+- Ukiyo-e prints (shape economy and controlled palette)
+- Traditional Japanese matsuri visuals (crowd and pillar motifs)
 
 ## Missing references to add next
-- Materials close-ups (2-3): shoji paper grain, lacquered wood highlights, clean ink shadow density.
-- Enchanted crowd sync (1-2): ritualized synchronized steps without combat chaos.
-- Geisha lure with mismatch cue (1): serene pose + minimal gesture + shadow/reflection mismatch hint.
+- High-density human crowd in tatami corridors (2-3)
+- Water chamber with divers behind glass under rhythmic pulses (1-2)
+- Geisha close-up with panic transition after contrast mark appears (1)
+- Minimal black-screen katana transition frame language (1)
+- End-card typography on black with short medical reveal sentence (1)
 
 ## Anti-references (3-5)
-- Pixar/Disney "soft plastic" look and overly rounded cuteness
-- Neon cyberpunk as an aesthetic goal (RGB glow overload)
-- Hyper-real 3D film rendering with no anime stylization
-- Chibi/comedic deformation during dramatic beats
-- UI-heavy frames with small readable text or infographics
+- Overly dark crushed-black noir grading
+- Pixar/Disney rounded plastic cuteness
+- Neon cyberpunk RGB glow as decoration
+- Hyper-real 3D rendering without anime stylization
+- UI-heavy frames or tiny readable text overlays
 
 ## "What else fits" (additional inspirations that match)
-- Kabuki: bold poses, controlled theatricality
-- Noh: stillness, masks, fear through restraint
-- Butoh: minimal movement, body control, uncanny calm
-- Junji Ito (only as a touch): unsettling "too perfect" moments, not gore
+- Kabuki: strong stage geometry and decisive poses
+- Noh: stillness and ritual control
+- Butoh: controlled off-balance body language
+- Taiko ensemble blocking: coordinated group energy without chaos
 
 ## Figma: Moodboard + Style Tiles + 2-3 key screens
 ### Moodboard (8-12 images total)
 Organize into 4 clusters:
-- Infinity Castle Architecture: tatami corridors, repeating doors, layered platforms, impossible angles
-- Materials & Textures: shoji paper, ink wash shadows, lacquered wood, kimono fabric patterns
-- Lighting & Contrast: lantern warmth vs ink blacks; red accent moments; silhouette frames
-- Rhythm Motif: string instrument / fan gestures / synchronized crowd movement / freeze poses
+- Infinity Castle architecture and shifting tatami corridors
+- Materials and textures: shoji paper, lacquered wood, kimono fabrics
+- Crowd energy language: large human groups, rhythmic sway, synchronized recovery
+- Reveal language: contrast mark, geisha panic beat, katana black-screen finish
+- End-card reveal language: large readable centered text after action resolves
 
 ### Style Tiles (1-2 pages)
 Include:
-- Color chips: Ink/Charcoal/Paper/Wood + Accent Red + Contrast Cyan + Indigo
-- Type pairing: cinematic display + clean readable body
-- Shape language: sharp-ish rectangles with slight "paper" rounding
-- Texture swatches: paper grain, ink bleed, wood lacquer
-- Motion notes: "pluck -> pause -> tilt -> stabilize" as the universal beat
+- Color chips: Warm Paper / Wood Brown / Indigo Void / Vermilion / Contrast Cyan / Festival Gold
+- Type pairing: dramatic display with clean readable body text
+- Shape language: clean rectangles, sliding frames, paper-edge curves
+- Texture swatches: paper grain, ink wash edges, lacquer sheen
+- Motion notes: "pluck -> tilt -> sway -> stabilize -> reveal"
 
 ### 2-3 Key Screens (so the team sees target look instantly)
-- Title Card / Opening
-  - Ink-black field, thin string line, minimal red stamp-like mark
-- Main Corridor (Doors Infinity)
-  - Strong depth, repeating doors, subtle tilt cues, lantern pockets of light
-- Geisha Dais / Reveal
-  - Central composition, crowd circle, shadow mismatch hint, contrast mark close-up
+- Opening Awakening
+  - String sound, warm corridor, unmasked Intruder rising in confusion
+- Corridor of Doors with Crowd Flow
+  - Multiple open doors, many hydrogen people swaying toward one destination
+- Geisha Reveal + Surgical End
+  - Contrast mark destabilizes the lure, then black-screen katana slash and end-card text

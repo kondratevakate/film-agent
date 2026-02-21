@@ -12,7 +12,9 @@ Narrative intent:
 Showrunner constraints:
 - Build a `ScriptArtifact` with total estimated duration inside
   `[project_constraints.duration_min_s, project_constraints.duration_max_s]`.
-- Provide at least 10 lines.
+- Provide at least 20 lines for rich visual storytelling.
+- Aim for ~4-5 seconds average per line (shorter for dialogue, longer for action).
+- Create diverse shot types: wide establishing, medium character, close-up details, macro inserts.
 - Dialogue lines must set `speaker` and use names declared in `characters`.
 - Keep character naming stable across lines; do not alias character names.
 - If `project_constraints.reference_images` is provided, keep character identity, wardrobe, and tone consistent with those references.

@@ -88,9 +88,9 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
 
     line_count = len(script.lines)
     dialogue_lines = sum(1 for line in script.lines if line.kind == "dialogue")
-    if line_count < 10:
-        reasons.append("Script is too sparse for a coherent short film.")
-        fixes.append("Provide at least 10 timed lines (action/dialogue).")
+    if line_count < 20:
+        reasons.append("Script is too sparse for a rich visual story.")
+        fixes.append("Provide at least 20 timed lines for diverse shot coverage.")
 
     # Compute metrics for warnings (non-blocking quality issues)
     adjacent_character_violations = _count_adjacent_primary_character_violations(script)
@@ -183,7 +183,7 @@ def evaluate_gate1(run_path: Path, state: RunStateData, config: RunConfig) -> Ga
         duration_ok
         and not undeclared_speakers
         and placeholder_lines == 0
-        and line_count >= 10
+        and line_count >= 20
         and concept_alignment_ok
         and structure_complete
         and narrative_coherence_ok
@@ -399,7 +399,7 @@ def _narrative_coherence_score(
     structure_complete: bool,
 ) -> float:
     score = 100.0
-    if line_count < 10:
+    if line_count < 20:
         score -= 15.0
     if placeholder_lines:
         score -= min(25.0, placeholder_lines * 10.0)

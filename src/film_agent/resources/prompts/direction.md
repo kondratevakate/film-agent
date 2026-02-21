@@ -14,9 +14,14 @@ Review checklist:
 Output requirements:
 - `approved_story_facts` should be explicit and testable.
 - `approved_character_registry` must cover all script characters.
-- `revision_notes` should be actionable edits.
-- `unresolved_items` should only include blockers that truly remain.
-- Set `lock_story_facts=true` only when unresolved blockers are empty.
+- `revision_notes` should be actionable edits (notes only, not blockers).
+  - Include stylistic/structural suggestions here (e.g., adjacent character violations, multi-action lines).
+  - These are quality improvements, not blockers.
+- `unresolved_items` should ONLY include critical story continuity blockers:
+  - Missing plot beats, broken narrative logic, contradictions.
+  - Do NOT include Gate1 warnings (they are informational, not blockers).
+- Set `lock_story_facts=true` when story facts are stable.
+  - Gate1 warnings do NOT prevent locking - only critical story issues do.
 
 Output schema:
 - script_version: integer >= 1

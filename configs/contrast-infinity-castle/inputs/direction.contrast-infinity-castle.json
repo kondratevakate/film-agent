@@ -1,22 +1,27 @@
 {
-  "script_version": 3,
-  "script_hash_hint": "fd40a00ac800530b18c3dc3c7ad2c851f2dded1287a1278bb31286693290487a",
+  "script_version": 6,
+  "script_hash_hint": null,
   "approved_story_facts": [
-    "A plucked castle string controls body balance through repeated rhythm in the Infinity Castle.",
-    "Gadolinium studies the crowd behavior instead of seeking physical support.",
-    "The Geisha lures the Hydrogen Crowd with synchronized fan gestures tied to each pluck.",
-    "The reveal happens when contrast marking stabilizes the crowd and exposes the predator dynamic."
+    "A plucked castle string in the Infinity Castle drives full-body sway in large hydrogen crowds and causes the disorientation.",
+    "An unmasked teenage Intruder (tanjiro-like original hero energy) wakes inside the castle and investigates why people are being pulled.",
+    "Core metaphor map is explicit in separate beats: water is divers behind glass, fat is sumo mass, bone is tai chi and buddhist groups at a support pillar, and the hidden source is Geisha (Lure).",
+    "MRI factual texture is explicit: T1 is longitudinal recovery time after excitation; water behaves longer-T1, fat behaves shorter-T1, and gadolinium shortens local T1 where it accumulates.",
+    "Athlete rotation is intentional metaphor: circular motion around a fixed pillar represents spin precession around one magnetic field axis before realignment.",
+    "Geisha (Lure) uses fan-timed rhythm to pull hydrogen people toward one central resource dais without explicit medical labeling before the end.",
+    "Intruder enters the circle to connect with high-energy hydrogen groups; a gadolinium-contrast wrist mark converts collapse into synchronized stability and reveals hidden resource flow.",
+    "Twist policy: before end credits there is no direct medical naming of tumor or glioblastoma; the explicit diagnosis appears only on the final end-card title text after the black-screen katana cut: \"Глиобластома выявлена и удалена.\""
   ],
   "approved_character_registry": [
-    "Gadolinium",
-    "Castle String",
+    "Intruder",
     "Hydrogen Crowd",
-    "Geisha"
+    "Geisha (Lure)",
+    "Castle String"
   ],
   "revision_notes": [
-    "Kept action lines single-beat for generation reliability.",
-    "Preserved anime-noir rhythm grammar and reveal-through-marking theme lock.",
-    "Maintained title and character roster to stay aligned with story anchor."
+    "Renamed characters to avoid literal medical labeling in visible scene text while preserving diagnostic payoff at the title card.",
+    "Locked hidden-twist behavior so medical truth is withheld until credits.",
+    "Aligned hero identity to an unmasked teenage Intruder and preserved the core 4 tissue metaphors in clear separate beats.",
+    "Added MRI texture language (T1 behavior, gadolinium mechanism, precession metaphor) to ground visual choices in scanner logic."
   ],
   "unresolved_items": [],
   "lock_story_facts": true

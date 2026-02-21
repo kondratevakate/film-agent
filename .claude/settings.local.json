@@ -1,7 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python -m pytest:*)"
+      "Bash(python -m pytest:*)",
+      "Bash(film-agent prepare-vimax:*)",
+      "Bash(echo:*)",
+      "Bash(film-agent vimax-run:*)",
+      "Bash(python:*)",
+      "WebFetch(domain:yunwu.ai)"
     ]
   }
 }
