@@ -4,6 +4,27 @@ __pycache__/
 .env
 .env.*
 
-runs/*
-references/*
-!runs/.gitkeep
+# Runs and outputs (heavy generated files)
+runs/
+references/
+
+# Generated anchors and outputs in examples/
+examples/*/anchors/
+examples/*/outputs/
+examples/*/world/
+
+# Heavy media files (keep only in projects, not in repo)
+*.mp4
+*.mov
+*.avi
+*.webm
+
+# Large images (anchors, references)
+# Keep small example images, ignore generated ones
+examples/*/anchors/**/*.png
+examples/*/world/**/*.png
+
+# Temporary and cache files
+*.tmp
+*.log
+.DS_Store

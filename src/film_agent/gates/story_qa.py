@@ -70,7 +70,8 @@ def evaluate_story_qa(
     for issue in result.blocking_issues:
         reasons.append(f"Blocking issue: {issue}")
 
-    # Check for any criterion below 40 (automatic fail)
+    # Check for any criterion below minimum threshold (configurable, default 40)
+    min_criterion = getattr(config.thresholds, "min_story_qa_criterion_score", 40.0)
     criteria_scores = [
         ("dramatic_question", result.dramatic_question.clarity_score),
         ("cause_effect", result.cause_effect.score),
@@ -89,11 +90,11 @@ def evaluate_story_qa(
     ]
 
     for name, score in criteria_scores:
-        if score < 40:
-            reasons.append(f"Criterion '{name}' score {score:.1f} is critically low (<40).")
+        if score < min_criterion:
+            reasons.append(f"Criterion '{name}' score {score:.1f} is below threshold ({min_criterion:.0f}).")
             fixes.append(f"Prioritize fixing '{name}' before other improvements.")
 
-    passed = result.overall_score >= 70 and all(score >= 40 for _, score in criteria_scores)
+    passed = result.overall_score >= 70 and all(score >= min_criterion for _, score in criteria_scores)
 
     return (
         GateReport(
@@ -201,27 +202,28 @@ def _analyze_script(
     ]
     overall_score = sum(scores) / len(scores)
 
-    # Identify blocking issues
+    # Identify blocking issues (configurable threshold, default 50)
+    blocking_threshold = getattr(config.thresholds, "min_story_qa_criterion_score", 40.0)
     blocking = []
     recommendations = []
 
-    if dramatic_q.clarity_score < 50:
+    if dramatic_q.clarity_score < blocking_threshold:
         blocking.append("dramatic_question: unclear what viewer is waiting for")
         recommendations.append("Add clear stakes/question by line 5-6")
 
-    if cause_effect.score < 50:
+    if cause_effect.score < blocking_threshold:
         blocking.append(f"cause_effect: chain breaks at {cause_effect.breaks}")
         recommendations.append("Ensure each scene forces the next (not just follows)")
 
-    if conflict.score < 50:
+    if conflict.score < blocking_threshold:
         blocking.append(f"conflict: missing in {conflict.scenes_missing_conflict}")
         recommendations.append("Add obstacle/opposition in each location")
 
-    if agency.score < 50:
+    if agency.score < blocking_threshold:
         blocking.append("agency: hero decisions don't drive plot")
         recommendations.append("Add moment where protagonist CHOOSES despite cost")
 
-    if finale.score < 50:
+    if finale.score < blocking_threshold:
         blocking.append("causal_finale: ending feels arbitrary")
         recommendations.append("Ensure finale results from earlier setup")
 

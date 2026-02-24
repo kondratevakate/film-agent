@@ -2,6 +2,8 @@ pydantic<3,>=2.8
 typer<1,>=0.12
 PyYAML<7,>=6.0
 openai<3,>=2.1.0
+anthropic<1,>=0.40.0
+python-dotenv<2,>=1.0
 
 [dev]
 pytest<9,>=8.0

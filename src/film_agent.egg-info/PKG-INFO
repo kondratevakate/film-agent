@@ -8,6 +8,8 @@ Requires-Dist: pydantic<3,>=2.8
 Requires-Dist: typer<1,>=0.12
 Requires-Dist: PyYAML<7,>=6.0
 Requires-Dist: openai<3,>=2.1.0
+Requires-Dist: anthropic<1,>=0.40.0
+Requires-Dist: python-dotenv<2,>=1.0
 Provides-Extra: providers
 Requires-Dist: requests<3,>=2.31; extra == "providers"
 Requires-Dist: python-dotenv<2,>=1.0; extra == "providers"
@@ -125,6 +127,37 @@ Environment variable for SDK:
 OPENAI_API_KEY=...
 # or
 OPENAI_SDK=...
+```
+
+Standard runbook for `contrast-infinity-castle` (no project script):
+
+```bash
+film-agent new-run --config configs/project.contrast-infinity-castle.yaml
+film-agent auto-run --run-id <RUN_ID> --model gpt-4.1 --until complete
+```
+
+Note: current auto-run flow stops at `FINAL_RENDER` (preprod locked).  
+To reach `COMPLETE`, submit `final_metrics` and run `gate4` manually.
+
+Dramaturgy review artifacts (canonical):
+
+- `runs/<RUN_ID>/gate_reports/gate1.iter-*.json`
+- `runs/<RUN_ID>/iterations/iter-XX/artifacts/script_review.json`
+
+Repeat runs via one-off PowerShell loop (without committing scripts):
+
+```powershell
+1..2 | ForEach-Object {
+  $created = film-agent new-run --config configs/project.contrast-infinity-castle.yaml | ConvertFrom-Json
+  $runId = $created.run_id
+  film-agent auto-run --run-id $runId --model gpt-4.1 --until complete | Out-Null
+  $state = Get-Content -Raw ("runs/{0}/state.json" -f $runId) | ConvertFrom-Json
+  [pscustomobject]@{
+    run_id = $runId
+    state = $state.current_state
+    iteration = $state.current_iteration
+  }
+} | Format-Table -AutoSize
 ```
 
 Replay authoritative local inputs through the run flow (strict submit + gate order):

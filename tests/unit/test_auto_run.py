@@ -11,5 +11,5 @@ def test_auto_run_requires_openai_credentials(monkeypatch: pytest.MonkeyPatch, t
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
     monkeypatch.delenv("OPENAI_SDK", raising=False)
 
-    with pytest.raises(ValueError, match="OPENAI_API_KEY or OPENAI_SDK is required"):
+    with pytest.raises(ValueError, match="OPENAI_API_KEY"):
         auto_run_sdk_loop(tmp_path, "run-does-not-matter")

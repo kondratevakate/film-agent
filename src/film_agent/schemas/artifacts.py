@@ -229,6 +229,17 @@ class FinalMetrics(BaseModel):
     one_shot_render: bool = True
 
 
+class EvalMetrics(BaseModel):
+    """Metrics for evaluating agent efficiency (Anthropic eval best practices)."""
+
+    total_tokens: int = 0
+    total_latency_ms: float = 0.0
+    num_llm_calls: int = 0
+    num_refinement_rounds: int = 0
+    was_approved: bool = False
+    transcript_path: str | None = None
+
+
 class GateReport(BaseModel):
     gate: str
     passed: bool
@@ -237,6 +248,8 @@ class GateReport(BaseModel):
     metrics: dict[str, Any] = Field(default_factory=dict)
     reasons: list[str] = Field(default_factory=list)
     fix_instructions: list[str] = Field(default_factory=list)
+    # Eval metrics for tracking agent efficiency
+    eval_metrics: EvalMetrics | None = None
 
 
 class FinalScorecard(BaseModel):

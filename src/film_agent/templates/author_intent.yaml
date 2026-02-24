@@ -1,0 +1,33 @@
+# Author Intent
+# This defines your narrative vision and is IMMUTABLE through the pipeline.
+# All generated content is validated against this intent.
+
+project_id: "my-project"
+
+# What story are you telling?
+core_narrative: |
+  Describe your core story here.
+  What is the main narrative you want to convey?
+
+# What should the audience feel/understand after watching?
+audience_takeaway: |
+  What emotion or understanding should viewers have?
+
+# Emotional journey through the film
+# Each beat represents a phase of the emotional arc
+emotional_arc:
+  - "opening"       # How does it start?
+  - "development"   # How does it build?
+  - "climax"        # Peak intensity
+  - "resolution"    # How does it conclude?
+
+# WHY each metaphor exists (not what it looks like - that goes in world.yaml)
+# This helps validate that generated content serves the narrative
+metaphor_purposes:
+  example_metaphor: "This represents the protagonist's inner journey"
+  # Add your metaphors and their narrative purposes here
+
+# Terms that should NEVER appear in generated text
+# These break the metaphor/narrative illusion
+forbidden_literal:
+  - "example_term"

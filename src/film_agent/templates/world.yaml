@@ -1,0 +1,52 @@
+# World Definition
+# Define your world, rooms, characters, and visual metaphors
+
+castle:
+  name: "Your World Name"
+  style: "photorealistic, cinematic lighting"
+
+rooms:
+  main_hall:
+    name: "Main Hall"
+    description: "spacious hall with dramatic lighting"
+    mood: "tense, anticipatory"
+    metaphor_meaning: "optional - what this room represents"
+
+  # Add more rooms as needed
+  # second_room:
+  #   name: "Second Room"
+  #   description: "..."
+  #   mood: "..."
+
+characters:
+  protagonist:
+    name: "Protagonist"
+    appearance: "detailed physical description for consistent rendering"
+    role: "main character"
+
+  # Add more characters as needed
+  # antagonist:
+  #   name: "Antagonist"
+  #   appearance: "..."
+  #   role: "..."
+
+# Visual metaphor translations
+# Use these concrete descriptions instead of abstract terms in prompts
+metaphor_visuals:
+  example_metaphor: "concrete visual description"
+
+# Terms that should NEVER appear in generated prompts
+forbidden_terms:
+  - example_forbidden_term
+
+# Physics rules for motion behavior
+physics:
+  global:
+    ambient_motion: "subtle environmental movement"
+
+  rooms:
+    main_hall:
+      motion_style: "normal movement"
+      movement_speed: 1.0
+      camera: "wide establishing shot"
+      environment: "ambient details"

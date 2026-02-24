@@ -18,7 +18,12 @@ logger = logging.getLogger(__name__)
 from film_agent.io.artifact_store import load_artifact_for_agent
 from film_agent.io.hashing import sha256_file, sha256_json
 from film_agent.io.json_io import dump_canonical_json, load_json
-from film_agent.schemas.artifacts import AVPromptPackage, ImagePromptPackage, RenderPackage
+from film_agent.schemas.artifacts import (
+    AVPromptPackage,
+    CinematographyPackage,
+    ImagePromptPackage,
+    RenderPackage,
+)
 from film_agent.state_machine.state_store import iteration_key, load_state, run_dir
 
 
@@ -66,7 +71,17 @@ def prepare_vimax_inputs(
     render_raw = load_artifact_for_agent(run_path, state, "render_package")
     render_package = RenderPackage.model_validate(render_raw) if render_raw is not None else None
 
-    lines = build_vimax_lines(dance=dance, audio=audio)
+    cinematography_raw = load_artifact_for_agent(run_path, state, "cinematography")
+    cinematography = None
+    if cinematography_raw is not None:
+        # cinematography can be either CinematographyPackage or SelectedImagesArtifact
+        # Only use CinematographyPackage for character info; skip SelectedImagesArtifact
+        try:
+            cinematography = CinematographyPackage.model_validate(cinematography_raw)
+        except Exception:
+            logger.debug("cinematography artifact is not CinematographyPackage, skipping character info")
+
+    lines = build_vimax_lines(dance=dance, audio=audio, cinematography=cinematography)
     validation = validate_vimax_lines(lines)
     final_size = image_size or suggest_openai_image_size(render_package.resolution if render_package else None)
 
@@ -254,8 +269,38 @@ def prepare_vimax_inputs(
     )
 
 
-def build_vimax_lines(*, dance: ImagePromptPackage, audio: AVPromptPackage) -> list[dict[str, Any]]:
+def build_vimax_lines(
+    *,
+    dance: ImagePromptPackage,
+    audio: AVPromptPackage,
+    cinematography: CinematographyPackage | None = None,
+) -> list[dict[str, Any]]:
     audio_by_shot = {item.shot_id: item for item in audio.shot_prompts}
+
+    # Build character lookup from cinematography
+    character_by_name: dict[str, dict[str, Any]] = {}
+    shot_characters: dict[str, list[dict[str, Any]]] = {}
+
+    if cinematography is not None:
+        for char in cinematography.character_bank.characters:
+            character_by_name[char.name] = {
+                "name": char.name,
+                "identity_token": char.identity_token,
+                "costume_style_constraints": char.costume_style_constraints,
+                "forbidden_drift_rules": char.forbidden_drift_rules,
+            }
+
+        for shot in cinematography.shots:
+            if shot.shot_id not in shot_characters:
+                shot_characters[shot.shot_id] = []
+            char_info = character_by_name.get(shot.character, {})
+            if char_info:
+                shot_characters[shot.shot_id].append({
+                    "name": shot.character,
+                    "features": f"{shot.identity_token}. {shot.pose_action}",
+                    "portrait_path": None,  # Filled later by portrait generation
+                })
+
     out: list[dict[str, Any]] = []
     seen: set[str] = set()
 
@@ -264,6 +309,9 @@ def build_vimax_lines(*, dance: ImagePromptPackage, audio: AVPromptPackage) -> l
         duration_conflict = False
         if shot_audio is not None:
             duration_conflict = abs(float(shot_audio.duration_s) - float(item.duration_s)) > 1e-6
+
+        visible_chars = shot_characters.get(item.shot_id, [])
+
         out.append(
             {
                 "shot_id": item.shot_id,
@@ -276,6 +324,7 @@ def build_vimax_lines(*, dance: ImagePromptPackage, audio: AVPromptPackage) -> l
                 "audio_prompt": shot_audio.audio_prompt if shot_audio else "",
                 "tts_text": shot_audio.tts_text if shot_audio else None,
                 "intent": item.intent,
+                "visible_characters": visible_chars,
             }
         )
         seen.add(item.shot_id)
@@ -283,6 +332,7 @@ def build_vimax_lines(*, dance: ImagePromptPackage, audio: AVPromptPackage) -> l
     for shot in audio.shot_prompts:
         if shot.shot_id in seen:
             continue
+        visible_chars = shot_characters.get(shot.shot_id, [])
         out.append(
             {
                 "shot_id": shot.shot_id,
@@ -295,6 +345,7 @@ def build_vimax_lines(*, dance: ImagePromptPackage, audio: AVPromptPackage) -> l
                 "audio_prompt": shot.audio_prompt,
                 "tts_text": shot.tts_text,
                 "intent": "derived_from_video_prompt",
+                "visible_characters": visible_chars,
             }
         )
     return out

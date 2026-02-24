@@ -23,6 +23,12 @@ from film_agent.render_qc import (
     judge_shot_quality,
     write_render_qc_report,
 )
+from film_agent.character_identity_qc import (
+    CharacterIdentityJudgement,
+    decide_identity_outcome,
+    judge_character_identity,
+    write_identity_qc_report,
+)
 from film_agent.providers.video_veo_yunwu import YunwuVeoClient
 from film_agent.state_machine.state_store import load_state, run_dir
 from film_agent.vimax_bridge import VimaxPrepareResult, prepare_vimax_inputs
@@ -50,6 +56,9 @@ def run_vimax_pipeline(
     image_model: str = "gpt-image-1",
     qc_model: str = "gpt-4.1-mini",
     qc_threshold: float = 0.75,
+    identity_qc_enabled: bool = True,
+    identity_qc_threshold: float = 0.75,
+    identity_qc_critical: float = 0.40,
     shot_retry_limit: int = 2,
     poll_interval_s: float = 2.0,
     timeout_s: float = 900.0,
@@ -90,6 +99,8 @@ def run_vimax_pipeline(
                 "run_id": run_id,
                 "iteration": state.current_iteration,
                 "threshold": qc_threshold,
+                "identity_qc_enabled": identity_qc_enabled,
+                "identity_qc_threshold": identity_qc_threshold,
                 "judge_model": qc_model,
                 "shots": [],
                 "failed_shots": [],
@@ -266,6 +277,78 @@ def run_vimax_pipeline(
                 retries_used += 1
                 continue
 
+            # Character identity QC (after render quality passes)
+            identity_result: dict[str, Any] | None = None
+            if identity_qc_enabled and decision == "pass":
+                characters = line.get("visible_characters", [])
+                for char_info in characters:
+                    if not isinstance(char_info, dict):
+                        continue
+                    char_name = str(char_info.get("name", ""))
+                    char_features = str(char_info.get("features", ""))
+                    portrait_path = _safe_path(char_info.get("portrait_path"))
+
+                    if not char_name or portrait_path is None:
+                        continue
+
+                    id_judgement = judge_character_identity(
+                        api_key=openai_api_key,
+                        model=qc_model,
+                        shot_id=shot_id,
+                        character_name=char_name,
+                        character_features=char_features,
+                        portrait_image_path=portrait_path,
+                        frame_image_path=frame_path,
+                    )
+
+                    id_decision, id_reason = decide_identity_outcome(
+                        overall_score=id_judgement.overall_identity_score,
+                        threshold=identity_qc_threshold,
+                        retries_used=retries_used,
+                        retry_limit=shot_retry_limit,
+                        judge_available=id_judgement.judge_available,
+                    )
+
+                    identity_result = {
+                        "character": char_name,
+                        "score": id_judgement.overall_identity_score,
+                        "face_similarity": id_judgement.face_similarity,
+                        "clothing_match": id_judgement.clothing_match,
+                        "age_consistency": id_judgement.age_consistency,
+                        "hair_consistency": id_judgement.hair_consistency,
+                        "decision": id_decision,
+                        "reason_codes": id_reason + id_judgement.reason_codes,
+                        "summary": id_judgement.summary,
+                    }
+
+                    # Critical identity failure (completely wrong person)
+                    if id_judgement.overall_identity_score is not None:
+                        if id_judgement.overall_identity_score < identity_qc_critical:
+                            decision = "fail"
+                            reason_codes = ["critical_identity_mismatch"] + reason_codes
+                            logger.warning(
+                                f"Shot {shot_id}: Critical identity mismatch for {char_name} "
+                                f"(score {id_judgement.overall_identity_score:.2f} < {identity_qc_critical})"
+                            )
+                            break
+
+                    if id_decision == "retry":
+                        _rerender_shot(
+                            client=client,
+                            render_row=render_row,
+                            line=line,
+                            model=model,
+                            aspect_ratio=aspect_ratio,
+                            poll_interval_s=poll_interval_s,
+                            timeout_s=timeout_s,
+                        )
+                        retries_used += 1
+                        break  # break from character loop, continue main loop
+
+                # If we triggered a retry from identity QC, continue the main loop
+                if identity_result and identity_result.get("decision") == "retry":
+                    continue
+
             final_judgement = {
                 "shot_id": shot_id,
                 "score": judgement.score,
@@ -276,6 +359,8 @@ def run_vimax_pipeline(
                 "output_path": str(output_path),
                 "frame_path": str(frame_path),
             }
+            if identity_result:
+                final_judgement["identity_qc"] = identity_result
             break
 
         assert final_judgement is not None

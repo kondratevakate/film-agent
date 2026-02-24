@@ -1,0 +1,35 @@
+# Shooting Script
+# Each shot references rooms/characters from world.yaml
+# Use CONCRETE visual descriptions - no abstract metaphors
+
+shots:
+  - id: shot_01
+    room: main_hall
+    characters: []
+    action: "Describe what happens visually"
+    camera: "wide establishing shot, slow dolly in"
+    duration_s: 4
+    audio: "ambient sound description"
+
+  - id: shot_02
+    room: main_hall
+    characters: [protagonist]
+    action: "Character enters and does something"
+    camera: "medium shot tracking character"
+    duration_s: 5
+    audio: "footsteps, ambient sounds"
+
+  # Add more shots following this pattern
+  # - id: shot_03
+  #   room: second_room
+  #   characters: [protagonist]
+  #   action: "..."
+  #   camera: "..."
+  #   duration_s: 4
+  #   audio: "..."
+
+style_notes:
+  lighting: "describe overall lighting approach"
+  color_palette: "primary colors used"
+  camera_style: "overall camera movement style"
+  pacing: "how tension/energy builds through shots"

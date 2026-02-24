@@ -1,0 +1,210 @@
+{
+    "title":  "Infinity Castle: Early Signal",
+    "logline":  "Inside Infinity Castle, a teenage Intruder decodes rhythm traps as a metaphor for hidden brain pathology and proves that early contrast MRI can expose dangerous inflow before collapse, turning fear into timely action.",
+    "theme":  "Early detection changes outcomes: when rhythm feels wrong, timely MRI and specialist review restore choice.",
+    "characters":  [
+                       "Intruder",
+                       "Hydrogen Crowd",
+                       "Geisha (Lure)",
+                       "Castle String"
+                   ],
+    "locations":  [
+                      "Infinity Castle Tatami Hall",
+                      "Shifting Tatami Corridor",
+                      "Glass Water Chamber",
+                      "Sumo Tatami Ring",
+                      "Bone Pillar Gallery",
+                      "Geisha Resource Dais"
+                  ],
+    "lines":  [
+                  {
+                      "line_id":  "l1",
+                      "kind":  "action",
+                      "text":  "A shamisen string rings through warm lantern air, and Infinity Castle corridors shiver in one clean pulse.",
+                      "speaker":  null,
+                      "est_duration_s":  4.0
+                  },
+                  {
+                      "line_id":  "l2",
+                      "kind":  "action",
+                      "text":  "A 16-year-old unmasked Intruder jolts awake on tatami as if dropped into a dream, staring at endless sliding doors with no clear up or down.",
+                      "speaker":  null,
+                      "est_duration_s":  7.0
+                  },
+                  {
+                      "line_id":  "l3",
+                      "kind":  "dialogue",
+                      "text":  "Where am I... and why does the room move on sound?",
+                      "speaker":  "Intruder",
+                      "est_duration_s":  4.0
+                  },
+                  {
+                      "line_id":  "l4",
+                      "kind":  "action",
+                      "text":  "She enters a long tatami corridor; each pluck tilts the axis, yet she recovers while everyone around her is thrown sideways.",
+                      "speaker":  null,
+                      "est_duration_s":  7.0
+                  },
+                  {
+                      "line_id":  "l5",
+                      "kind":  "action",
+                      "text":  "Doors on both sides slide open in sequence, revealing dense groups of Hydrogen Crowd people jerking, stumbling, and regaining balance in repeating waves.",
+                      "speaker":  null,
+                      "est_duration_s":  7.0
+                  },
+                  {
+                      "line_id":  "l6",
+                      "kind":  "dialogue",
+                      "text":  "Too many of them. One beat moves all of them.",
+                      "speaker":  "Intruder",
+                      "est_duration_s":  5.0
+                  },
+                  {
+                      "line_id":  "l7",
+                      "kind":  "action",
+                      "text":  "In the Glass Water Chamber, divers drift behind glass and recover slowly after each pluck, mirroring long-T1 water behavior.",
+                      "speaker":  null,
+                      "est_duration_s":  7.0
+                  },
+                  {
+                      "line_id":  "l8",
+                      "kind":  "action",
+                      "text":  "In the Sumo Tatami Ring, massive wrestlers sway and rebound first on each beat, mirroring short-T1 fat recovery.",
+                      "speaker":  null,
+                      "est_duration_s":  6.0
+                  },
+                  {
+                      "line_id":  "l9",
+                      "kind":  "action",
+                      "text":  "At the Bone Pillar Gallery, athletic tai chi monks and buddhist practitioners rotate around a fixed support pillar while each pluck challenges their balance.",
+                      "speaker":  null,
+                      "est_duration_s":  7.0
+                  },
+                  {
+                      "line_id":  "l9a",
+                      "kind":  "dialogue",
+                      "text":  "Why do they keep turning in circles?",
+                      "speaker":  "Intruder",
+                      "est_duration_s":  3.0
+                  },
+                  {
+                      "line_id":  "l9b",
+                      "kind":  "dialogue",
+                      "text":  "Because spins precess around one field axis before they realign.",
+                      "speaker":  "Castle String",
+                      "est_duration_s":  4.0
+                  },
+                  {
+                      "line_id":  "l10",
+                      "kind":  "action",
+                      "text":  "Intruder does not stop in any room; she scans faces and follows higher-energy hydrogen clusters being pulled in one direction.",
+                      "speaker":  null,
+                      "est_duration_s":  8.0
+                  },
+                  {
+                      "line_id":  "l11",
+                      "kind":  "action",
+                      "text":  "Crowd streams merge into a single human current flowing toward a bright tatami stage where more groups keep arriving every beat.",
+                      "speaker":  null,
+                      "est_duration_s":  6.0
+                  },
+                  {
+                      "line_id":  "l12",
+                      "kind":  "action",
+                      "text":  "On the Geisha Resource Dais, a breathtaking Geisha (Lure) lifts her fan to the pluck, and the crowd gives her one obedient step of energy.",
+                      "speaker":  null,
+                      "est_duration_s":  7.0
+                  },
+                  {
+                      "line_id":  "l13",
+                      "kind":  "dialogue",
+                      "text":  "T1 is recovery time after the pulse. Fat returns fast, water returns slow; reading these differences early buys time.",
+                      "speaker":  "Intruder",
+                      "est_duration_s":  5.0
+                  },
+                  {
+                      "line_id":  "l14",
+                      "kind":  "action",
+                      "text":  "The Geisha (Lure) smiles and opens the circle for Intruder, expecting one more rich source to step in.",
+                      "speaker":  null,
+                      "est_duration_s":  7.0
+                  },
+                  {
+                      "line_id":  "l15",
+                      "kind":  "dialogue",
+                      "text":  "Come closer. Even your light belongs to me.",
+                      "speaker":  "Geisha (Lure)",
+                      "est_duration_s":  5.0
+                  },
+                  {
+                      "line_id":  "l16",
+                      "kind":  "action",
+                      "text":  "Intruder steps in on the next pluck, and instead of collapsing, the nearest hydrogen people plant their feet and begin a precise synchronized dance.",
+                      "speaker":  null,
+                      "est_duration_s":  6.0
+                  },
+                  {
+                      "line_id":  "l17",
+                      "kind":  "dialogue",
+                      "text":  "Contrast can shorten local T1 where flow is abnormal. The earlier we see it, the more options remain.",
+                      "speaker":  "Intruder",
+                      "est_duration_s":  5.0
+                  },
+                  {
+                      "line_id":  "l18",
+                      "kind":  "action",
+                      "text":  "A gadolinium-contrast mark ignites on Intruder\u0027s wrist; cyan paths brighten where T1 shortens and reveal a hidden inflow into Geisha (Lure).",
+                      "speaker":  null,
+                      "est_duration_s":  6.0
+                  },
+                  {
+                      "line_id":  "l19",
+                      "kind":  "action",
+                      "text":  "Twist beat: Geisha (Lure) sees the mark, her expression cracks into panic, and she freezes as the whole circle stares back.",
+                      "speaker":  null,
+                      "est_duration_s":  4.0
+                  },
+                  {
+                      "line_id":  "l20",
+                      "kind":  "dialogue",
+                      "text":  "No... you were supposed to fall with the beat.",
+                      "speaker":  "Geisha (Lure)",
+                      "est_duration_s":  5.0
+                  },
+                  {
+                      "line_id":  "l21",
+                      "kind":  "action",
+                      "text":  "The full Hydrogen Crowd now stands steady, eyes locked on Geisha (Lure), while the castle stops dragging them forward as Intruder calls for early screening.",
+                      "speaker":  null,
+                      "est_duration_s":  5.0
+                  },
+                  {
+                      "line_id":  "l21a",
+                      "kind":  "dialogue",
+                      "text":  "Do not wait for collapse. If the rhythm keeps breaking, check the brain early with MRI and a specialist.",
+                      "speaker":  "Intruder",
+                      "est_duration_s":  5
+                  },
+                  {
+                      "line_id":  "l22",
+                      "kind":  "action",
+                      "text":  "Cut to pure black for a brief held breath.",
+                      "speaker":  null,
+                      "est_duration_s":  3.0
+                  },
+                  {
+                      "line_id":  "l23",
+                      "kind":  "action",
+                      "text":  "A katana slash tears across the black in a few seconds, severing the red thread and collapsing the lure silhouette.",
+                      "speaker":  null,
+                      "est_duration_s":  4.0
+                  },
+                  {
+                      "line_id":  "l24",
+                      "kind":  "action",
+                      "text":  "End card, large centered title text on black: \"?????? ??????????? ??? ???????? ??????? ????????? ????? ???????.\"",
+                      "speaker":  null,
+                      "est_duration_s":  4.0
+                  }
+              ]
+}

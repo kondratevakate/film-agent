@@ -1,0 +1,217 @@
+{
+  "title": "Infinity Castle: Three Plucks",
+  "logline": "With only three plucks before lock, an unmasked Intruder is blocked from early rooms and must coordinate through a resonance thread; at the final gate she enters Geisha Resource Dais, marks the Lure with contrast, and reveals hidden abnormal inflow early enough to change outcome.",
+  "theme": "Time and access are part of diagnosis: predation hijacks attention through rhythm, while early MRI contrast and specialist coordination reveal hidden brain flow before collapse.",
+  "characters": [
+    "Intruder",
+    "Hydrogen Crowd",
+    "Geisha (Lure)",
+    "Castle String"
+  ],
+  "locations": [
+    "Infinity Castle Tatami Hall",
+    "Shifting Tatami Corridor",
+    "Glass Water Chamber",
+    "Sumo Tatami Ring",
+    "Bone Pillar Gallery",
+    "Geisha Resource Dais"
+  ],
+  "lines": [
+    {
+      "line_id": "l1",
+      "kind": "action",
+      "text": "In Infinity Castle Tatami Hall, one shamisen pluck triggers an alarm pulse and Castle String announces: three plucks until the channels lock.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l2",
+      "kind": "action",
+      "text": "A 16-year-old unmasked Intruder wakes disoriented and lost on tatami, facing endless sliding doors with no clear up or down.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l3",
+      "kind": "dialogue",
+      "text": "Three plucks? Then I do not have time.",
+      "speaker": "Intruder",
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l4",
+      "kind": "action",
+      "text": "Cut to Shifting Tatami Corridor: each pluck tilts the axis; threshold seals block entry, and she resists being thrown sideways.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l5",
+      "kind": "action",
+      "text": "Doors open to dense Hydrogen Crowd waves, but gate wards stop Intruder at each threshold and prevent direct contact.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l6",
+      "kind": "dialogue",
+      "text": "I'm locked out. I need a channel to reach them now.",
+      "speaker": "Intruder",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l7",
+      "kind": "action",
+      "text": "Cut to Glass Water Chamber: she can only watch through lattice glass as divers recover slowly after each pluck, while barred rails block her path.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l8",
+      "kind": "action",
+      "text": "Cut to Sumo Tatami Ring: heavy bodies rebound first, but ward chains challenge every approach and force her back.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l9",
+      "kind": "action",
+      "text": "Cut to Bone Pillar Gallery: practitioners rotate around a fixed pillar while a tense guard ring refuses entry.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l9a",
+      "kind": "dialogue",
+      "text": "If I cannot enter, who can carry the signal inside?",
+      "speaker": "Intruder",
+      "est_duration_s": 3.0
+    },
+    {
+      "line_id": "l9b",
+      "kind": "dialogue",
+      "text": "Use the resonance thread. Speak once, they all hear.",
+      "speaker": "Castle String",
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l10",
+      "kind": "action",
+      "text": "Intruder anchors a taut thread to the pillar and relays one instruction: resist the pull and hold footing on the next beat.",
+      "speaker": null,
+      "est_duration_s": 8.0
+    },
+    {
+      "line_id": "l11",
+      "kind": "action",
+      "text": "Crowd streams still merge toward Geisha Resource Dais; with each pluck, the final gate narrows toward lock.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l12",
+      "kind": "action",
+      "text": "Cut to Geisha Resource Dais: Geisha (Lure) lifts her fan; a hostile rhythm strips one obedient step of energy from each group.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l13",
+      "kind": "dialogue",
+      "text": "T1 is recovery time after the pulse. Fat returns fast, water returns slow; these differences are read before collapse.",
+      "speaker": "Intruder",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l14",
+      "kind": "action",
+      "text": "Last pluck. The final gate opens for one source only, and Intruder chooses to enter the circle.",
+      "speaker": null,
+      "est_duration_s": 7.0
+    },
+    {
+      "line_id": "l15",
+      "kind": "dialogue",
+      "text": "Come closer. Even your light belongs to me.",
+      "speaker": "Geisha (Lure)",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l16",
+      "kind": "action",
+      "text": "On the final beat she runs in, plants her feet, and the nearest hydrogen people stop collapsing and mirror her stance.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l17",
+      "kind": "dialogue",
+      "text": "Contrast shortens local T1 where flow is abnormal. Early signal, clear target.",
+      "speaker": "Intruder",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l18",
+      "kind": "action",
+      "text": "She reaches Geisha (Lure) and stamps a gadolinium-contrast mark on Lure's wrist; cyan paths flare and expose hidden inflow.",
+      "speaker": null,
+      "est_duration_s": 6.0
+    },
+    {
+      "line_id": "l19",
+      "kind": "action",
+      "text": "Twist beat: Geisha (Lure) panics and freezes as the whole circle returns its gaze.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l20",
+      "kind": "dialogue",
+      "text": "No... you were supposed to fall before the lock.",
+      "speaker": "Geisha (Lure)",
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l21",
+      "kind": "action",
+      "text": "The full Hydrogen Crowd now stands steady and opposes the pull; the castle can no longer drag them forward.",
+      "speaker": null,
+      "est_duration_s": 5.0
+    },
+    {
+      "line_id": "l21a",
+      "kind": "dialogue",
+      "text": "Do not wait for collapse. If warning rhythm repeats, get brain MRI early and review it with a specialist.",
+      "speaker": "Intruder",
+      "est_duration_s": 5
+    },
+    {
+      "line_id": "l22",
+      "kind": "action",
+      "text": "Extreme close-up: Geisha (Lure) locks eyes with Intruder; her pupils shake, fan hand trembles, and cyan reflection fractures across her gaze in pure shock.",
+      "speaker": null,
+      "est_duration_s": 2.5
+    },
+    {
+      "line_id": "l22a",
+      "kind": "action",
+      "text": "Cut to pure black for a brief held breath.",
+      "speaker": null,
+      "est_duration_s": 2.0
+    },
+    {
+      "line_id": "l23",
+      "kind": "action",
+      "text": "A katana slash cuts across the black, severing the lure thread and collapsing the silhouette.",
+      "speaker": null,
+      "est_duration_s": 4.0
+    },
+    {
+      "line_id": "l24",
+      "kind": "action",
+      "text": "End card, large centered title text on black: \"Early and timely brain MRI can reveal hidden changes in time. Talk to a specialist.\"",
+      "speaker": null,
+      "est_duration_s": 4.0
+    }
+  ]
+}

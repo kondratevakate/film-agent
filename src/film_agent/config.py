@@ -59,6 +59,7 @@ class Thresholds(BaseModel):
     max_fine_grained_visual_elements: int = 2
     max_tight_spatial_transitions: int = 1
     min_scene_coherence_score: float = 70.0  # Gate1: scene-to-scene coherence
+    min_story_qa_criterion_score: float = 40.0  # Story QA: minimum per-criterion score
 
 
 class RetryLimits(BaseModel):

@@ -1,6 +1,7 @@
 README.md
 pyproject.toml
 src/film_agent/__init__.py
+src/film_agent/character_identity_qc.py
 src/film_agent/cli.py
 src/film_agent/config.py
 src/film_agent/constants.py
@@ -8,6 +9,7 @@ src/film_agent/continuity.py
 src/film_agent/final_mix.py
 src/film_agent/prompt_packets.py
 src/film_agent/prompts.py
+src/film_agent/reference_library.py
 src/film_agent/render_api.py
 src/film_agent/render_qc.py
 src/film_agent/replay_inputs.py
@@ -25,19 +27,24 @@ src/film_agent.egg-info/top_level.txt
 src/film_agent/automation/__init__.py
 src/film_agent/automation/sdk_loop.py
 src/film_agent/gates/__init__.py
+src/film_agent/gates/cinematography_qa.py
 src/film_agent/gates/common.py
 src/film_agent/gates/gate0.py
 src/film_agent/gates/gate1.py
 src/film_agent/gates/gate2.py
 src/film_agent/gates/gate3.py
 src/film_agent/gates/gate4.py
+src/film_agent/gates/reference_qa.py
 src/film_agent/gates/scoring.py
+src/film_agent/gates/story_qa.py
 src/film_agent/io/__init__.py
 src/film_agent/io/artifact_store.py
 src/film_agent/io/hashing.py
 src/film_agent/io/json_io.py
 src/film_agent/io/locking.py
 src/film_agent/io/package_export.py
+src/film_agent/io/response_parsing.py
+src/film_agent/io/transcript_logger.py
 src/film_agent/providers/__init__.py
 src/film_agent/providers/audio_elevenlabs.py
 src/film_agent/providers/image_nanobanana.py
@@ -53,6 +60,7 @@ src/film_agent/resources/prompts/direction.md
 src/film_agent/resources/prompts/main_agent_overlay.md
 src/film_agent/resources/prompts/qa_judge.md
 src/film_agent/resources/prompts/showrunner.md
+src/film_agent/resources/prompts/story_qa.md
 src/film_agent/resources/roles/audio/handoff.md
 src/film_agent/resources/roles/audio/output_contract.md
 src/film_agent/resources/roles/audio/schema.json
@@ -94,6 +102,7 @@ src/film_agent/resources/schemas/showrunner.schema.json
 src/film_agent/resources/schemas/timeline.schema.json
 src/film_agent/schemas/__init__.py
 src/film_agent/schemas/artifacts.py
+src/film_agent/schemas/references.py
 src/film_agent/schemas/registry.py
 src/film_agent/state_machine/__init__.py
 src/film_agent/state_machine/orchestrator.py

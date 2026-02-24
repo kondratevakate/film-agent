@@ -1,0 +1,203 @@
+{
+  "characters": [
+    "Intruder",
+    "Hydrogen Crowd",
+    "Geisha (Lure)",
+    "Castle String"
+  ],
+  "lines": [
+    {
+      "est_duration_s": 4.0,
+      "kind": "action",
+      "line_id": "l1",
+      "speaker": null,
+      "text": "In Infinity Castle Tatami Hall, a shamisen pluck hits like a pulse. The air tightens, as if the building just woke up hungry."
+    },
+    {
+      "est_duration_s": 3.0,
+      "kind": "dialogue",
+      "line_id": "l1a",
+      "speaker": "Castle String",
+      "text": "First pluck. Two left. On the third, every channel locks\u2014and you stay outside forever."
+    },
+    {
+      "est_duration_s": 6.0,
+      "kind": "action",
+      "line_id": "l2",
+      "speaker": null,
+      "text": "A 16-year-old unmasked Intruder wakes on tatami, disoriented, staring at endless sliding doors with no stable up or down."
+    },
+    {
+      "est_duration_s": 3.5,
+      "kind": "dialogue",
+      "line_id": "l3",
+      "speaker": "Intruder",
+      "text": "Two plucks left\u2026 then I lose access."
+    },
+    {
+      "est_duration_s": 6.0,
+      "kind": "action",
+      "line_id": "l4",
+      "speaker": null,
+      "text": "She runs into the Shifting Tatami Corridor. The second pluck snaps in\u2014axis tilts; she skids, catches a doorframe, and forces herself forward."
+    },
+    {
+      "est_duration_s": 6.0,
+      "kind": "action",
+      "line_id": "l5",
+      "speaker": null,
+      "text": "A door slides open to the Hydrogen Crowd collapsing in waves. Intruder steps over the threshold\u2014gate wards snap and shove her back into the corridor."
+    },
+    {
+      "est_duration_s": 4.0,
+      "kind": "dialogue",
+      "line_id": "l6",
+      "speaker": "Intruder",
+      "text": "Locked out. Every room turns help into distance."
+    },
+    {
+      "est_duration_s": 5.0,
+      "kind": "action",
+      "line_id": "l7",
+      "speaker": null,
+      "text": "She yanks open the next shoji door\u2014behind it, the Glass Water Chamber. Divers drift and recover slowly after the pluck, while rails and lattice glass block her path."
+    },
+    {
+      "est_duration_s": 4.5,
+      "kind": "action",
+      "line_id": "l8",
+      "speaker": null,
+      "text": "She slams it shut, staggers back into the corridor, and opens another door: the Sumo Tatami Ring. Heavy bodies rebound first\u2014then ward chains lash the threshold and force her out again."
+    },
+    {
+      "est_duration_s": 5.0,
+      "kind": "action",
+      "line_id": "l9",
+      "speaker": null,
+      "text": "Breathing hard, she pushes onward and finds the Bone Pillar Gallery: practitioners rotate around a fixed pillar while a tense guard ring refuses entry."
+    },
+    {
+      "est_duration_s": 2.5,
+      "kind": "dialogue",
+      "line_id": "l9a",
+      "speaker": "Intruder",
+      "text": "If I can\u2019t enter\u2026 who can carry the signal inside?"
+    },
+    {
+      "est_duration_s": 3.5,
+      "kind": "dialogue",
+      "line_id": "l9b",
+      "speaker": "Castle String",
+      "text": "The third is already coming. Use the thread\u2014if you dare. One pull, and they all hear. Miss it, and you watch them fall from outside."
+    },
+    {
+      "est_duration_s": 5.0,
+      "kind": "action",
+      "line_id": "l10",
+      "speaker": null,
+      "text": "Intruder anchors a taut thread to the bone pillar; the line hums faintly, stretching through door cracks like it belongs to the castle itself."
+    },
+    {
+      "est_duration_s": 5.5,
+      "kind": "action",
+      "line_id": "l11",
+      "speaker": null,
+      "text": "The corridor narrows as the Hydrogen Crowd streams toward a distant glow. Doors begin to seal in slow increments, as if the castle is practicing the lock."
+    },
+    {
+      "est_duration_s": 5.0,
+      "kind": "action",
+      "line_id": "l12",
+      "speaker": null,
+      "text": "She follows the flow to the Geisha Resource Dais. Geisha (Lure) lifts her fan; the rhythm steals one obedient step of strength from every group."
+    },
+    {
+      "est_duration_s": 3.5,
+      "kind": "dialogue",
+      "line_id": "l13",
+      "speaker": "Intruder",
+      "text": "Fast ones rise. Slow ones sink. Your rhythm turns bodies into a map."
+    },
+    {
+      "est_duration_s": 5.0,
+      "kind": "action",
+      "line_id": "l14",
+      "speaker": null,
+      "text": "The third pluck gathers like thunder behind the walls. Intruder grips the resonance thread, then steps through the narrowing doorway into the circle\u2014choosing the only gate that still opens."
+    },
+    {
+      "est_duration_s": 4.0,
+      "kind": "dialogue",
+      "line_id": "l15",
+      "speaker": "Geisha (Lure)",
+      "text": "There you are. I felt you coming. Come closer\u2014before the lock seals you out."
+    },
+    {
+      "est_duration_s": 5.0,
+      "kind": "action",
+      "line_id": "l16",
+      "speaker": null,
+      "text": "On the beat, Intruder plants her feet. The nearest hydrogen people stop collapsing and mirror her stance; the circle finally holds against the pull."
+    },
+    {
+      "est_duration_s": 3.5,
+      "kind": "dialogue",
+      "line_id": "l17",
+      "speaker": "Intruder",
+      "text": "Contrast doesn\u2019t save you. It names you."
+    },
+    {
+      "est_duration_s": 5.0,
+      "kind": "action",
+      "line_id": "l18",
+      "speaker": null,
+      "text": "She lunges to Geisha (Lure) and stamps a gadolinium-contrast mark onto her wrist. Cyan paths flare outward, tracing hidden inflow through the crowd."
+    },
+    {
+      "est_duration_s": 3.0,
+      "kind": "action",
+      "line_id": "l19",
+      "speaker": null,
+      "text": "Twist beat: Geisha (Lure) freezes mid-gesture as the entire circle returns its gaze\u2014no longer hypnotized, now accusing."
+    },
+    {
+      "est_duration_s": 4.0,
+      "kind": "dialogue",
+      "line_id": "l20",
+      "speaker": "Geisha (Lure)",
+      "text": "No\u2026 you were supposed to fall before the lock."
+    },
+    {
+      "est_duration_s": 4.5,
+      "kind": "action",
+      "line_id": "l21",
+      "speaker": null,
+      "text": "The full Hydrogen Crowd stands steady, resisting the pull together. The castle\u2019s rhythm can\u2019t drag them forward anymore."
+    },
+    {
+      "est_duration_s": 2.5,
+      "kind": "action",
+      "line_id": "l22",
+      "speaker": null,
+      "text": "Extreme close-up: Geisha (Lure) locks eyes with Intruder. Her pupils shake; cyan reflection fractures across her gaze in shock."
+    },
+    {
+      "est_duration_s": 3.0,
+      "kind": "action",
+      "line_id": "l24",
+      "speaker": null,
+      "text": "A katana slash rips across the frame like a surgical cut, leaving a blood-red streak over the Geisha\u2019s eyes\u2014then the image drops to black."
+    }
+  ],
+  "locations": [
+    "Infinity Castle Tatami Hall",
+    "Shifting Tatami Corridor",
+    "Glass Water Chamber",
+    "Sumo Tatami Ring",
+    "Bone Pillar Gallery",
+    "Geisha Resource Dais"
+  ],
+  "logline": "With only three plucks before lock, an unmasked Intruder is blocked from early rooms and must coordinate through a resonance thread; at the final gate she enters Geisha Resource Dais, marks the Lure with contrast, and reveals hidden abnormal inflow early enough to change outcome.",
+  "theme": "Time and access are part of diagnosis: predation hijacks attention through rhythm, while early MRI contrast and specialist coordination reveal hidden brain flow before collapse.",
+  "title": "Infinity Castle: Three Plucks"
+}

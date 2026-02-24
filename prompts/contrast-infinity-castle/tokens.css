@@ -1,0 +1,158 @@
+/* ============================================
+   CONTRAST IN THE INFINITY CASTLE
+   Visual Design Tokens
+   ============================================ */
+
+:root {
+  /* ─────────────────────────────────────────
+     COLOR PALETTE
+     ───────────────────────────────────────── */
+
+  /* Primary Amber/Gold (Predation Phase) */
+  --color-amber-deep: #8B5A00;
+  --color-amber-core: #D4A017;
+  --color-amber-glow: #FFB84D;
+  --color-gold-panel: #C9A227;
+  --color-gold-highlight: #FFD700;
+
+  /* Shadow & Depth */
+  --color-shadow-ink: #0D0D0D;
+  --color-shadow-warm: #1A1408;
+  --color-shadow-mid: #2D2418;
+  --color-lacquer-black: #0A0A0A;
+
+  /* Tension Phase (Cold Creep) */
+  --color-cold-blue: #1E3A5F;
+  --color-tension-teal: #2D4F5F;
+
+  /* Liberation Phase (High Contrast) */
+  --color-pure-white: #FFFFFF;
+  --color-pure-black: #000000;
+  --color-slash-red: #8B0000;
+
+  /* ─────────────────────────────────────────
+     LIGHTING
+     ───────────────────────────────────────── */
+
+  --light-lantern-warm: rgba(212, 160, 23, 0.8);
+  --light-rim-gold: rgba(201, 162, 39, 0.6);
+  --light-ambient-shadow: rgba(13, 13, 13, 0.9);
+  --light-spotlight-intensity: 0.85;
+
+  /* ─────────────────────────────────────────
+     MATERIALS
+     ───────────────────────────────────────── */
+
+  /* Textures */
+  --texture-shoji-paper: "rice-paper-grain";
+  --texture-tatami-weave: "woven-rush";
+  --texture-lacquer-gloss: "high-gloss-black";
+  --texture-wood-grain: "aged-cedar";
+  --texture-silk-kimono: "woven-silk-sheen";
+
+  /* Surface Properties */
+  --surface-reflectivity-lacquer: 0.7;
+  --surface-reflectivity-gold: 0.5;
+  --surface-reflectivity-paper: 0.1;
+  --surface-roughness-tatami: 0.8;
+
+  /* ─────────────────────────────────────────
+     ARCHITECTURE
+     ───────────────────────────────────────── */
+
+  --arch-corridor-width: 3.5m;
+  --arch-ceiling-height: 4.5m;
+  --arch-door-ratio: 1:2.2;
+  --arch-platform-spacing: 2m;
+  --arch-lantern-interval: 1.5m;
+  --arch-infinity-repetition: 12;
+
+  /* ─────────────────────────────────────────
+     MOTION & RHYTHM
+     ───────────────────────────────────────── */
+
+  /* Timing (in frames @ 24fps) */
+  --rhythm-pluck-duration: 6;      /* 0.25s */
+  --rhythm-sway-cycle: 48;         /* 2s full sway */
+  --rhythm-tilt-ease: 12;          /* 0.5s axis shift */
+  --rhythm-cut-hold: 3;            /* minimum cut length */
+
+  /* Easing */
+  --ease-pluck-response: cubic-bezier(0.25, 0.1, 0.25, 1);
+  --ease-crowd-sway: cubic-bezier(0.37, 0, 0.63, 1);
+  --ease-axis-tilt: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-mass-inertia: cubic-bezier(0.55, 0.055, 0.675, 0.19);
+
+  /* ─────────────────────────────────────────
+     CAMERA
+     ───────────────────────────────────────── */
+
+  --camera-fov-wide: 65deg;
+  --camera-fov-medium: 40deg;
+  --camera-fov-closeup: 28deg;
+  --camera-tilt-max: 15deg;
+  --camera-axis-flip: 180deg;
+
+  /* ─────────────────────────────────────────
+     CHARACTERS
+     ───────────────────────────────────────── */
+
+  /* Biwa Demon */
+  --char-biwa-robe: var(--color-shadow-warm);
+  --char-biwa-instrument: var(--color-lacquer-black);
+  --char-biwa-strings: var(--color-gold-highlight);
+
+  /* Geisha Leader */
+  --char-geisha-kimono: var(--color-amber-core);
+  --char-geisha-obi: var(--color-shadow-ink);
+  --char-geisha-makeup: var(--color-pure-white);
+
+  /* Intruder */
+  --char-intruder-attire: #2C3E50;
+  --char-intruder-accent: var(--color-slash-red);
+
+  /* Crowd */
+  --char-crowd-silhouette: var(--color-shadow-mid);
+  --char-crowd-density: 0.7;
+
+  /* ─────────────────────────────────────────
+     TRANSITIONS
+     ───────────────────────────────────────── */
+
+  --transition-hard-cut: 0;
+  --transition-color-drain: 18;    /* 0.75s to B&W */
+  --transition-slash-duration: 8;  /* 0.33s katana */
+
+  /* ─────────────────────────────────────────
+     COMPOSITION
+     ───────────────────────────────────────── */
+
+  --comp-rule-of-thirds: true;
+  --comp-diagonal-bias: 15deg;
+  --comp-silhouette-clearance: 10%;
+  --comp-headroom-standard: 8%;
+  --comp-leadroom-motion: 20%;
+}
+
+/* ─────────────────────────────────────────
+   PHASE-SPECIFIC OVERRIDES
+   ───────────────────────────────────────── */
+
+[data-phase="predation"] {
+  --dominant-hue: var(--color-amber-core);
+  --shadow-depth: 0.85;
+  --crowd-motion: "synchronized-sway";
+}
+
+[data-phase="tension"] {
+  --dominant-hue: var(--color-tension-teal);
+  --shadow-depth: 0.9;
+  --crowd-motion: "escalating-wave";
+}
+
+[data-phase="liberation"] {
+  --dominant-hue: var(--color-pure-white);
+  --shadow-depth: 1.0;
+  --crowd-motion: "unified-stance";
+  --color-saturation: 0;
+}

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from math import gcd
@@ -9,6 +10,8 @@ from pathlib import Path
 from typing import Any, Iterable
 
 from film_agent.io.artifact_store import load_artifact_for_agent
+
+logger = logging.getLogger(__name__)
 from film_agent.io.json_io import dump_canonical_json, load_json
 from film_agent.providers.video_veo_yunwu import YunwuVeoClient, build_veo_yunwu_video_payload
 from film_agent.schemas.artifacts import AVPromptPackage, RenderPackage, SelectedImagesArtifact
@@ -36,6 +39,7 @@ class RenderApiRunResult:
     manifest_path: Path
     generated_count: int
     failed_count: int
+    skipped_count: int = 0
 
 
 def resolution_to_aspect_ratio(resolution: str) -> str:
@@ -59,6 +63,42 @@ def build_video_prompt_text(video_prompt: str, negative_constraints: Iterable[st
     if not negatives:
         return base
     return f"{base}\nAvoid: {'; '.join(negatives)}"
+
+
+def validate_prompt_with_core(
+    prompt: str,
+    shot_id: str,
+    project_dir: Path | None = None,
+) -> tuple[str, list[str]]:
+    """
+    Validate and optionally process prompt through core ValidationLoop.
+
+    Args:
+        prompt: The video prompt to validate
+        shot_id: Shot identifier for logging
+        project_dir: Optional path to project config dir (for loading world.yaml)
+
+    Returns:
+        (processed_prompt, list_of_warnings)
+    """
+    try:
+        from film_agent.core import ValidationLoop
+
+        if project_dir and (project_dir / "world.yaml").exists():
+            loop = ValidationLoop.from_project(project_dir)
+            results = loop.validate_all(prompt, shot_id)
+            warnings = [r.error_message for r in results if not r.is_valid and r.error_message]
+
+            if warnings:
+                logger.warning(f"Shot {shot_id} validation warnings: {warnings}")
+
+            return prompt, warnings
+    except ImportError:
+        logger.debug("core.ValidationLoop not available, skipping validation")
+    except Exception as e:
+        logger.debug(f"Validation skipped for {shot_id}: {e}")
+
+    return prompt, []
 
 
 def render_single_shot_once(
@@ -106,6 +146,7 @@ def render_run_via_api(
     fail_fast: bool = False,
     lines_path: Path | None = None,
     shot_retry_limit: int = 2,
+    validation_project_dir: Path | None = None,
 ) -> RenderApiRunResult:
     run_path = run_dir(base_dir, run_id)
     state = load_state(run_path)
@@ -160,6 +201,13 @@ def render_run_via_api(
         output_path = output_dir / f"{index:02d}_{spec.shot_id}.mp4"
         prompt = build_video_prompt_text(spec.video_prompt, [spec.negative_prompt])
 
+        # Validate prompt through core ValidationLoop if project_dir provided
+        validation_warnings: list[str] = []
+        if validation_project_dir:
+            prompt, validation_warnings = validate_prompt_with_core(
+                prompt, spec.shot_id, validation_project_dir
+            )
+
         row: dict[str, object] = {
             "shot_id": spec.shot_id,
             "duration_s": spec.duration_s,
@@ -167,6 +215,7 @@ def render_run_via_api(
             "output_path": str(output_path),
             "status": "pending",
             "attempts": [],
+            "validation_warnings": validation_warnings,
             "request_preview": {
                 "model": effective_model,
                 "aspect_ratio": aspect_ratio,

@@ -18,7 +18,8 @@ from film_agent.io.artifact_store import ArtifactError, submit_artifact
 from film_agent.io.hashing import sha256_file
 from film_agent.io.json_io import load_json
 from film_agent.io.locking import lock_preprod_artifacts
-from film_agent.schemas.artifacts import FinalScorecard, GateReport
+from film_agent.io.transcript_logger import load_transcript_metrics
+from film_agent.schemas.artifacts import EvalMetrics, FinalScorecard, GateReport
 from film_agent.state_machine.state_store import (
     RunStateData,
     append_event,
@@ -136,6 +137,9 @@ def validate_gate(base_dir: Path, run_id: str, gate: int) -> CommandResult:
     report: GateReport
     scorecard: FinalScorecard | None = None
 
+    # Map gates to the role that was just processed
+    gate_to_role = {1: "showrunner", 2: "direction", 3: "dance_mapping", 4: None}
+
     if gate == 1:
         _ensure_state(state, {RunState.GATE1})
         report = evaluate_gate1(path, state, config)
@@ -152,6 +156,20 @@ def validate_gate(base_dir: Path, run_id: str, gate: int) -> CommandResult:
         _ensure_state(state, {RunState.FINAL_RENDER, RunState.GATE4})
         report, scorecard = evaluate_gate4(path, state, config)
         _apply_gate4_transition(state, report)
+
+    # Enrich report with eval metrics from transcript (if available)
+    role = gate_to_role.get(gate)
+    if role:
+        transcript_data = load_transcript_metrics(path, state.current_iteration, role)
+        if transcript_data:
+            report.eval_metrics = EvalMetrics(
+                total_tokens=transcript_data["total_tokens"],
+                total_latency_ms=transcript_data["total_latency_ms"],
+                num_llm_calls=transcript_data["num_llm_calls"],
+                num_refinement_rounds=transcript_data["num_refinement_rounds"],
+                was_approved=transcript_data["was_approved"],
+                transcript_path=transcript_data["transcript_path"],
+            )
 
     out = write_report(path, report)
     append_event(path, "gate_validated", {"gate": report.gate, "passed": report.passed, "report": str(out)})
