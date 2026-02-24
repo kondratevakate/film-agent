@@ -1,0 +1,146 @@
+# World Definition: Infinity Castle
+# Dance Your PhD - MRI Contrast Metaphor Story
+# All metaphors translated to concrete visual descriptions
+
+castle:
+  name: "Infinity Castle"
+  style: "photorealistic Japanese castle interior, warm amber lantern lighting, traditional wood and paper architecture"
+
+rooms:
+  tatami_hall:
+    name: "Tatami Hall"
+    description: "vast tatami hall with paper lanterns hanging from dark wooden beams, warm amber light casting soft shadows, sliding shoji doors on all sides"
+    mood: "tense, anticipatory"
+    metaphor_meaning: "MRI scanner bore - the space where the patient lies"
+
+  shifting_corridor:
+    name: "Shifting Corridor"
+    description: "endless corridor with sliding paper doors, disorienting perspective with impossible geometry, warm amber lighting from paper lanterns"
+    mood: "confusion, urgency"
+    metaphor_meaning: "T1/T2 relaxation - the changing signal as atoms return to equilibrium"
+
+  glass_water_chamber:
+    name: "Glass Water Chamber"
+    description: "deep blue chamber with synchronized swimmers in formation behind glass walls, side view perspective, soft underwater lighting diffusing through the water, metal railings and lattice patterns framing the view"
+    mood: "slow, dreamlike, graceful"
+    metaphor_meaning: "cerebrospinal fluid - slow synchronized movement around the brain"
+
+  sumo_ring:
+    name: "Sumo Tatami Ring"
+    description: "circular tatami platform with multiple sumo wrestlers grappling and pushing against each other, dust rising from heavy impacts, ward chains at the threshold, warm amber lighting"
+    mood: "heavy, grounded, intense struggle"
+    metaphor_meaning: "fat tissue - slow T1 recovery, heavy mass, competing forces"
+
+  pillar_gallery:
+    name: "Pillar Gallery"
+    description: "gallery with tall pale wooden column at center, practitioners in white robes circling around it, amber lantern light"
+    mood: "ritualistic, focused"
+    metaphor_meaning: "bone/scanner axis - the fixed reference point in MRI"
+
+  geisha_dais:
+    name: "Geisha Dais"
+    description: "elevated platform with gold and vermilion curtains, central figure with decorative fan, hypnotic atmosphere"
+    mood: "hypnotic, dangerous"
+    metaphor_meaning: "gadolinium contrast agent - the enhancer that reveals hidden patterns"
+
+  taichi_courtyard:
+    name: "Tai Chi Courtyard"
+    description: "open courtyard with practitioners in flowing white robes performing tai chi in unison, smooth continuous movements, morning mist swirling with their motions, bamboo and stone garden elements"
+    mood: "meditative, flowing, harmonious"
+    metaphor_meaning: "T2 relaxation - slow continuous dephasing, gradual loss of coherence"
+
+characters:
+  intruder:
+    name: "Intruder"
+    appearance: "16-year-old girl, straight black hair tied back tightly, sharp dark eyes, lean agile build, dark hakama pants, wrapped top, determined expression, pale skin"
+    role: "protagonist - represents the MRI technician/radiologist"
+
+  geisha_lure:
+    name: "Geisha Lure"
+    appearance: "elegant woman, ornate gold and vermilion kimono, white-painted face, decorative fan, hypnotic presence"
+    role: "antagonist - represents the contrast agent that reveals hidden pathology"
+
+# Metaphor to Visual Translation Dictionary
+# Use these instead of metaphor terms in prompts
+metaphor_visuals:
+  hydrogen_crowd: "crowd in white festival robes swaying in synchronized waves"
+  hydrogen_people: "people in white robes moving together"
+  bone_pillar: "tall pale wooden column with ornate carvings"
+  resonance_thread: "thin glowing golden thread"
+  gadolinium_mark: "bright cyan glowing symbol"
+  castle_string: "voice echoing from wooden walls"
+  shamisen_pluck: "sharp musical note reverberating through the halls"
+
+# Forbidden terms - NEVER use these in visual prompts
+forbidden_terms:
+  - hydrogen
+  - T1
+  - T2
+  - resonance
+  - precession
+  - gadolinium
+  - MRI
+  - contrast agent
+  - Demon Slayer
+  - anime
+
+# PHYSICS RULES - Motion behavior for each room type
+physics:
+  global:
+    rf_pulse_effect: "camera shake, lanterns swing violently, floor tilts momentarily"
+    rf_pulse_triggers: ["shamisen pluck", "beat drop", "door slam"]
+    ambient_motion: "gentle lantern sway, dust particles floating"
+
+  rooms:
+    glass_water_chamber:
+      motion_style: "slow motion, synchronized swimming, graceful floating"
+      movement_speed: 0.3  # 30% normal speed
+      camera: "smooth dolly along glass wall, side view, no shake"
+      environment: "synchronized swimmers in formation, bubbles trailing movements, light rays diffusing through water"
+      physics_metaphor: "CSF fluid - coordinated slow movement through resistance"
+
+    sumo_ring:
+      motion_style: "heavy impact, multiple bodies colliding, ground shake on contact"
+      movement_speed: 0.7  # deliberate, weighty
+      camera: "low angle, slight shake on impacts, tracking wrestlers"
+      environment: "multiple wrestlers grappling, dust rises on impacts, chains rattle at threshold"
+      physics_metaphor: "Fat tissue - competing masses, slow T1 recovery"
+
+    shifting_corridor:
+      motion_style: "disorienting, perspective shifts"
+      movement_speed: 1.0  # normal but unstable
+      camera: "Dutch angle, tracking with sudden tilts"
+      environment: "doors slide unexpectedly, floor plane shifts"
+      physics_metaphor: "Gradient coils - spatial encoding, position shifts"
+
+    pillar_gallery:
+      motion_style: "circular, ritualistic, synchronized"
+      movement_speed: 0.8  # measured, deliberate
+      camera: "orbiting around central pillar"
+      environment: "figures circling in unison, thread connecting them"
+      physics_metaphor: "Precession around B0 axis"
+
+    geisha_dais:
+      motion_style: "hypnotic swaying, synchronized crowd"
+      movement_speed: 1.0
+      camera: "crane up to reveal, then push in"
+      environment: "crowd moves as one organism, energy flows from center"
+      physics_metaphor: "Signal coherence - all spins aligned"
+
+    taichi_courtyard:
+      motion_style: "fluid continuous, never stopping, wave-like"
+      movement_speed: 0.5  # meditative pace
+      camera: "slow orbit around practitioners, wide establishing"
+      environment: "mist swirling with movements, fabric flowing, bamboo swaying"
+      physics_metaphor: "T2 relaxation - gradual loss of phase coherence"
+
+  transitions:
+    door_opening:
+      motion: "sliding paper door, force field resistance"
+      effect: "character pushed back at threshold, then allowed through"
+      physics_metaphor: "Tissue boundary - different T1/T2 values create resistance"
+
+    room_to_room:
+      motion: "perspective warp, lighting shift"
+      effect: "warm amber to specific room color, then back"
+      physics_metaphor: "Contrast between tissue types"

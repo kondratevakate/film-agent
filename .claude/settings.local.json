@@ -6,7 +6,22 @@
       "Bash(echo:*)",
       "Bash(film-agent vimax-run:*)",
       "Bash(python:*)",
-      "WebFetch(domain:yunwu.ai)"
+      "WebFetch(domain:yunwu.ai)",
+      "Bash(film-agent submit:*)",
+      "Bash(film-agent auto-run:*)",
+      "Bash(done)",
+      "Bash(film-agent:*)",
+      "Bash(ffprobe:*)",
+      "Bash(pip install:*)",
+      "Bash(PYTHONIOENCODING=utf-8 python:*)",
+      "Bash(ls:*)",
+      "Bash(grep:*)",
+      "WebFetch(domain:higgsfield.ai)",
+      "Bash(pip show:*)",
+      "WebFetch(domain:docs.higgsfield.ai)",
+      "Bash(curl:*)",
+      "Bash(find:*)",
+      "Bash(python3 -m py_compile:*)"
     ]
   }
 }

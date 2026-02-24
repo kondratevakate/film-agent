@@ -1,0 +1,92 @@
+# Author Intent Configuration
+# This file captures WHY we're making this video
+# Every gate in the pipeline validates against this
+
+project_id: contrast-infinity-castle
+
+# Core Narrative
+# What story am I telling?
+core_narrative: |
+  A young intruder navigates an impossible Japanese castle,
+  where she discovers that the mysterious Geisha is manipulating
+  everyone through synchronized movements. By understanding the
+  castle's rules (MRI physics), she exposes the Geisha's control
+  and breaks the spell.
+
+# Audience Takeaway
+# What should viewers feel/understand after watching?
+audience_takeaway: |
+  "Wow, MRI is fascinating - I want to learn more about how
+  contrast agents reveal hidden structures in the brain."
+  The viewer should feel curious, not lectured.
+
+# Emotional Arc
+# The journey the viewer takes
+emotional_arc:
+  - disorientation   # Shots 1-3: Waking in strange place, confusion
+  - discovery        # Shots 4-6: Finding different rooms, learning rules
+  - confrontation    # Shots 7-10: Approaching the Geisha, tension builds
+  - resolution       # Shots 11-12: The mark, the reveal, release
+
+# Metaphor Purposes
+# WHY each metaphor exists (not what it looks like)
+metaphor_purposes:
+  hydrogen_crowd: |
+    Represents the body's water molecules (hydrogen atoms) that
+    respond to MRI signals. The crowd's synchronized movement
+    shows how atoms align with the magnetic field.
+
+  bone_pillar: |
+    Represents the fixed axis of the MRI scanner (B0 field).
+    The pillar is the reference point around which everything
+    else moves - stability in chaos.
+
+  resonance_thread: |
+    Represents how the MRI signal travels through tissue.
+    The golden thread shows connectivity and how the contrast
+    agent spreads through the body.
+
+  gadolinium_mark: |
+    Represents the contrast agent that reveals hidden pathology.
+    The cyan mark is the "aha moment" - suddenly you can see
+    what was invisible before.
+
+  water_chamber: |
+    Represents cerebrospinal fluid (CSF) around the brain.
+    The slow, synchronized swimmers show how CSF moves differently
+    from other tissues.
+
+  sumo_ring: |
+    Represents fat tissue in MRI. Heavy, slow to return to
+    equilibrium. The wrestling shows competing T1 recovery.
+
+  taichi_courtyard: |
+    Represents T2 relaxation - the gradual loss of phase coherence.
+    The flowing, never-stopping movements show continuous dephasing.
+
+# Dance Your PhD Context
+# Competition-specific considerations
+competition_context:
+  name: "Dance Your PhD"
+  goal: "Explain MRI contrast mechanisms through visual metaphor"
+  constraint: "Must be understandable without narration"
+  style: "Artistic, evocative, NOT documentary or educational video"
+
+# Visual Principles
+# Rules for maintaining author vision
+visual_principles:
+  - "Metaphors should be felt, not explained"
+  - "Photorealistic, NOT anime or cartoon"
+  - "Warm amber lighting throughout, cyan ONLY for contrast reveal"
+  - "Movements should be deliberate and meaningful"
+  - "Each room has distinct physics behavior"
+
+# Forbidden Literal Interpretations
+# The generator should NEVER show these literally
+forbidden_literal:
+  - "MRI machine or scanner"
+  - "Hospital setting"
+  - "Molecules or atoms with orbitals"
+  - "Scientific diagrams or charts"
+  - "Text explanations on screen"
+  - "Anime or cartoon style"

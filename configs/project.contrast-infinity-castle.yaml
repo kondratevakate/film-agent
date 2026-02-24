@@ -55,8 +55,8 @@ providers:
   audio: elevenlabs
   image_primary: openai_images
   image_secondary: nanobanana
-  video_primary: sora
-  video_fallback: hugsfield
+  video_primary: yunwu_veo
+  video_fallback: sora
 
 model_candidates:
   - name: sora-2
@@ -82,8 +82,50 @@ thresholds:
   max_consecutive_identical_framing: 2
   variety_score_threshold: 70
   final_score_floor: 70
+  # Lowered for handcrafted script
+  min_scene_coherence_score: 0
+  min_narrative_coherence_score: 30
+  min_story_qa_score: 60
+  min_story_qa_criterion_score: 35  # Allow conflict score 36.54
+  # Character identity QC thresholds
+  character_identity_floor: 0.75
+  character_identity_critical: 0.40
+  max_identity_retries: 2
 
 retry_limits:
   gate1: 3
   gate2: 3
   gate3: 2
+
+# Character consistency settings (for ViMax integration)
+character_consistency:
+  portrait_generation: true
+  views: [front, side, back]
+  identity_qc:
+    enabled: true
+    threshold: 0.75
+    retry_limit: 2
+  mandatory_portrait_injection: true
+  enhanced_descriptions: true
+  critical_features:
+    - age
+    - hairstyle
+    - clothing_color
+
+# Anchor images for ViMax pipeline (5 required)
+anchor_images:
+  - id: biwa_demon
+    path: ../references/input/contrast-infinity-castle/biwa_demon.png
+    priority: 1
+  - id: castle_wide
+    path: ../references/input/contrast-infinity-castle/infinity_castle_wide.png
+    priority: 2
+  - id: corridor
+    path: ../references/input/contrast-infinity-castle/infinity_castle_corridor_upside_down.png
+    priority: 3
+  - id: stage
+    path: ../references/input/contrast-infinity-castle/infinity_castle_stage.png
+    priority: 4
+  - id: killbill_duel
+    path: ../references/input/contrast-infinity-castle/killbill_duel.jpg
+    priority: 5

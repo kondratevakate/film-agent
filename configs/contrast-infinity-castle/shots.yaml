@@ -1,0 +1,106 @@
+# Shooting Script: Infinity Castle
+# Each shot references rooms/characters from world.yaml
+# NO metaphors - only concrete visual descriptions
+
+shots:
+  - id: shot_01
+    room: tatami_hall
+    characters: []
+    action: "Sharp musical note echoes. Camera reveals vast tatami hall awakening"
+    camera: "wide establishing shot, slow dolly in"
+    duration_s: 4
+    audio: "shamisen pluck, reverberating through wooden halls"
+
+  - id: shot_02
+    room: tatami_hall
+    characters: [intruder]
+    action: "Young woman wakes on tatami floor, disoriented, looking around at endless sliding doors"
+    camera: "low angle medium shot, slight handheld"
+    duration_s: 5
+    audio: "soft breathing, distant wooden creaks"
+
+  - id: shot_03
+    room: shifting_corridor
+    characters: [intruder]
+    action: "Running through corridor as second musical note sounds, floor tilts, she catches doorframe"
+    camera: "tracking shot following her, Dutch angle as floor shifts"
+    duration_s: 4
+    audio: "second shamisen pluck, footsteps on tatami"
+
+  - id: shot_04
+    room: glass_water_chamber
+    characters: [intruder]
+    action: "Door slides open revealing figures suspended in water behind glass, invisible force pushes her back"
+    camera: "POV shot looking in, then reverse to show her pushed back"
+    duration_s: 4
+    audio: "water sounds, muffled barrier impact"
+
+  - id: shot_05
+    room: sumo_ring
+    characters: [intruder]
+    action: "Opens another door - heavy sumo wrestlers on circular platform, chains lash at threshold"
+    camera: "wide shot of ring, quick cut to chains"
+    duration_s: 3
+    audio: "heavy bodies hitting tatami, chain rattling"
+
+  - id: shot_06
+    room: pillar_gallery
+    characters: [intruder]
+    action: "Finds gallery with tall pale column, practitioners in white robes circling it, guards block entry"
+    camera: "wide shot revealing column and circling figures"
+    duration_s: 4
+    audio: "rhythmic footsteps, chanting"
+
+  - id: shot_07
+    room: shifting_corridor
+    characters: [intruder]
+    action: "Anchors thin golden thread to column, thread stretches through door cracks"
+    camera: "close-up on hands with thread, then follow thread through space"
+    duration_s: 4
+    audio: "thread humming, tension building"
+
+  - id: shot_08
+    room: geisha_dais
+    characters: [intruder, geisha_lure]
+    action: "Follows crowd flow to elevated platform, Geisha lifts fan, crowd sways to her rhythm"
+    camera: "crane up revealing Geisha on dais, crowd below"
+    duration_s: 5
+    audio: "hypnotic shamisen melody, synchronized breathing"
+
+  - id: shot_09
+    room: geisha_dais
+    characters: [intruder, geisha_lure]
+    action: "Third musical note. Intruder steps through narrowing doorway into circle"
+    camera: "dolly through doorway with her, tension"
+    duration_s: 4
+    audio: "third shamisen pluck, thunder building"
+
+  - id: shot_10
+    room: geisha_dais
+    characters: [intruder, geisha_lure]
+    action: "Intruder plants feet, crowd stops swaying and mirrors her stance"
+    camera: "wide shot showing synchronized stance change"
+    duration_s: 4
+    audio: "sudden silence, then unified breathing"
+
+  - id: shot_11
+    room: geisha_dais
+    characters: [intruder, geisha_lure]
+    action: "Intruder lunges, stamps bright cyan mark on Geisha's wrist, glowing paths spread outward"
+    camera: "close-up wrist, then pull back showing cyan paths through crowd"
+    duration_s: 5
+    audio: "impact sound, electric crackle spreading"
+
+  - id: shot_12
+    room: geisha_dais
+    characters: [intruder, geisha_lure]
+    action: "Extreme close-up Geisha's eyes - shock, cyan reflection fracturing. Cut to black with red slash"
+    camera: "extreme close-up eyes, flash cut to black"
+    duration_s: 3
+    audio: "katana slash sound, silence"
+
+style_notes:
+  lighting: "warm amber throughout, cyan ONLY for the contrast mark reveal"
+  color_palette: "amber, gold, vermilion, dark wood, white robes, single cyan accent"
+  camera_style: "cinematic, deliberate movements, avoid handheld chaos"
+  pacing: "tension builds through first 9 shots, release in shots 10-12"
