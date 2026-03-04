@@ -72,6 +72,8 @@ metaphor_visuals:
   shamisen_pluck: "sharp musical note reverberating through the halls"
 
 # Forbidden terms - NEVER use these in visual prompts
+# NOTE: Style terms (anime, cartoon, etc.) are handled by StyleEnforcer
+# Only list METAPHOR terms here that would be misinterpreted literally
 forbidden_terms:
   - hydrogen
   - T1
@@ -82,7 +84,6 @@ forbidden_terms:
   - MRI
   - contrast agent
   - Demon Slayer
-  - anime
 
 # PHYSICS RULES - Motion behavior for each room type
 physics:

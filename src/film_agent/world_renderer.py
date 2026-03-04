@@ -23,7 +23,8 @@ from .core import (
     CharacterAnchors,
     ValidationLoop,
 )
-from .higgsfield_client import HiggsFieldClient, GenerationResult
+from .higgsfield_client import HiggsFieldClient, GenerationResult, MOTION_PRESETS
+from .pipeline.image_uploader import AnchorCache, upload_to_imgbb
 
 
 logger = logging.getLogger(__name__)
@@ -211,6 +212,9 @@ class WorldRenderer:
     # World directory (for from_cwd architecture)
     world_dir: Optional[Path] = None
 
+    # Anchor URL cache (for uploaded images)
+    anchor_cache: Optional[AnchorCache] = None
+
     @classmethod
     def from_project(
         cls,
@@ -270,6 +274,10 @@ class WorldRenderer:
         outputs_dir = (run_dir or project_dir) / "outputs"
         outputs_dir.mkdir(parents=True, exist_ok=True)
 
+        # Initialize anchor cache for uploaded URLs
+        cache_path = project_dir / ".anchor_cache.json"
+        anchor_cache = AnchorCache(cache_path)
+
         return cls(
             world=world,
             room_anchors=room_anchors,
@@ -279,6 +287,7 @@ class WorldRenderer:
             project_dir=project_dir,
             outputs_dir=outputs_dir,
             run_dir=run_dir,
+            anchor_cache=anchor_cache,
         )
 
     @classmethod
@@ -338,6 +347,10 @@ class WorldRenderer:
         outputs_dir = (run_dir or project_dir) / "outputs"
         outputs_dir.mkdir(parents=True, exist_ok=True)
 
+        # Initialize anchor cache for uploaded URLs
+        cache_path = project_dir / ".anchor_cache.json"
+        anchor_cache = AnchorCache(cache_path)
+
         return cls(
             world=world,
             room_anchors=room_anchors,
@@ -348,6 +361,7 @@ class WorldRenderer:
             outputs_dir=outputs_dir,
             run_dir=run_dir,
             world_dir=world_dir,
+            anchor_cache=anchor_cache,
         )
 
     def load_shots(self, from_run: bool = True) -> list[ShotConfig]:
@@ -427,17 +441,84 @@ class WorldRenderer:
         prompt = ". ".join(parts) + "."
         return prompt
 
-    def render_shot(self, shot: ShotConfig, shot_index: int = 0, total_shots: int = 1) -> GenerationResult:
+    def _parse_camera_to_motions(self, camera_desc: str) -> list[str]:
         """
-        Render a single shot.
+        Parse camera description to motion preset names.
 
-        1. Build prompt from shot config
-        2. Process through validation loop
-        3. Load anchors
-        4. Generate video
-        5. Save result
+        Maps natural camera descriptions to HiggsField motion presets.
+        """
+        camera_lower = camera_desc.lower()
+        motions = []
+
+        # Direct mappings
+        motion_keywords = {
+            "dolly in": "dolly_in",
+            "dolly out": "dolly_out",
+            "dolly left": "dolly_left",
+            "dolly right": "dolly_right",
+            "crane up": "crane_up",
+            "crane down": "crane_down",
+            "zoom in": "zoom_in",
+            "zoom out": "zoom_out",
+            "tilt up": "tilt_up",
+            "tilt down": "tilt_down",
+            "arc left": "arc_left",
+            "arc right": "arc_right",
+            "orbit": "orbit_360",
+            "handheld": "handheld",
+            "static": "static",
+            "tracking": "dolly_in",  # Tracking often means following = dolly
+            "push in": "dolly_in",
+            "pull back": "dolly_out",
+            "dutch angle": "handheld",  # Dutch angle pairs well with handheld feel
+        }
+
+        for keyword, motion in motion_keywords.items():
+            if keyword in camera_lower:
+                motions.append(motion)
+
+        # Default to static if no motion detected
+        if not motions:
+            motions = ["static"]
+
+        return motions
+
+    def render_shot(
+        self,
+        shot: ShotConfig,
+        shot_index: int = 0,
+        total_shots: int = 1,
+        first_frame_url: str | None = None,
+        auto_upload_anchors: bool = True,
+    ) -> GenerationResult:
+        """
+        Render a single shot using HiggsField DoP API.
+
+        Args:
+            shot: Shot configuration
+            shot_index: Index of this shot in sequence
+            total_shots: Total number of shots
+            first_frame_url: Optional URL for first frame image (publicly accessible HTTPS)
+                            If not provided and room anchor exists, will upload to imgbb.
+            auto_upload_anchors: If True, automatically upload local anchors to imgbb
+
+        Note: HiggsField requires publicly accessible HTTPS URLs for images.
+        Local anchors are automatically uploaded to imgbb if IMGBB_API_KEY is set.
         """
         logger.info(f"Rendering shot: {shot.id}")
+
+        # Auto-upload room anchor if no URL provided
+        if not first_frame_url and auto_upload_anchors:
+            room_anchor_path = self.room_anchors.get(shot.room)
+            if room_anchor_path and room_anchor_path.exists():
+                if self.anchor_cache:
+                    try:
+                        first_frame_url = self.anchor_cache.get_or_upload(room_anchor_path)
+                        logger.info(f"Using anchor URL: {first_frame_url[:60]}...")
+                    except Exception as e:
+                        logger.warning(f"Failed to upload anchor: {e}")
+                else:
+                    logger.warning("No anchor cache configured, skipping auto-upload")
 
         # 1. Build prompt
         raw_prompt = self.build_prompt(shot)
@@ -453,23 +534,24 @@ class WorldRenderer:
         )
         logger.debug(f"Processed prompt: {processed_prompt}")
 
-        # 3. Load room anchor
-        room_anchor_path = self.room_anchors.get(shot.room)
-        input_image = None
-        if room_anchor_path and room_anchor_path.exists():
-            input_image = self.client.load_image_as_base64(room_anchor_path)
-            logger.info(f"Using room anchor: {room_anchor_path.name}")
+        # 3. Parse camera motions
+        motion_names = self._parse_camera_to_motions(shot.camera)
+        logger.info(f"Camera motions: {motion_names}")
 
-        # 4. Get camera motion from shot
-        camera_motion = shot.camera
+        # 4. Get room physics for motion strength
+        room_physics = self.world.physics.get("rooms", {}).get(shot.room, {})
+        movement_speed = room_physics.get("movement_speed", 0.5)
+        motion_strength = min(1.0, movement_speed)  # Cap at 1.0
 
         # 5. Generate video
+        # Note: first_frame_url must be a publicly accessible HTTPS URL
         result = self.client.generate_video(
             prompt=processed_prompt,
-            input_image=input_image,
-            duration=shot.duration_s,
-            camera_motion=camera_motion,
-            negative_prompt="anime, cartoon, illustration, cel-shaded, manga",
+            first_frame_url=first_frame_url,
+            motion_names=motion_names,
+            motion_strength=motion_strength,
+            quality="lite",  # Use lite for speed, can upgrade to standard
+            enhance_prompt=True,
         )
 
         # 6. Download if successful

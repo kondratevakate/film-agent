@@ -80,21 +80,39 @@ class StyleEnforcer:
 
     def validate(self, prompt: str) -> tuple[bool, Optional[str]]:
         """
-        Check if prompt contains forbidden styles.
+        Check if prompt contains forbidden styles in positive context.
 
         Returns:
             (is_valid, error_message or None)
         """
         prompt_lower = prompt.lower()
 
+        # Find all "NOT" or "not" sections (negative contexts)
+        # These sections start with NOT/not and continue to the next period or end
+        import re
+        negative_sections = []
+        for match in re.finditer(r'\bnot\b[^.]*', prompt_lower):
+            negative_sections.append((match.start(), match.end()))
+
+        def is_in_negative_context(idx: int) -> bool:
+            """Check if position is within a negative context."""
+            for start, end in negative_sections:
+                if start <= idx <= end:
+                    return True
+            return False
+
         for style in self.forbidden_styles:
-            # Check if style is used positively (not after "NOT" or "no")
-            if style.lower() in prompt_lower:
-                # Check if it's in a negative context
-                idx = prompt_lower.find(style.lower())
-                prefix = prompt_lower[max(0, idx - 10) : idx]
-                if "not " not in prefix and "no " not in prefix:
+            style_lower = style.lower()
+            # Find all occurrences
+            start = 0
+            while True:
+                idx = prompt_lower.find(style_lower, start)
+                if idx == -1:
+                    break
+                # Check if this occurrence is in a negative context
+                if not is_in_negative_context(idx):
                     return False, f"Forbidden style '{style}' found in prompt"
+                start = idx + 1
 
         return True, None
 

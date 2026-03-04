@@ -28,3 +28,4 @@ examples/*/world/**/*.png
 *.tmp
 *.log
 .DS_Store
+.anchor_cache.json

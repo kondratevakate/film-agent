@@ -21,7 +21,10 @@
       "WebFetch(domain:docs.higgsfield.ai)",
       "Bash(curl:*)",
       "Bash(find:*)",
-      "Bash(python3 -m py_compile:*)"
+      "Bash(python3 -m py_compile:*)",
+      "WebFetch(domain:cloud.higgsfield.ai)",
+      "WebFetch(domain:apidog.com)",
+      "WebFetch(domain:github.com)"
     ]
   }
 }

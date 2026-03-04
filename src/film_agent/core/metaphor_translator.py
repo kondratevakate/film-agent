@@ -107,15 +107,36 @@ class MetaphorTranslator:
         """
         text_lower = text.lower()
 
-        # Check forbidden terms
+        # Find all "NOT" or "not" sections (negative contexts)
+        # These sections start with NOT/not and continue to the next period or end
+        negative_sections = []
+        for match in re.finditer(r'\bnot\b[^.]*', text_lower):
+            negative_sections.append((match.start(), match.end()))
+
+        def is_in_negative_context(idx: int) -> bool:
+            """Check if position is within a negative context."""
+            for start, end in negative_sections:
+                if start <= idx <= end:
+                    return True
+            return False
+
+        # Check forbidden terms (these should never appear, even in negative context)
         for term in self.forbidden_terms:
-            if term.lower() in text_lower:
+            term_lower = term.lower()
+            if term_lower in text_lower:
                 return False, f"Forbidden term '{term}' found in prompt"
 
-        # Check forbidden styles
+        # Check forbidden styles (allow in negative context like "NOT anime, cartoon")
         for style in self.forbidden_styles:
-            if style.lower() in text_lower:
-                return False, f"Forbidden style '{style}' found in prompt"
+            style_lower = style.lower()
+            start = 0
+            while True:
+                idx = text_lower.find(style_lower, start)
+                if idx == -1:
+                    break
+                if not is_in_negative_context(idx):
+                    return False, f"Forbidden style '{style}' found in prompt"
+                start = idx + 1
 
         return True, None
 

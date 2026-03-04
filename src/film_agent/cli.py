@@ -969,6 +969,151 @@ def world_list_shots(
     })
 
 
+@app.command("pipeline")
+def pipeline(
+    project: Path = typer.Option(..., "--project", help="Path to project directory"),
+    generate_shots: bool = typer.Option(
+        False,
+        "--generate-shots",
+        help="Generate shots.yaml from author_intent using Claude API",
+    ),
+    generate_anchors: bool = typer.Option(
+        False,
+        "--generate-anchors",
+        help="Generate missing world anchors (rooms + characters)",
+    ),
+    render: bool = typer.Option(
+        True,
+        "--render/--no-render",
+        help="Render all shots to video",
+    ),
+    quality: str = typer.Option(
+        "lite",
+        "--quality",
+        help="HiggsField quality: lite, turbo, standard",
+    ),
+    dry_run: bool = typer.Option(
+        False,
+        "--dry-run",
+        help="Show what would be done without executing",
+    ),
+) -> None:
+    """Run full pipeline: [generate shots] → [generate anchors] → render video.
+
+    World-First Architecture:
+    1. Optionally generate shots.yaml from author_intent.yaml (--generate-shots)
+    2. Optionally generate world anchors if missing (--generate-anchors)
+    3. Render all shots using HiggsField DoP API
+
+    Example:
+        film-agent pipeline --project ./my-project --render
+        film-agent pipeline --project ./my-project --generate-anchors --render
+    """
+    import logging
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+
+    project_dir = project.resolve()
+
+    # Validate project structure
+    if not (project_dir / "world.yaml").exists():
+        _emit({"error": f"world.yaml not found in {project_dir}"})
+        raise typer.Exit(code=1)
+
+    if not (project_dir / "author_intent.yaml").exists():
+        _emit({"error": f"author_intent.yaml not found in {project_dir}"})
+        raise typer.Exit(code=1)
+
+    if not (project_dir / "shots.yaml").exists() and not generate_shots:
+        _emit({"error": f"shots.yaml not found. Use --generate-shots or create manually."})
+        raise typer.Exit(code=1)
+
+    steps_completed = []
+
+    try:
+        # Step 1: Generate shots (if requested)
+        if generate_shots:
+            if dry_run:
+                steps_completed.append({"step": "generate_shots", "status": "dry_run"})
+            else:
+                from film_agent.pipeline.shot_generator import generate_shots_from_intent
+                shots_path = generate_shots_from_intent(project_dir)
+                steps_completed.append({
+                    "step": "generate_shots",
+                    "status": "completed",
+                    "output": str(shots_path),
+                })
+
+        # Step 2: Generate anchors (if requested)
+        if generate_anchors:
+            renderer = WorldRenderer.from_project(project_dir)
+            is_valid, issues, _ = renderer.validate_world()
+
+            if dry_run:
+                steps_completed.append({
+                    "step": "generate_anchors",
+                    "status": "dry_run",
+                    "missing": issues,
+                })
+            else:
+                rooms_generated = []
+                chars_generated = []
+
+                # Generate missing room anchors
+                for room_id in renderer.world.rooms:
+                    if not renderer.room_anchors.get(room_id):
+                        result = renderer.generate_room_anchor(room_id)
+                        rooms_generated.append(room_id)
+
+                # Generate missing character anchors
+                for char_id in renderer.world.characters:
+                    if not renderer.character_anchors.has_character(char_id):
+                        result = renderer.generate_character_anchor(char_id, "turnaround")
+                        chars_generated.append(char_id)
+
+                steps_completed.append({
+                    "step": "generate_anchors",
+                    "status": "completed",
+                    "rooms_generated": rooms_generated,
+                    "characters_generated": chars_generated,
+                })
+
+        # Step 3: Render shots
+        if render:
+            renderer = WorldRenderer.from_project(project_dir)
+            shots = renderer.load_shots()
+
+            if dry_run:
+                steps_completed.append({
+                    "step": "render",
+                    "status": "dry_run",
+                    "shots_count": len(shots),
+                    "quality": quality,
+                })
+            else:
+                results = renderer.render_all_shots()
+                completed = sum(1 for r in results if r.status == "completed")
+                failed = sum(1 for r in results if r.status == "failed")
+
+                steps_completed.append({
+                    "step": "render",
+                    "status": "completed",
+                    "output_dir": str(renderer.outputs_dir),
+                    "total": len(results),
+                    "completed": completed,
+                    "failed": failed,
+                })
+
+    except Exception as exc:
+        _emit({"error": str(exc), "steps_completed": steps_completed})
+        raise typer.Exit(code=1)
+
+    _emit({
+        "project": str(project_dir),
+        "dry_run": dry_run,
+        "steps": steps_completed,
+    })
+
+
 def main() -> None:
     app()
 
