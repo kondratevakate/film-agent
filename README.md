@@ -1,251 +1,133 @@
 # film-agent
 
-Multi-role film pipeline with strict JSON artifacts, gate validation, and SDK-driven prompt iteration.
+![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
+![AI](https://img.shields.io/badge/AI-Claude%20%7C%20GPT-purple?logo=openai&logoColor=white)
+![Video](https://img.shields.io/badge/Video-Higgsfield-orange)
+![Status](https://img.shields.io/badge/Status-Active-brightgreen)
 
-## Core Flow
+Multi-role AI film pipeline with dramaturgy validation, prompt generation, and visual production bridge.
 
-- State machine:
-  `INIT -> GATE0 -> COLLECT_SHOWRUNNER(script) -> GATE1 -> COLLECT_DIRECTION(script_review) -> GATE2 -> COLLECT_DANCE_MAPPING(image_prompts) -> GATE3 -> COLLECT_CINEMATOGRAPHY(selected_images) -> COLLECT_AUDIO(av_prompts) -> LOCK_PREPROD(spec lock) -> FINAL_RENDER -> GATE4`
-- Roles are explicit role packs under `roles/`.
-- Artifacts are strict JSON and validated on submit.
+> **For storytellers who understand dramaturgy.** Full auto-generation works, but doesn't maintain style/character consistency well. Manual supervision of runs is recommended for best results.
 
-## Install
+---
+
+## Recommended Workflow
+
+### Phase 1: Ideation (AI Chat)
+
+Discuss your film idea in Claude or ChatGPT:
+- Develop concept, characters, themes
+- Get creative feedback on narrative structure
+- Export your concept when ready
+
+### Phase 2: film-agent (until Gate 2)
 
 ```bash
+# Create new run from your config
+film-agent new-run --config configs/project.yaml
+
+# Auto-run until Gate 2 (script + direction + prompts ready)
+film-agent auto-run --run-id <RUN_ID> --model claude-sonnet-4-20250514 --until gate2
+```
+
+**Gate 2 outputs:**
+
+| File | Description |
+|------|-------------|
+| `script.json` | Full screenplay with shots and dialogue |
+| `script_review.json` | Dramaturgy analysis and feedback |
+| `image_prompt_package.json` | Visual prompts + `style_anchor` for consistency |
+| `vimax_lines.md` | Ready-to-use prompts for each shot |
+
+### Phase 3: Higgsfield Cinema Studio
+
+1. Open [Higgsfield Cinema Studio](https://higgsfield.ai/cinema-studio)
+2. Create **character elements** using prompts from `image_prompt_package.json`
+3. Create **location elements** for your settings
+4. Generate **START FRAME** images (Soul model) for each shot
+5. Generate **videos** using prompts from `vimax_lines.md`
+6. Assemble your final film
+
+---
+
+## Quick Start
+
+```bash
+# Install
 pip install -e .
+
+# Create project config (see examples/)
+cp examples/project.example.yaml configs/my-project.yaml
+
+# Run pipeline
+film-agent new-run --config configs/my-project.yaml
+film-agent auto-run --run-id <RUN_ID> --model claude-sonnet-4-20250514 --until gate2
 ```
 
-Optional legacy provider runtime (deprecated scripts only):
+## Full Auto (experimental)
+
+If you want complete end-to-end generation:
 
 ```bash
-pip install -e .[providers]
-```
-
-`.[providers]` is also required for:
-
-- `render-api` (external video APIs)
-- `vimax-run` final mix stage (`moviepy`)
-
-## Main Commands
-
-```bash
-film-agent new-run --config configs/project.example.yaml
-film-agent gate0 --run-id <RUN_ID>
-film-agent submit --run-id <RUN_ID> --agent showrunner --file script.json
-film-agent validate --run-id <RUN_ID> --gate 1
-film-agent package-iteration --run-id <RUN_ID> --iter 1
-film-agent final-report --run-id <RUN_ID>
-```
-
-API render execution from current run artifacts:
-
-```bash
-film-agent render-api --run-id <RUN_ID> --provider veo_yunwu --api-key <YUNWU_API_KEY>
-# or set env:
-YUNWU_API_KEY=...
-film-agent render-api --run-id <RUN_ID> --provider veo_yunwu
-```
-
-Dry-run (no API calls, request/manifest only):
-
-```bash
-film-agent render-api --run-id <RUN_ID> --provider veo_yunwu --dry-run
-```
-
-Technical retries per shot (default `2`):
-
-```bash
-film-agent render-api --run-id <RUN_ID> --provider veo_yunwu --shot-retry-limit 2
-```
-
-Prepare ViMax input package from your artifact lines:
-
-```bash
-# 1) generate/reference all shot images from dance_mapping prompts
-# 2) build full lines package for ViMax (image+video+audio lines)
-film-agent prepare-vimax --run-id <RUN_ID> --image-model gpt-image-1 \
-  --anchor-image path/to/anchor1.png \
-  --anchor-image path/to/anchor2.png \
-  --anchor-image path/to/anchor3.png \
-  --anchor-image path/to/anchor4.png \
-  --anchor-image path/to/anchor5.png
-
-# preview package only (without image generation API calls)
-film-agent prepare-vimax --run-id <RUN_ID> --dry-run
-```
-
-End-to-end run (prepare -> render -> auto QC -> final video+audio mix):
-
-```bash
-OPENAI_API_KEY=...
-YUNWU_API_KEY=...
-film-agent vimax-run --run-id <RUN_ID> \
-  --anchor-image path/to/anchor1.png \
-  --anchor-image path/to/anchor2.png \
-  --anchor-image path/to/anchor3.png \
-  --anchor-image path/to/anchor4.png \
-  --anchor-image path/to/anchor5.png
-```
-
-Config note:
-
-- Use `reference_images` in config for visual anchors (recommended 2-3 images).
-- Example folder for inputs: `references/input/README.md`.
-
-## Auto SDK Iteration
-
-Auto-run role prompts via OpenAI SDK until target stage:
-
-```bash
-film-agent auto-run --run-id <RUN_ID> --model gpt-4.1 --until gate2
-# optional stricter refinement:
-film-agent auto-run --run-id <RUN_ID> --model gpt-4.1 --until gate2 --self-eval-rounds 2
-```
-
-Environment variable for SDK:
-
-```bash
-OPENAI_API_KEY=...
-# or
-OPENAI_SDK=...
-```
-
-Standard runbook for `contrast-infinity-castle` (no project script):
-
-```bash
-film-agent new-run --config configs/project.contrast-infinity-castle.yaml
 film-agent auto-run --run-id <RUN_ID> --model gpt-4.1 --until complete
+
+# With visual rendering
+OPENAI_API_KEY=... YUNWU_API_KEY=...
+film-agent vimax-run --run-id <RUN_ID> --anchor-image refs/anchor1.png
 ```
 
-Note: current auto-run flow stops at `FINAL_RENDER` (preprod locked).  
-To reach `COMPLETE`, submit `final_metrics` and run `gate4` manually.
+> Note: Full auto works but style/character consistency degrades. Supervise your runs.
 
-Dramaturgy review artifacts (canonical):
+---
 
-- `runs/<RUN_ID>/gate_reports/gate1.iter-*.json`
-- `runs/<RUN_ID>/iterations/iter-XX/artifacts/script_review.json`
+## Pipeline Overview
 
-Repeat runs via one-off PowerShell loop (without committing scripts):
-
-```powershell
-1..2 | ForEach-Object {
-  $created = film-agent new-run --config configs/project.contrast-infinity-castle.yaml | ConvertFrom-Json
-  $runId = $created.run_id
-  film-agent auto-run --run-id $runId --model gpt-4.1 --until complete | Out-Null
-  $state = Get-Content -Raw ("runs/{0}/state.json" -f $runId) | ConvertFrom-Json
-  [pscustomobject]@{
-    run_id = $runId
-    state = $state.current_state
-    iteration = $state.current_iteration
-  }
-} | Format-Table -AutoSize
+```
+INIT → GATE0 → SHOWRUNNER(script) → GATE1 → DIRECTION(review) → GATE2
+     → DANCE_MAPPING(prompts) → GATE3 → CINEMATOGRAPHY → AUDIO → FINAL_RENDER → GATE4
 ```
 
-Replay authoritative local inputs through the run flow (strict submit + gate order):
+**Roles:**
+- `showrunner` - Script generation
+- `direction` - Dramaturgy review
+- `dance_mapping` - Image/video prompts
+- `cinematography` - Visual selection
+- `audio` - Sound design
+- `qa_judge` - Quality validation
+
+## Commands
 
 ```bash
-film-agent replay-inputs --run-id <RUN_ID>
-# optional:
-film-agent replay-inputs --run-id <RUN_ID> --inputs-dir configs/the-trace/inputs --prefer-current
+film-agent new-run --config <CONFIG>       # Create new run
+film-agent auto-run --run-id <ID> --until gate2  # Auto-run to gate
+film-agent submit --run-id <ID> --agent showrunner --file script.json
+film-agent validate --run-id <ID> --gate 1
+film-agent package-iteration --run-id <ID> --iter 1
+film-agent role list                       # List available roles
 ```
 
-## Roles (explicit agent profiles)
+## Artifacts
 
-- `showrunner`
-- `direction`
-- `dance_mapping`
-- `cinematography`
-- `audio`
-- `qa_judge`
+| Role | Artifact |
+|------|----------|
+| showrunner | `ScriptArtifact` |
+| direction | `ScriptReviewArtifact` |
+| dance_mapping | `ImagePromptPackage` |
+| cinematography | `SelectedImagesArtifact` |
+| audio | `AVPromptPackage` |
 
-Commands:
+## Environment
 
 ```bash
-film-agent role list
-film-agent role show --role showrunner
+ANTHROPIC_API_KEY=...   # For Claude models
+OPENAI_API_KEY=...      # For GPT models
+HF_API_KEY=...          # Higgsfield API
+HF_API_SECRET=...       # Higgsfield secret
 ```
 
-Role packs live in:
+---
 
-- `roles/showrunner/`
-- `roles/direction/`
-- `roles/dance_mapping/`
-- `roles/cinematography/`
-- `roles/audio/`
-- `roles/qa_judge/`
+## License
 
-Each role pack includes:
-
-- `system.md`
-- `task.md`
-- `output_contract.md`
-- `handoff.md`
-- `schema.json`
-
-## Prompt Packets
-
-Build packet for one role:
-
-```bash
-film-agent packet build --run-id <RUN_ID> --role showrunner
-```
-
-Build all possible packets for current iteration:
-
-```bash
-film-agent packet build-all --run-id <RUN_ID>
-```
-
-Backward-compatible prompt command:
-
-```bash
-film-agent show-prompt --agent showrunner
-```
-
-## Export Package (prompt-first default)
-
-`film-agent package-iteration` now exports:
-
-- `artifacts/`
-- `prompt_packets/`
-- `submission_templates/`
-- `scripts/` (copy-ready sheets: plan, image prompts, sora prompts, elevenlabs lines)
-- `legacy_optional_scripts/` (deprecated API-run scripts area)
-- `RUNBOOK.md`
-- `readable_index.md`
-- `hash_manifest.json`
-
-## Canonical JSON Artifacts
-
-- `showrunner` -> `ScriptArtifact`
-- `direction` -> `ScriptReviewArtifact`
-- `dance_mapping` -> `ImagePromptPackage`
-- `cinematography` -> `SelectedImagesArtifact`
-- `audio` -> `AVPromptPackage`
-- `dryrun_metrics` -> `DryRunMetrics`
-- `final_metrics` -> `FinalMetrics`
-
-Lock manifest now includes an immutable `spec_hash` and Gate4 requires `final_metrics.spec_hash` to match that locked hash.
-
-## ViMax Bridge Outputs
-
-Per iteration, the pipeline writes:
-
-- `vimax_input/reference_images/*.png`
-- `vimax_input/vimax_lines.json`
-- `vimax_input/manifest.json`
-- `render_outputs/veo_yunwu/render_manifest.json`
-- `render_outputs/veo_yunwu/render_qc.json`
-- `render_outputs/veo_yunwu/final_mix/final_video_with_audio.mp4`
-- `render_outputs/veo_yunwu/final_mix/final_mix_manifest.json`
-
-## Prompt Stack
-
-- Main overlay for principal scriptwriter: `prompts/main_agent_overlay.md`
-- Showrunner addendum: `prompts/showrunner.md`
-- Other role prompts: `prompts/*.md`
-
-## Image Generation Best Practices
-
-- Method-by-method notes based on OpenAI official docs:
-  `references/openai_image_generation_best_practices/README.md`
+MIT
